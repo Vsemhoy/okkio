@@ -17,6 +17,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/index', function () {
+Route::get('/eventor', function () {
     return view('public.apps.eventor.index');
-});
+})->name('eventor');
+
+Route::get('/budget', function () {
+    return view('public.apps.budget.index');
+})->name('budget');
