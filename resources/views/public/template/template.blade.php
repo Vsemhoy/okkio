@@ -141,10 +141,24 @@
     }
     
     .col-main {
+        width: 100%;
+        float: left;
+        margin-left: 0px;
+    }
+    .th-sidenav-show .col-main {
         width: calc(100% - 61px);
         float: left;
         margin-left: 60px;
     }
+    .th-sidenav-trigger,  .th-col-sidenav ,  .th-nav-rail {
+        display: none;
+    }
+    .th-sidenav-show .th-sidenav-trigger, .th-sidenav-show .th-col-sidenav , .th-sidenav-show .th-nav-rail {
+        display: block;
+    }
+    .th-sidebar-opened .th-col-sidenav {
+            width: 260px;
+        }
     @media only screen and (max-width: 992px) {
         .th-col-sidenav {
             margin-left: -46px;
@@ -153,7 +167,12 @@
             width: 100%;
             margin-left: 0px;
         }
+        .th-sidebar-opened .th-col-sidenav {
+            margin-left: 0px !important;
+            width: 260px !important;
+        }
     }
+
 
 
     .flex-column {
@@ -181,7 +200,7 @@
     </style>
 </head>
 
-<body>
+<body class='th-sidenav-show'>
 
 
     <!-- Offcanvas Menu -->
@@ -203,7 +222,7 @@
     <!-- Navbar -->
     <nav class="uk-navbar-container uk-margin-none th-navbar" uk-navbar>
         <div>
-            <div class='th-navbar-item'>
+            <div class='th-navbar-item th-sidenav-trigger' style='padding-left: 1px; padding-right: 1px;'>
                 <a class="" href="#offcanvas-nav2">
                     <span uk-navbar-toggle-icon></span>
                 </a>
@@ -391,7 +410,7 @@
             </div>
         </nav>
 
-        <div id="navRail" class="th-nav-rail">
+        <div id="navRail" class="th-nav-rail th-sidenav-trigger">
         </div>
 
         <main class="col-main ms-sm-auto p-0" id="mainWrapper">
@@ -560,7 +579,38 @@
         }
     }
 
+
+    class SideNav {
+        constructor(){
+            this.body      = document.querySelector("body");
+            this.triggers  = document.querySelectorAll(".th-sidenav-trigger");
+
+            this.triggers.forEach((el)=> {
+                el.addEventListener('click', (e) => {
+                e.preventDefault;
+               this.body.classList.toggle('th-sidebar-opened');       
+            });
+            });
+
+
+        }
+
+        trigSearchBar(){
+            if (this.searchbar.classList.contains('uk-hidden')){
+                this.searchbar.classList.remove('uk-hidden');
+                this.menubar.classList.add('uk-hidden');
+                this.cst.classList.add('uk-hidden');
+                    
+                } else {
+                    this.searchbar.classList.add('uk-hidden');
+                    this.menubar.classList.remove('uk-hidden');
+                    this.cst.classList.remove('uk-hidden');
+                }
+        }
+    }
+
     $sb = new SearchBar();
+    $sn = new SideNav();
     </script>
 </body>
 
