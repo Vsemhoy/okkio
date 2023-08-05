@@ -16,7 +16,9 @@
         height: 40px !important;
         background: red;
     }
-
+main {
+    min-height: 100vh;
+}
     .th-navbar {
         /* display: grid;
             grid-template-columns: 120px auto 120px; */
@@ -153,6 +155,20 @@
     .th-sidenav-trigger,  .th-col-sidenav ,  .th-nav-rail {
         display: none;
     }
+    .th-sidenav-trigger-back {
+        vertical-align: middle;
+        font-size: 1.2rem;
+        text-align: center;
+        padding: 6px;
+        min-width: 42px;
+        transition: all ease 0.2s;
+        border-right: 1px solid transparent;
+        border-left: 1px solid transparent;
+        padding: 1px;
+    text-align: center;
+    }
+
+
     .th-sidenav-show .th-sidenav-trigger, .th-sidenav-show .th-col-sidenav , .th-sidenav-show .th-nav-rail {
         display: block;
     }
@@ -196,6 +212,46 @@
         text-align: center;
         width: 32px;
         padding-right: 6px;
+    }
+
+    .th-flex-column {
+        flex-direction: column !important;
+    }
+    .th-com-s-nav {
+        display: flex;
+        flex-wrap: wrap;
+        padding-left: 0;
+        margin: 0px;
+        margin-bottom: 12px;
+        list-style: none;
+    }
+
+    .th-sn-item-icon {
+
+    }
+    .th-sn-item-text {
+        overfow: hidden;
+        display: none;
+        text-align: left;
+    }
+    .th-sidebar-opened .th-sn-item-text{
+        display: block;
+    }
+    .th-com-s-nav-item > a {
+        display: grid;
+        display: grid;
+        grid-template-columns: 42px auto auto;
+    }
+    .th-sn-column {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: calc(100vh - 42px);
+        margin-top: 6px;
+    }
+    .th-com-s-nav-item:hover a {
+        color: white;
+        text-decoration: none;
     }
     </style>
 </head>
@@ -287,121 +343,54 @@
             <div class="position-sticky pt-3"><a
                     href="http://new.teftele.com/logout?token=qgH8Z217juVMgHxL5uo84paIhBOBtHSzIayDwmYy"
                     class="app-item login-btn">
-                </a><a class="uk-navbar-toggle " id="leftSidenavToggler2" style="justify-items: none;">
+                </a><a class="th-sidenav-trigger th-sidenav-trigger-back" id="" style="justify-items: none;">
                     <div class="uk-width-1-1 " style="padding: 3px;">
-                        <span uk-navbar-toggle-icon="" class="uk-icon uk-navbar-toggle-icon"><svg width="20" height="20"
-                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <style>
-                                .uk-navbar-toggle-animate svg &gt;
-
-                                [class*='line-'] {
-                                    transition: 0.2s ease-in-out;
-                                    transition-property: transform, opacity, ;
-                                    transform-origin: center;
-                                    opacity: 1;
-                                }
-
-                                .uk-navbar-toggle svg &gt;
-
-                                .line-3 {
-                                    opacity: 0;
-                                }
-
-                                .uk-navbar-toggle-animate[aria-expanded="true"] svg &gt;
-
-                                .line-3 {
-                                    opacity: 1;
-                                }
-
-                                .uk-navbar-toggle-animate[aria-expanded="true"] svg &gt;
-
-                                .line-2 {
-                                    transform: rotate(45deg);
-                                }
-
-                                .uk-navbar-toggle-animate[aria-expanded="true"] svg &gt;
-
-                                .line-3 {
-                                    transform: rotate(-45deg);
-                                }
-
-                                .uk-navbar-toggle-animate[aria-expanded="true"] svg &gt;
-                                .line-1,
-                                .uk-navbar-toggle-animate[aria-expanded="true"] svg &gt;
-
-                                .line-4 {
-                                    opacity: 0;
-                                }
-
-                                .uk-navbar-toggle-animate[aria-expanded="true"] svg &gt;
-
-                                .line-1 {
-                                    transform: translateY(6px) scaleX(0);
-                                }
-
-                                .uk-navbar-toggle-animate[aria-expanded="true"] svg &gt;
-
-                                .line-4 {
-                                    transform: translateY(-6px) scaleX(0);
-                                }
-                                </style>
-                                <rect class="line-1" y="3" width="20" height="2"></rect>
-                                <rect class="line-2" y="9" width="20" height="2"></rect>
-                                <rect class="line-3" y="9" width="20" height="2"></rect>
-                                <rect class="line-4" y="15" width="20" height="2"></rect>
-                            </svg></span>
+                        <span uk-navbar-toggle-icon="" class="uk-icon uk-navbar-toggle-icon"></span>
                     </div>
                 </a>
-                <br>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
+                <div class='th-sn-column'>
+                <ul class="th-com-s-nav th-flex-column" id="th_sidenav_items">
+                    <li class="th-com-s-nav-item">
                         <a class="nav-link active" aria-current="page" href="http://new.teftele.com/budger">
-                            <span class="icon-square">
-                                MA </span>
-                            <span data-feather="home" class="align-text-bottom"></span>
-                            <span class="sitem-text">
-                                Main </span>
+                            <div class="th-sn-item-icon">
+                                MA </div>
+                                <div class="th-sn-item-text">
+                                    Main </div>
+                                    <span data-feather="home" class="align-text-bottom"></span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="th-com-s-nav-item">
                         <a class="nav-link active" aria-current="page" href="http://new.teftele.com/budger/accmanager">
-                            <span class="icon-square">
-                                BS </span>
-                            <span data-feather="home" class="align-text-bottom"></span>
-                            <span class="sitem-text">
-                                Account manager </span>
-                        </a>
+                            <div class="th-sn-item-icon">
+                                BS </div>
+                                <div class="th-sn-item-text">
+                                    Account manager </div>
+                                    <span data-feather="home" class="align-text-bottom"></span>
+                                </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="th-com-s-nav-item">
                         <a class="nav-link active" aria-current="page" href="http://new.teftele.com/budger/catmanager">
-                            <span class="icon-square">
-                                GM </span>
-                            <span data-feather="home" class="align-text-bottom"></span>
-                            <span class="sitem-text">
-                                Category Manager </span>
-                        </a>
-                    </li>
-                </ul>
-                <div class="sidebar-heading uk-padding-x-small uk-text-uppercase uk-text-medium">
-                    <span class="nav-divider-text">Statistics:</span>
-                    <span class="nav-divider-icon"><i class="bi-dot uk-icon" uk-icon="icon: flickr" title="ST"><svg
-                                width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="5.5" cy="9.5" r="3.5"></circle>
-                                <circle cx="14.5" cy="9.5" r="3.5"></circle>
-                            </svg></i></span>
-                </div>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="http://new.teftele.com/budger/commstat">
-                            <span class="icon-square">
-                                CS </span>
-                            <span data-feather="home" class="align-text-bottom"></span>
-                            <span class="sitem-text">
-                                Common stat </span>
-                        </a>
+                            <div class="th-sn-item-icon">
+                                GM </div>
+                                <div class="th-sn-item-text">
+                                    Category Manager </div>
+                                    <span data-feather="home" class="align-text-bottom"></span>
+                                </a>
                     </li>
                 </ul>
 
+                <ul class="th-com-s-nav flex-column" id="th_sidenav_settings">
+                    <li class="th-com-s-nav-item">
+                        <a class="nav-link active" aria-current="page" href="http://new.teftele.com/budger/commstat">
+                            <div class="th-sn-item-icon">
+                                CS </div>
+                                <div class="th-sn-item-text">
+                                    Common stat </div>
+                                </a>
+                                <span data-feather="home" class="align-text-bottom"></span>
+                    </li>
+                </ul>
+</div>
 
 
 
