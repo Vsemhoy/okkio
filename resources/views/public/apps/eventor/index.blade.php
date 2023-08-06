@@ -17,13 +17,13 @@
     let nav = Nav.navButtons();
     let toptools = Nav.topTools();
     let epool = Page.eventPool();
-    let modalContainer = Modals.modalEventEditor();
+    let modalE = new EventModal();
     document.querySelector('#eventor_body').insertAdjacentHTML('afterbegin', nav);
     document.querySelector('#eventor_body').insertAdjacentHTML('afterbegin', toptools);
 
     document.querySelector('#eventor_body').appendChild(epool);
 
-    document.body.appendChild(modalContainer);
+    document.body.appendChild(modalE.get());
 </script>
 
 <script>
