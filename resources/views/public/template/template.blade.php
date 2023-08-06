@@ -11,15 +11,17 @@
 
     <link rel="stylesheet" href="{{ asset('resources/css/uikit.min.css') }}">
     <!-- Add more CSS files if needed -->
-
+    @yield('page-styles')
     <style>
     .uk-navbar-container .uk-navbar-item {
         height: 40px !important;
         background: red;
     }
-main {
-    min-height: 100vh;
-}
+
+    main {
+        min-height: 100vh;
+    }
+
     .th-navbar {
         /* display: grid;
             grid-template-columns: 120px auto 120px; */
@@ -66,33 +68,38 @@ main {
     .th-navbar-item-dd .th-navbar-item:hover a {
         color: #039BE5;
     }
-.th-central-search, .th-central-menu {
-    width: -webkit-fill-available;
-}
-.th-central-search {
-    padding: 3px 12px;
-}
-.th-central-search input {
 
-}
-.th-search-wrap {
-    display: flex;
-    border-radius: 6px;
-    border: 1px solid #dfdfdf;
-    background: white;
-    overflow: hidden;
-    width: 100%;
-}
-.th-search-wrap * {
-    border:none;
-    background: white;
-    height: 31px;
-    color: gray;
-}
-.th-search-wrap button:hover * {
-    color: black;
-    cursor: pointer;
-}
+    .th-central-search,
+    .th-central-menu {
+        width: -webkit-fill-available;
+    }
+
+    .th-central-search {
+        padding: 3px 12px;
+    }
+
+    .th-central-search input {}
+
+    .th-search-wrap {
+        display: flex;
+        border-radius: 6px;
+        border: 1px solid #dfdfdf;
+        background: white;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .th-search-wrap * {
+        border: none;
+        background: white;
+        height: 31px;
+        color: gray;
+    }
+
+    .th-search-wrap button:hover * {
+        color: black;
+        cursor: pointer;
+    }
 
     .menu-minimized .th-col-sidenav {
         width: 60px !important;
@@ -137,23 +144,29 @@ main {
         left: 0px;
         width: 6px;
     }
+
     .th-nav-rail:hover {
         opacity: 1;
     }
-    
+
     .col-main {
         width: 100%;
         float: left;
         margin-left: 0px;
     }
+
     .th-sidenav-show .col-main {
-        width: calc(100% - 61px);
+        width: calc(100% - 42px);
         float: left;
-        margin-left: 60px;
+        margin-left: 42px;
     }
-    .th-sidenav-trigger,  .th-col-sidenav ,  .th-nav-rail {
+
+    .th-sidenav-trigger,
+    .th-col-sidenav,
+    .th-nav-rail {
         display: none;
     }
+
     .th-sidenav-trigger-back {
         vertical-align: middle;
         font-size: 1.2rem;
@@ -167,25 +180,32 @@ main {
         text-align: center;
         color: gray;
     }
+
     .th-sidenav-trigger-back:hover {
         color: white;
     }
 
 
-    .th-sidenav-show .th-sidenav-trigger, .th-sidenav-show .th-col-sidenav , .th-sidenav-show .th-nav-rail {
+    .th-sidenav-show .th-sidenav-trigger,
+    .th-sidenav-show .th-col-sidenav,
+    .th-sidenav-show .th-nav-rail {
         display: block;
     }
+
     .th-sidebar-opened .th-col-sidenav {
-            width: 260px;
-        }
+        width: 260px;
+    }
+
     @media only screen and (max-width: 992px) {
         .th-col-sidenav {
             margin-left: -46px;
         }
+
         .col-main {
             width: 100%;
             margin-left: 0px;
         }
+
         .th-sidebar-opened .th-col-sidenav {
             margin-left: 0px !important;
             width: 260px !important;
@@ -220,6 +240,7 @@ main {
     .th-flex-column {
         flex-direction: column !important;
     }
+
     .th-com-s-nav {
         display: flex;
         flex-wrap: wrap;
@@ -229,22 +250,24 @@ main {
         list-style: none;
     }
 
-    .th-sn-item-icon {
+    .th-sn-item-icon {}
 
-    }
     .th-sn-item-text {
         overfow: hidden;
         display: none;
         text-align: left;
     }
-    .th-sidebar-opened .th-sn-item-text{
+
+    .th-sidebar-opened .th-sn-item-text {
         display: block;
     }
-    .th-com-s-nav-item > a {
+
+    .th-com-s-nav-item>a {
         display: grid;
         display: grid;
         grid-template-columns: 42px auto auto;
     }
+
     .th-sn-column {
         display: flex;
         flex-direction: column;
@@ -252,6 +275,7 @@ main {
         height: calc(100vh - 42px);
         margin-top: 6px;
     }
+
     .th-com-s-nav-item:hover a {
         color: white;
         text-decoration: none;
@@ -291,21 +315,21 @@ main {
             <div class='th-navbar-item'>
                 <!-- here will be main nav items -->
                 <!-- Check if the user is authenticated -->
-@auth
-    <!-- Display the username -->
-    Welcome, {{ Auth::user()->name }}
-@endauth
+                @auth
+                    <!-- Display the username -->
+                    Welcome, {{ Auth::user()->name }}
+                @endauth
             </div>
         </div>
         <div class='th-central-search uk-hidden'>
             <div class='uk-form-custom th-search-wrap uk-box-shadow-hover-medium'>
                 <input class="uk-input" type="text" placeholder="Input" aria-label="Input" id='th_searchArea'>
                 <button type="button" id='th_topSearch'><span uk-icon="search"></span></button>
-                <button type="button" id='th_searchClose'><span uk-icon="close" ></span></button>
+                <button type="button" id='th_searchClose'><span uk-icon="close"></span></button>
 
             </div>
             <div uk-form-custom="target: true">
-               
+
             </div>
 
         </div>
@@ -316,19 +340,19 @@ main {
                 </a>
             </div>
             <div class='th-navbar-item th-navbar-item-dd'>
-                <a class=""  href="#">
+                <a class="" href="#">
                     <span uk-icon="user"></span>
                 </a>
                 <div class="uk-navbar-dropdown" uk-dropdown="mode: click">
                     <ul class="uk-nav uk-navbar-dropdown-nav">
-                    @guest
-                    <li><a href="#" uk-toggle="target: #login-modal">Login</a></li>
+                        @guest
+                        <li uk-toggle="target: #login-modal"><a href="#">Login</a></li>
                         <li class="uk-active" uk-toggle="target: #register-modal"><a href="#">Registration</a></li>
-                    @endguest
-                    @auth
+                        @endguest
+                        @auth
                         <li><a id='logout' href="#">Logout</a></li>
                         <li><a href="#">Account settings</a></li>
-                    @endauth
+                        @endauth
                         <li><a href="#">Terms of service</a></li>
                     </ul>
                 </div>
@@ -361,58 +385,279 @@ main {
                     </div>
                 </a>
                 <div class='th-sn-column'>
-                <ul class="th-com-s-nav th-flex-column" id="th_sidenav_items">
-                    <li class="th-com-s-nav-item">
-                        <a class="nav-link active" aria-current="page" href="http://new.teftele.com/budger">
-                            <div class="th-sn-item-icon">
-                                MA </div>
+                    <ul class="th-com-s-nav th-flex-column" id="th_sidenav_items">
+                        <li class="th-com-s-nav-item">
+                            <a class="nav-link active" aria-current="page" href="http://new.teftele.com/budger">
+                                <div class="th-sn-item-icon">
+                                    MA </div>
                                 <div class="th-sn-item-text">
                                     Main </div>
-                                    <span data-feather="home" class="align-text-bottom"></span>
-                        </a>
-                    </li>
-                    <li class="th-com-s-nav-item">
-                        <a class="nav-link active" aria-current="page" href="http://new.teftele.com/budger/accmanager">
-                            <div class="th-sn-item-icon">
-                                BS </div>
+                                <span data-feather="home" class="align-text-bottom"></span>
+                            </a>
+                        </li>
+                        <li class="th-com-s-nav-item">
+                            <a class="nav-link active" aria-current="page"
+                                href="http://new.teftele.com/budger/accmanager">
+                                <div class="th-sn-item-icon">
+                                    BS </div>
                                 <div class="th-sn-item-text">
                                     Account manager </div>
-                                    <span data-feather="home" class="align-text-bottom"></span>
-                                </a>
-                    </li>
-                    <li class="th-com-s-nav-item">
-                        <a class="nav-link active" aria-current="page" href="http://new.teftele.com/budger/catmanager">
-                            <div class="th-sn-item-icon">
-                                GM </div>
+                                <span data-feather="home" class="align-text-bottom"></span>
+                            </a>
+                        </li>
+                        <li class="th-com-s-nav-item">
+                            <a class="nav-link active" aria-current="page"
+                                href="http://new.teftele.com/budger/catmanager">
+                                <div class="th-sn-item-icon">
+                                    GM </div>
                                 <div class="th-sn-item-text">
                                     Category Manager </div>
-                                    <span data-feather="home" class="align-text-bottom"></span>
-                                </a>
-                    </li>
-                </ul>
+                                <span data-feather="home" class="align-text-bottom"></span>
+                            </a>
+                        </li>
+                    </ul>
 
-                <ul class="th-com-s-nav flex-column" id="th_sidenav_settings">
-                    <li class="th-com-s-nav-item">
-                        <a class="nav-link active" aria-current="page" href="http://new.teftele.com/budger/commstat">
-                            <div class="th-sn-item-icon">
-                                CS </div>
+                    <ul class="th-com-s-nav flex-column" id="th_sidenav_settings">
+                        <li class="th-com-s-nav-item">
+                            <a class="nav-link active" aria-current="page"
+                                href="http://new.teftele.com/budger/commstat">
+                                <div class="th-sn-item-icon">
+                                    CS </div>
                                 <div class="th-sn-item-text">
                                     Common stat </div>
-                                </a>
-                                <span data-feather="home" class="align-text-bottom"></span>
-                    </li>
-                </ul>
-</div>
-
-
-
-
-
+                            </a>
+                            <span data-feather="home" class="align-text-bottom"></span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </nav>
 
         <div id="navRail" class="th-nav-rail th-sidenav-trigger">
         </div>
+
+<script>
+class SidebarMenu
+{
+    constructor(objectMenu = {'count' : 0}){
+        this.object = objectMenu;
+        this.body     = document.querySelector('body');
+        this.itemBox = document.querySelector('#th_sidenav_items');
+        this.setItemBox = document.querySelector('#th_sidenav_settings');
+        this.reset();
+
+        this.fill(this.object);
+    }
+
+    fill(obj) {
+        if (obj.count == 0) {
+            return;
+        }
+        if (obj.items != null && Array.isArray(obj.items)) {
+            for (let i = 0; i < obj.items.length; i++) {
+                if (obj.items[i] != undefined && obj.items[i] != null) {
+                    let objectItem = obj.items[i];
+                    let listItem = this.makeItem(objectItem);
+                    this.itemBox.appendChild(listItem);
+                }
+            }
+        }
+        if (obj.setItems != null && Array.isArray(obj.setItems)) {
+            for (let i = 0; i < obj.setItems.length; i++) {
+                if (obj.setItems[i] != undefined && obj.setItems[i] != null) {
+                    let objectItem = obj.setItems[i];
+                    let listItem = this.makeItem(objectItem);
+                    this.setItemBox.appendChild(listItem);
+                }
+            }
+        }
+    }
+
+
+    reset()
+    {
+        // this.itemBox.innerHTML = '';
+        // this.setItemBox.innerHTML = '';
+        while (this.itemBox.firstChild) {
+            this.itemBox.removeChild(this.itemBox.firstChild);
+        }
+
+        while (this.setItemBox.firstChild) {
+            this.setItemBox.removeChild(this.setItemBox.firstChild);
+        }
+        if (this.object.count < 1){
+            this.body.classList.remove('th-sidenav-show');
+        } else {
+            this.body.classList.add('th-sidenav-show');
+        }
+    }
+
+    makeItem(itemObj) {
+    const listItem = document.createElement('li');
+    const link = document.createElement('a');
+    const iconArea = document.createElement('span');
+    const text = document.createElement('div');
+    const badge = document.createElement('span');
+
+    listItem.className = `th-com-s-nav-item ${itemObj.class || ''} ${itemObj.active ? 'th-active' : ''} ${itemObj.disabled ? 'th-disabled' : ''}`;
+    if (itemObj.id) listItem.id = itemObj.id;
+
+    link.className = 'nav-link active';
+    link.href = itemObj.ref || '#';
+
+    iconArea.className = 'th-sn-item-icon';
+    if (itemObj.ukicon) {
+        iconArea.innerHTML = `<span uk-icon="icon: ${itemObj.ukicon}"></span>`;
+    } else if (itemObj.icon) {
+        iconArea.textContent = itemObj.icon;
+    } else {
+        iconArea.textContent = itemObj.literals;
+    }
+
+    text.className = 'th-sn-item-text';
+    text.textContent = itemObj.name;
+
+    badge.setAttribute('data-feather', 'home');
+    badge.className = 'align-text-bottom';
+    badge.textContent = itemObj.badge || '';
+
+    // Append the elements to build the structure
+    link.appendChild(iconArea);
+    link.appendChild(text);
+    link.appendChild(badge);
+    listItem.appendChild(link);
+
+    return listItem;
+    }
+
+    addItem(item, area = 0, placetop = false) {
+        let objectItem = {
+            'icon': item.icon || '',
+            'ref': item.ref || '',
+            'ukicon': item.ukicon || '',
+            'name': item.name || '',
+            'literals': item.literals || '',
+            'active': item.active || '',
+            'disabled': item.disabled || '',
+            'badge': item.badge || '',
+            'class': item.class || '',
+            'id': item.id || '',
+            'params': item.params || ''
+        };
+
+        const listItem = this.makeItem(objectItem);
+
+        if (area === 0) {
+            if (placetop) {
+                this.itemBox.insertBefore(listItem, this.itemBox.firstChild);
+            } else {
+                this.itemBox.appendChild(listItem);
+            }
+        } else if (area === 1) {
+            if (placetop) {
+                this.setItemBox.insertBefore(listItem, this.setItemBox.firstChild);
+            } else {
+                this.setItemBox.appendChild(listItem);
+            }
+        }
+    }
+
+    removeItem(tofind, area = 0, removeByName = false) {
+        const targetList = area === 1 ? [this.setItemBox] : [this.itemBox, this.setItemBox];
+
+        for (const list of targetList) {
+            const items = list.getElementsByTagName('li');
+
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                const textElements = item.querySelectorAll('.th-sn-item-text');
+                let found = false;
+
+                for (const element of textElements) {
+                    if ((removeByName && element.textContent.trim() === tofind) ||
+                        (!removeByName && item.id === tofind)) {
+                        list.removeChild(item);
+                        found = true;
+                        break; // Exit the loop once we remove an item
+                    }
+                }
+
+                if (found) {
+                    return; // Exit the outer loop if we removed an item
+                }
+            }
+        }
+    }
+}
+
+
+
+
+const demoMenu = {
+    'items'    : [
+        {
+            'icon'     : '',
+            'ref'      : '',
+            'ukicon'   : '',
+            'name'     : 'First item',
+            'literals' : 'FI',
+            'active'   : '1',
+            'disabled' : '',
+            'badge'    : '25',
+            'class'    : '',
+            'id'       : '',
+            'params'   : ''
+        },
+        {
+            'icon'     : '',
+            'ref'      : '',
+            'ukicon'   : '',
+            'name'     : 'Second item',
+            'literals' : 'SI',
+            'active'   : 'false',
+            'disabled' : 'false',
+            'badge'    : '',
+            'class'    : '',
+            'id'       : '',
+            'params'   : ''
+        },
+        {
+            'icon'     : '',
+            'ref'      : '',
+            'ukicon'   : '',
+            'name'     : 'Third item',
+            'literals' : 'TI',
+            'active'   : 'false',
+            'disabled' : 'false',
+            'badge'    : '',
+            'class'    : '',
+            'id'       : '',
+            'params'   : ''
+        },
+    ],
+    'setItems' : [
+        {
+            'icon'     : '',
+            'ref'      : '',
+            'ukicon'   : 'cog',
+            'name'     : 'Settings',
+            'literals' : 'TI',
+            'active'   : 'false',
+            'disabled' : 'false',
+            'badge'    : '',
+            'class'    : '',
+            'id'       : '',
+            'params'   : ''
+        },
+    ],
+    'color'    : "",
+    'style'    : "",
+    'css'      : "",
+    'count'    : '4'
+};
+
+const nb = new SidebarMenu(demoMenu);
+</script>
 
         <main class="col-main ms-sm-auto p-0" id="mainWrapper">
             <!-- Your page content goes here -->
@@ -444,7 +689,8 @@ main {
                     <input class="uk-input" type="password" id="password" placeholder="Enter your password">
                 </div>
                 <div class="uk-margin uk-text-danger" id="wrong-credentials_error"></div>
-                <div class="uk-modal-footer uk-text-right uk-padding-remove-left uk-padding-remove-right uk-padding-remove-bottom">
+                <div
+                    class="uk-modal-footer uk-text-right uk-padding-remove-left uk-padding-remove-right uk-padding-remove-bottom">
                     <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
                     <button class="uk-button uk-button-primary" type="submit">Login</button>
                 </div>
@@ -452,17 +698,16 @@ main {
         </div>
     </div>
     <script>
+    class LoginHandler {
+        static calling = false;
+        constructor() {
+            LoginHandler.calling = false;
+            this.loginForm = document.getElementById('login-form');
+            this.loginForm.addEventListener('submit', this.login.bind(this));
+            this.loginMessage = document.getElementById('wrong-credentials_error');
+        }
 
-class LoginHandler {
-    static calling = false;
-  constructor() {
-    LoginHandler.calling = false;
-    this.loginForm = document.getElementById('login-form');
-    this.loginForm.addEventListener('submit', this.login.bind(this));
-    this.loginMessage = document.getElementById('wrong-credentials_error');
-  }
-
-  validateEmail(emailInput) {
+        validateEmail(emailInput) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(emailInput)) {
                 alert("Invalid email address.");
@@ -471,71 +716,74 @@ class LoginHandler {
             return true;
         }
 
-  async login(event) {
-    event.preventDefault();
-    if (LoginHandler.calling){
-        return;
-    }
-    LoginHandler.calling = true;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    
-    if (!this.validateEmail(email)){
-        this.loginMessage.innerHTML = "Email not valid!"
-        return;
-    };
-    if (email.length < 6){
-        this.loginMessage.innerHTML = "Email too short!"
-        return;
-    };
-    if (password.length < 1){
-        this.loginMessage.innerHTML = "Fill the password field!"
-        return;
-    };
-    if (password.length < 5){
-        this.loginMessage.innerHTML = "Password too short!"
-        return;
-    };
-    
-        try {
-        const response = await fetch('/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-        },
-        body: JSON.stringify({ email, password }),
-        });
+        async login(event) {
+            event.preventDefault();
+            if (LoginHandler.calling) {
+                return;
+            }
+            LoginHandler.calling = true;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-        if (!response.ok) {
-        // Handle error response from the server
-        const errorData = await response.json();
-        console.error('Login failed:', errorData.message);
-        this.loginMessage.innerHTML = errorData.message;
-        return; // Stop the execution of the function
+            if (!this.validateEmail(email)) {
+                this.loginMessage.innerHTML = "Email not valid!"
+                return;
+            };
+            if (email.length < 6) {
+                this.loginMessage.innerHTML = "Email too short!"
+                return;
+            };
+            if (password.length < 1) {
+                this.loginMessage.innerHTML = "Fill the password field!"
+                return;
+            };
+            if (password.length < 5) {
+                this.loginMessage.innerHTML = "Password too short!"
+                return;
+            };
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password
+                    }),
+                });
+
+                if (!response.ok) {
+                    // Handle error response from the server
+                    const errorData = await response.json();
+                    console.error('Login failed:', errorData.message);
+                    this.loginMessage.innerHTML = errorData.message;
+                    return; // Stop the execution of the function
+                }
+                this.loginMessage.innerHTML = "";
+                const data = await response.json();
+                // Login successful, do something (e.g., set token, redirect, etc.)
+                console.log('Login successful');
+                //console.log('User token:', data.token); // Assuming the server returns a token
+                document.querySelector('meta[name="csrf-token"]').content = data.token;
+                UIkit.modal('#login-modal').hide();
+                UIkit.modal.alert(data.message);
+            } catch (error) {
+                // Handle network-related errors or exceptions
+
+                console.error('Error:', error.message);
+                this.loginMessage.innerHTML = error.message;
+            }
+            setTimeout(() => {
+                LoginHandler.calling = false;
+            }, 5000);
         }
-        this.loginMessage.innerHTML = "";
-        const data = await response.json();
-        // Login successful, do something (e.g., set token, redirect, etc.)
-        console.log('Login successful');
-        //console.log('User token:', data.token); // Assuming the server returns a token
-        document.querySelector('meta[name="csrf-token"]').content = data.token;
-        UIkit.modal('#login-modal').hide();
-        UIkit.modal.alert(data.message);
-    } catch (error) {
-        // Handle network-related errors or exceptions
-
-        console.error('Error:', error.message);
-        this.loginMessage.innerHTML = error.message;
     }
-    setTimeout(() => {
-        LoginHandler.calling = false;
-        }, 5000);
-  }
-}
-// Create an instance of the LoginHandler class
-const loginHandler = new LoginHandler();
-</script>
+    // Create an instance of the LoginHandler class
+    const loginHandler = new LoginHandler();
+    </script>
 
 
     <!-- Register Modal -->
@@ -557,8 +805,8 @@ const loginHandler = new LoginHandler();
                     <div class="uk-inline uk-width-1-1">
                         <input class="uk-input" type="password" id="reg_password" placeholder="Enter your password"
                             required>
-                        <button class="uk-form-icon uk-form-icon-flip" id="password-toggle"
-                            type="button" uk-icon="icon: unlock"></button>
+                        <button class="uk-form-icon uk-form-icon-flip" id="password-toggle" type="button"
+                            uk-icon="icon: unlock"></button>
                     </div>
                 </div>
                 <div class="uk-margin">
@@ -574,329 +822,278 @@ const loginHandler = new LoginHandler();
         </div>
     </div>
 
-    
 
-<script>
-class RegisterHandler {
-    static calling = false;
-    constructor() {
-        this.registrationForm = document.getElementById("registration-form");
-        this.passwordInput = document.getElementById("reg_password");
-        this.confirmPasswordInput = document.getElementById("reg_confirm-password");
-        this.passwordMatchError = document.getElementById("password-match-error");
-        RegisterHandler.calling = false;
-        this.registrationForm.addEventListener("submit", this.onSubmit.bind(this));
-    }
 
-    onSubmit(event) {
-        event.preventDefault();
-        if (!this.validateEmail()) {
-            return;
-        }
-
-        if (!this.checkPasswordMatch()) {
-            this.passwordMatchError.textContent = "Passwords do not match.";
-            return;
-        } else {
-            this.passwordMatchError.textContent = "";
-        }
-
-        // If all validations pass, submit the form to the server
-        if (!RegisterHandler.calling){
-            RegisterHandler.calling = true;
-            this.registerUser();
-        }
-    }
-
-    validateEmail() {
-        const emailInput = document.getElementById("reg_email");
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(emailInput.value)) {
-            alert("Invalid email address.");
-            return false;
-        }
-        return true;
-    }
-
-    checkPasswordMatch() {
-        if (this.passwordInput.value !== this.confirmPasswordInput.value) {
-            return false;
-        }
-        return true;
-    }
-
-    async registerUser() {
-        const email = document.getElementById("reg_email").value;
-        const password = document.getElementById("reg_password").value;
-        const name = document.getElementById('name').value;
-        if (name.length < 6){
-            this.loginMessage.innerHTML = "Name is too short!";
-            return;
-        };
-        if (!this.validateName(name)){
-            this.loginMessage.innerHTML = "Name is not valid!";
-            return;
-        }
-
-        try {
-            const response = await fetch('/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                },
-                body: JSON.stringify({ name, email, password }),
-            });
-
-            if (!response.ok) {
-                // Handle the server response for unsuccessful registration
-                const responseData = await response.json();
-                if (responseData.message == undefined){
-                    console.log(response);
-                }
-                alert('Registration failed: ' + responseData.message);
-            } else {
-                // Registration successful, refresh the page
-                const responseData = await response.json();
-                if (responseData.message == undefined){
-                    console.log(response);
-                }
-                console.log('Registration message: ' + responseData.message);
-                if (responseData.code == 0){
-                    UIkit.modal('#register-modal').hide();
-                    UIkit.modal.alert(responseData.message);
-                }
-                //location.reload();
-            }
-        } catch (error) {
-            // Handle network-related errors or exceptions
-            console.error('Error:', error.message);
-        }
-        setTimeout(() => {
+    <script>
+    class RegisterHandler {
+        static calling = false;
+        constructor() {
+            this.registrationForm = document.getElementById("registration-form");
+            this.passwordInput = document.getElementById("reg_password");
+            this.confirmPasswordInput = document.getElementById("reg_confirm-password");
+            this.passwordMatchError = document.getElementById("password-match-error");
             RegisterHandler.calling = false;
-        }, 5000);
-    }
-
-    validateName() {
-        const nameInput = document.getElementById("name");
-        const nameRegex = /^[A-Za-z0-9]+(?:_[A-Za-z0-9]+)*(?: [A-Za-z0-9]+)?$/;
-        
-        if (!nameRegex.test(nameInput.value)) {
-            alert("The name may only contain alphanumeric characters and a maximum of one underscore.");
-            return false;
+            this.registrationForm.addEventListener("submit", this.onSubmit.bind(this));
         }
-        return true;
+
+        onSubmit(event) {
+            event.preventDefault();
+            if (!this.validateEmail()) {
+                return;
+            }
+
+            if (!this.checkPasswordMatch()) {
+                this.passwordMatchError.textContent = "Passwords do not match.";
+                return;
+            } else {
+                this.passwordMatchError.textContent = "";
+            }
+
+            // If all validations pass, submit the form to the server
+            if (!RegisterHandler.calling) {
+                RegisterHandler.calling = true;
+                this.registerUser();
+            }
+        }
+
+        validateEmail() {
+            const emailInput = document.getElementById("reg_email");
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput.value)) {
+                alert("Invalid email address.");
+                return false;
+            }
+            return true;
+        }
+
+        checkPasswordMatch() {
+            if (this.passwordInput.value !== this.confirmPasswordInput.value) {
+                return false;
+            }
+            return true;
+        }
+
+        async registerUser() {
+            const email = document.getElementById("reg_email").value;
+            const password = document.getElementById("reg_password").value;
+            const name = document.getElementById('name').value;
+            if (name.length < 6) {
+                this.loginMessage.innerHTML = "Name is too short!";
+                return;
+            };
+            if (!this.validateName(name)) {
+                this.loginMessage.innerHTML = "Name is not valid!";
+                return;
+            }
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        password
+                    }),
+                });
+
+                if (!response.ok) {
+                    // Handle the server response for unsuccessful registration
+                    const responseData = await response.json();
+                    if (responseData.message == undefined) {
+                        console.log(response);
+                    }
+                    alert('Registration failed: ' + responseData.message);
+                } else {
+                    // Registration successful, refresh the page
+                    const responseData = await response.json();
+                    if (responseData.message == undefined) {
+                        console.log(response);
+                    }
+                    console.log('Registration message: ' + responseData.message);
+                    if (responseData.code == 0) {
+                        UIkit.modal('#register-modal').hide();
+                        UIkit.modal.alert(responseData.message);
+                    }
+                    //location.reload();
+                }
+            } catch (error) {
+                // Handle network-related errors or exceptions
+                console.error('Error:', error.message);
+            }
+            setTimeout(() => {
+                RegisterHandler.calling = false;
+            }, 5000);
+        }
+
+        validateName() {
+            const nameInput = document.getElementById("name");
+            const nameRegex = /^[A-Za-z0-9]+(?:_[A-Za-z0-9]+)*(?: [A-Za-z0-9]+)?$/;
+
+            if (!nameRegex.test(nameInput.value)) {
+                alert("The name may only contain alphanumeric characters and a maximum of one underscore.");
+                return false;
+            }
+            return true;
+        }
     }
-}
 
-document.addEventListener("DOMContentLoaded", function () {
-    const registerHandler = new RegisterHandler();
+    document.addEventListener("DOMContentLoaded", function() {
+        const registerHandler = new RegisterHandler();
 
-    // Password visibility toggle
-    const passwordToggle = document.getElementById("password-toggle");
-    passwordToggle.addEventListener("click", function () {
-        registerHandler.togglePasswordVisibility();
+        // Password visibility toggle
+        const passwordToggle = document.getElementById("password-toggle");
+        passwordToggle.addEventListener("click", function() {
+            registerHandler.togglePasswordVisibility();
+        });
     });
-});
 
-RegisterHandler.prototype.togglePasswordVisibility = function () {
-    const passwordIcon = document.querySelector("#reg_password ~ .uk-form-icon");
+    RegisterHandler.prototype.togglePasswordVisibility = function() {
+        const passwordIcon = document.querySelector("#reg_password ~ .uk-form-icon");
 
-    if (this.passwordInput.type === "password") {
-        this.passwordInput.type = "text";
-        this.confirmPasswordInput.type = "text";
-        passwordIcon.setAttribute("uk-icon", "icon: lock-open");
-    } else {
-        this.passwordInput.type = "password";
-        this.confirmPasswordInput.type = "password";
-        passwordIcon.setAttribute("uk-icon", "icon: unlock");
-    }
-};
+        if (this.passwordInput.type === "password") {
+            this.passwordInput.type = "text";
+            this.confirmPasswordInput.type = "text";
+            passwordIcon.setAttribute("uk-icon", "icon: lock-open");
+        } else {
+            this.passwordInput.type = "password";
+            this.confirmPasswordInput.type = "password";
+            passwordIcon.setAttribute("uk-icon", "icon: unlock");
+        }
+    };
 
-const regHandler = new RegisterHandler();
-</script>
+    const regHandler = new RegisterHandler();
+    </script>
 
-@endguest
+    @endguest
 
-@auth
+    @auth
 
-<script>
+    <script>
     class LogoutHandler {
         constructor() {
-        this.logout = document.getElementById("logout");
-        this.logout.addEventListener("click", this.exit);
-    }
+            this.logout = document.getElementById("logout");
+            this.logout.addEventListener("click", this.exit);
+        }
 
-    async exit(){
-        try {
-            const response = await fetch('/logout', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                },
-            });
+        async exit() {
+            try {
+                const response = await fetch('/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                });
 
-            if (!response.ok) {
-                // Handle the server response for unsuccessful registration
-                const responseData = await response.json();
-                if (responseData.message == undefined){
-                    console.log(response);
-                    UIkit.modal.alert(responseData.message);
-                }
+                if (!response.ok) {
+                    // Handle the server response for unsuccessful registration
+                    const responseData = await response.json();
+                    if (responseData.message == undefined) {
+                        console.log(response);
+                        UIkit.modal.alert(responseData.message);
+                    }
 
-            } else {
-                // Registration successful, refresh the page
-                const responseData = await response.json();
-                if (responseData.message == undefined){
-                    console.log(response);
+                } else {
+                    // Registration successful, refresh the page
+                    const responseData = await response.json();
+                    if (responseData.message == undefined) {
+                        console.log(response);
+                    }
+                    if (responseData.code == 0) {
+                        UIkit.modal.alert(responseData.message);
+                    }
+                    setTimeout(() => {
+                        location.reload();
+                    }, 5000);
                 }
-                if (responseData.code == 0){
-                    UIkit.modal.alert(responseData.message);
-                }
-                setTimeout(() => {
-                    location.reload();
-                }, 5000);
+            } catch (error) {
+                // Handle network-related errors or exceptions
+                console.error('Error:', error.message);
             }
-        } catch (error) {
-            // Handle network-related errors or exceptions
-            console.error('Error:', error.message);
         }
     }
-}
-const loghan = new LogoutHandler();
-</script>
-@endauth
+    const loghan = new LogoutHandler();
+    </script>
+    @endauth
     <!-- Add your JavaScript files here -->
     <script src="{{ asset('resources/js/uikit.js') }}"></script>
     <script src="{{ asset('resources/js/uikit-icons.js') }}"></script>
+    @yield('page-scripts')
+
     <!-- Add more JavaScript files if needed -->
 
     <script>
-    // document.addEventListener("DOMContentLoaded", function() {
-    //     const registrationForm = document.getElementById("registration-form");
-    //     const passwordInput = document.getElementById("reg_password");
-    //     const confirmPasswordInput = document.getElementById("reg_confirm-password");
-    //     const passwordMatchError = document.getElementById("password-match-error");
-
-    //     registrationForm.addEventListener("submit", function(event) {
-    //         event.preventDefault();
-    //         if (!validateEmail()) {
-    //             return;
-    //         }
-
-    //         if (!checkPasswordMatch()) {
-    //             passwordMatchError.textContent = "Passwords do not match.";
-    //             return;
-    //         } else {
-    //             passwordMatchError.textContent = "";
-    //         }
-
-    //         // If all validations pass, submit the form to the server
-    //         registrationForm.submit();
-    //     });
-
-    //     function validateEmail() {
-    //         const emailInput = document.getElementById("reg_email");
-    //         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    //         if (!emailRegex.test(emailInput.value)) {
-    //             alert("Invalid email address.");
-    //             return false;
-    //         }
-    //         return true;
-    //     }
-
-    //     function checkPasswordMatch() {
-    //         if (passwordInput.value !== confirmPasswordInput.value) {
-    //             return false;
-    //         }
-    //         return true;
-    //     }
-    // });
-
-    // function togglePasswordVisibility() {
-    //     const passwordInput = document.getElementById("reg_password");
-    //     const passwordInput2 = document.getElementById("reg_confirm-password");
-    //     const passwordIcon = document.querySelector("#reg_password ~ .uk-form-icon");
-
-    //     if (passwordInput.type === "password") {
-    //         passwordInput.type = "text";
-    //         passwordInput2.type = "text";
-    //         passwordIcon.setAttribute("uk-icon", "icon: lock-open");
-
-    //     } else {
-    //         passwordInput.type = "password";
-    //         passwordInput2.type = "password";
-    //         passwordIcon.setAttribute("uk-icon", "icon: unlock");
-    //     }
-    // }
-
-
     class SearchBar {
-        constructor(){
-            this.cst       = document.querySelector("#th_topSearchTrigger");
+        constructor() {
+            this.cst = document.querySelector("#th_topSearchTrigger");
             this.searchbar = document.querySelector(".th-central-search");
-            this.menubar   = document.querySelector(".th-central-menu");
+            this.menubar = document.querySelector(".th-central-menu");
             this.closearch = document.querySelector("#th_searchClose");
 
-            
+
             this.cst.addEventListener('click', (e) => {
                 e.preventDefault;
-                this.trigSearchBar();         
+                this.trigSearchBar();
             });
             this.closearch.addEventListener('click', (e) => {
                 e.preventDefault;
-                this.trigSearchBar();         
+                this.trigSearchBar();
             });
         }
 
-        trigSearchBar(){
-            if (this.searchbar.classList.contains('uk-hidden')){
+        trigSearchBar() {
+            if (this.searchbar.classList.contains('uk-hidden')) {
                 this.searchbar.classList.remove('uk-hidden');
                 this.menubar.classList.add('uk-hidden');
                 this.cst.classList.add('uk-hidden');
-                    
-                } else {
-                    this.searchbar.classList.add('uk-hidden');
-                    this.menubar.classList.remove('uk-hidden');
-                    this.cst.classList.remove('uk-hidden');
-                }
+
+            } else {
+                this.searchbar.classList.add('uk-hidden');
+                this.menubar.classList.remove('uk-hidden');
+                this.cst.classList.remove('uk-hidden');
+            }
         }
     }
 
 
     class SideNav {
-        constructor(){
-            this.body      = document.querySelector("body");
-            this.triggers  = document.querySelectorAll(".th-sidenav-trigger");
+        constructor() {
+            this.body = document.querySelector("body");
+            this.triggers = document.querySelectorAll(".th-sidenav-trigger");
 
-            this.triggers.forEach((el)=> {
+            this.triggers.forEach((el) => {
                 el.addEventListener('click', (e) => {
-                e.preventDefault;
-               this.body.classList.toggle('th-sidebar-opened');       
-            });
+                    e.preventDefault;
+                    this.body.classList.toggle('th-sidebar-opened');
+                });
             });
 
 
         }
 
-        trigSearchBar(){
-            if (this.searchbar.classList.contains('uk-hidden')){
+        trigSearchBar() {
+            if (this.searchbar.classList.contains('uk-hidden')) {
                 this.searchbar.classList.remove('uk-hidden');
                 this.menubar.classList.add('uk-hidden');
                 this.cst.classList.add('uk-hidden');
-                    
-                } else {
-                    this.searchbar.classList.add('uk-hidden');
-                    this.menubar.classList.remove('uk-hidden');
-                    this.cst.classList.remove('uk-hidden');
-                }
+
+            } else {
+                this.searchbar.classList.add('uk-hidden');
+                this.menubar.classList.remove('uk-hidden');
+                this.cst.classList.remove('uk-hidden');
+            }
         }
     }
 
     $sb = new SearchBar();
     $sn = new SideNav();
     </script>
+
+@yield('page-script')
 </body>
 
 </html>

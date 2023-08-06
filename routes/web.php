@@ -25,10 +25,18 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/eventor', function () {
-    return view('public.apps.eventor.index');
-})->name('eventor');
+
 
 Route::get('/budget', function () {
     return view('public.apps.budget.index');
 })->name('budget');
+
+
+
+Route::prefix('eventor')->group(function () {
+    Route::get('/', function () {
+        return view('public.apps.eventor.index');
+    })->name('eventor');
+  
+    Route::post('/postcall', [EventorHttpController::class, 'postcall']);
+  });

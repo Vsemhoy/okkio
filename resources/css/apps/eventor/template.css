@@ -1,0 +1,51 @@
+.uk-card {
+    border: 0px solid gray;
+  }
+  
+  .start-collapse {
+    align-items: flex-start;
+  
+  }
+  .section-padding {
+      padding: 12px;
+  }
+  
+  .left-corrector {
+    padding: 0px;
+  }
+  
+  .starred > div {
+    background: #ffffe3;
+  }
+  
+  .event-card {
+    border-left: 6px solid salmon;
+  }
+  .flex-space {
+        display: flex;
+      justify-content: space-between;
+  }
+  .event-section {
+    transition: all ease 0.3s;
+    border-top: 1px solid #80808014;
+  }
+  .event-section:hover {
+    background-color: #ebebea;
+  }
+  
+  .uk-card-body > p:first-child, .uk-card-body > div:first-child {
+    margin-top: 0px;
+  }
+  .event-card > div {
+    padding: 5px 20px !important;
+  }
+  .eventor-today {
+    background: #c1c1c1;
+  }
+  .eventor-hiddenrow {
+    /* display: none; */
+  }
+
+  .evt-navigation  .uk-button  {
+    padding: 0 12px;
+  }
