@@ -9,12 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->char('id',8)->primary();
             $table->string('name');
             $table->string('email')->unique();
+            $table->json('services')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
@@ -30,3 +31,5 @@ return new class extends Migration
         Schema::dropIfExists('users');
     }
 };
+
+

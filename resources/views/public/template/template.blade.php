@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A new Super Laravel App</title>
 
@@ -97,20 +98,18 @@ main {
         width: 60px !important;
     }
 
-    .th-col-sidenav {
-        background-color: rgba(0, 122, 193, 0.82);
-        box-shadow: rgb(0 54 108 / 70%) 0px 0px 200px inset !important;
-    }
+
 
     .th-col-sidenav {
         overflow: auto;
         float: left;
-        background-color: rgba(0, 122, 193, 0.82);
+        /* background-color: rgba(0, 122, 193, 0.82); */
+        background-color: rgb(20 20 20 / 82%);
         position: fixed;
         z-index: 1;
         transition: all ease 0.3s;
         overflow: hidden;
-        box-shadow: rgba(0, 54, 108, 0.7) 0px 0px 200px inset;
+        /* box-shadow: rgba(0, 54, 108, 0.7) 0px 0px 200px inset; */
         height: 100vh;
         width: 46px;
         top: 0px;
@@ -165,7 +164,11 @@ main {
         border-right: 1px solid transparent;
         border-left: 1px solid transparent;
         padding: 1px;
-    text-align: center;
+        text-align: center;
+        color: gray;
+    }
+    .th-sidenav-trigger-back:hover {
+        color: white;
     }
 
 
@@ -286,7 +289,12 @@ main {
         </div>
         <div class='th-central-menu'>
             <div class='th-navbar-item'>
-                First hfghfd dasfj asdjkfhjkashdjfk sajdhfjashdjkfs
+                <!-- here will be main nav items -->
+                <!-- Check if the user is authenticated -->
+@auth
+    <!-- Display the username -->
+    Welcome, {{ Auth::user()->name }}
+@endauth
             </div>
         </div>
         <div class='th-central-search uk-hidden'>
@@ -311,12 +319,16 @@ main {
                 <a class=""  href="#">
                     <span uk-icon="user"></span>
                 </a>
-                <div class="uk-navbar-dropdown">
+                <div class="uk-navbar-dropdown" uk-dropdown="mode: click">
                     <ul class="uk-nav uk-navbar-dropdown-nav">
+                    @guest
+                    <li><a href="#" uk-toggle="target: #login-modal">Login</a></li>
                         <li class="uk-active" uk-toggle="target: #register-modal"><a href="#">Registration</a></li>
-                        <li><a href="#" uk-toggle="target: #login-modal">Login</a></li>
-                        <li><a href="#">Logout</a></li>
+                    @endguest
+                    @auth
+                        <li><a id='logout' href="#">Logout</a></li>
                         <li><a href="#">Account settings</a></li>
+                    @endauth
                         <li><a href="#">Terms of service</a></li>
                     </ul>
                 </div>
@@ -416,13 +428,13 @@ main {
 
     </div>
 
-
+    @guest
     <!-- Login Modal -->
     <div id="login-modal" uk-modal>
         <div class="uk-modal-dialog uk-modal-body">
             <h2 class="uk-modal-title">Login</h2>
             <!-- Add your login form content here -->
-            <form>
+            <form id='login-form'>
                 <div class="uk-margin">
                     <label class="uk-form-label" for="email">Email:</label>
                     <input class="uk-input" type="email" id="email" placeholder="Enter your email">
@@ -431,15 +443,102 @@ main {
                     <label class="uk-form-label" for="password">Password:</label>
                     <input class="uk-input" type="password" id="password" placeholder="Enter your password">
                 </div>
-                <div class="uk-modal-footer uk-text-right">
+                <div class="uk-margin uk-text-danger" id="wrong-credentials_error"></div>
+                <div class="uk-modal-footer uk-text-right uk-padding-remove-left uk-padding-remove-right uk-padding-remove-bottom">
                     <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
                     <button class="uk-button uk-button-primary" type="submit">Login</button>
                 </div>
             </form>
         </div>
     </div>
+    <script>
 
-    <!-- Login Modal -->
+class LoginHandler {
+    static calling = false;
+  constructor() {
+    LoginHandler.calling = false;
+    this.loginForm = document.getElementById('login-form');
+    this.loginForm.addEventListener('submit', this.login.bind(this));
+    this.loginMessage = document.getElementById('wrong-credentials_error');
+  }
+
+  validateEmail(emailInput) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput)) {
+                alert("Invalid email address.");
+                return false;
+            }
+            return true;
+        }
+
+  async login(event) {
+    event.preventDefault();
+    if (LoginHandler.calling){
+        return;
+    }
+    LoginHandler.calling = true;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    
+    if (!this.validateEmail(email)){
+        this.loginMessage.innerHTML = "Email not valid!"
+        return;
+    };
+    if (email.length < 6){
+        this.loginMessage.innerHTML = "Email too short!"
+        return;
+    };
+    if (password.length < 1){
+        this.loginMessage.innerHTML = "Fill the password field!"
+        return;
+    };
+    if (password.length < 5){
+        this.loginMessage.innerHTML = "Password too short!"
+        return;
+    };
+    
+        try {
+        const response = await fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+        },
+        body: JSON.stringify({ email, password }),
+        });
+
+        if (!response.ok) {
+        // Handle error response from the server
+        const errorData = await response.json();
+        console.error('Login failed:', errorData.message);
+        this.loginMessage.innerHTML = errorData.message;
+        return; // Stop the execution of the function
+        }
+        this.loginMessage.innerHTML = "";
+        const data = await response.json();
+        // Login successful, do something (e.g., set token, redirect, etc.)
+        console.log('Login successful');
+        //console.log('User token:', data.token); // Assuming the server returns a token
+        document.querySelector('meta[name="csrf-token"]').content = data.token;
+        UIkit.modal('#login-modal').hide();
+        UIkit.modal.alert(data.message);
+    } catch (error) {
+        // Handle network-related errors or exceptions
+
+        console.error('Error:', error.message);
+        this.loginMessage.innerHTML = error.message;
+    }
+    setTimeout(() => {
+        LoginHandler.calling = false;
+        }, 5000);
+  }
+}
+// Create an instance of the LoginHandler class
+const loginHandler = new LoginHandler();
+</script>
+
+
+    <!-- Register Modal -->
     <div id="register-modal" uk-modal>
         <div class="uk-modal-dialog uk-modal-body">
             <h2 class="uk-modal-title">Registration</h2>
@@ -450,11 +549,15 @@ main {
                     <input class="uk-input" type="email" id="reg_email" placeholder="Enter your email" required>
                 </div>
                 <div class="uk-margin">
+                    <label class="uk-form-label" for="name">Name:</label>
+                    <input class="uk-input" type="text" id="name" placeholder="Enter your UserName">
+                </div>
+                <div class="uk-margin">
                     <label class="uk-form-label" for="reg_password">Password:</label>
                     <div class="uk-inline uk-width-1-1">
                         <input class="uk-input" type="password" id="reg_password" placeholder="Enter your password"
                             required>
-                        <button class="uk-form-icon uk-form-icon-flip" onclick="togglePasswordVisibility()"
+                        <button class="uk-form-icon uk-form-icon-flip" id="password-toggle"
                             type="button" uk-icon="icon: unlock"></button>
                     </div>
                 </div>
@@ -471,69 +574,262 @@ main {
         </div>
     </div>
 
+    
+
+<script>
+class RegisterHandler {
+    static calling = false;
+    constructor() {
+        this.registrationForm = document.getElementById("registration-form");
+        this.passwordInput = document.getElementById("reg_password");
+        this.confirmPasswordInput = document.getElementById("reg_confirm-password");
+        this.passwordMatchError = document.getElementById("password-match-error");
+        RegisterHandler.calling = false;
+        this.registrationForm.addEventListener("submit", this.onSubmit.bind(this));
+    }
+
+    onSubmit(event) {
+        event.preventDefault();
+        if (!this.validateEmail()) {
+            return;
+        }
+
+        if (!this.checkPasswordMatch()) {
+            this.passwordMatchError.textContent = "Passwords do not match.";
+            return;
+        } else {
+            this.passwordMatchError.textContent = "";
+        }
+
+        // If all validations pass, submit the form to the server
+        if (!RegisterHandler.calling){
+            RegisterHandler.calling = true;
+            this.registerUser();
+        }
+    }
+
+    validateEmail() {
+        const emailInput = document.getElementById("reg_email");
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailInput.value)) {
+            alert("Invalid email address.");
+            return false;
+        }
+        return true;
+    }
+
+    checkPasswordMatch() {
+        if (this.passwordInput.value !== this.confirmPasswordInput.value) {
+            return false;
+        }
+        return true;
+    }
+
+    async registerUser() {
+        const email = document.getElementById("reg_email").value;
+        const password = document.getElementById("reg_password").value;
+        const name = document.getElementById('name').value;
+        if (name.length < 6){
+            this.loginMessage.innerHTML = "Name is too short!";
+            return;
+        };
+        if (!this.validateName(name)){
+            this.loginMessage.innerHTML = "Name is not valid!";
+            return;
+        }
+
+        try {
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+                body: JSON.stringify({ name, email, password }),
+            });
+
+            if (!response.ok) {
+                // Handle the server response for unsuccessful registration
+                const responseData = await response.json();
+                if (responseData.message == undefined){
+                    console.log(response);
+                }
+                alert('Registration failed: ' + responseData.message);
+            } else {
+                // Registration successful, refresh the page
+                const responseData = await response.json();
+                if (responseData.message == undefined){
+                    console.log(response);
+                }
+                console.log('Registration message: ' + responseData.message);
+                if (responseData.code == 0){
+                    UIkit.modal('#register-modal').hide();
+                    UIkit.modal.alert(responseData.message);
+                }
+                //location.reload();
+            }
+        } catch (error) {
+            // Handle network-related errors or exceptions
+            console.error('Error:', error.message);
+        }
+        setTimeout(() => {
+            RegisterHandler.calling = false;
+        }, 5000);
+    }
+
+    validateName() {
+        const nameInput = document.getElementById("name");
+        const nameRegex = /^[A-Za-z0-9]+(?:_[A-Za-z0-9]+)*(?: [A-Za-z0-9]+)?$/;
+        
+        if (!nameRegex.test(nameInput.value)) {
+            alert("The name may only contain alphanumeric characters and a maximum of one underscore.");
+            return false;
+        }
+        return true;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const registerHandler = new RegisterHandler();
+
+    // Password visibility toggle
+    const passwordToggle = document.getElementById("password-toggle");
+    passwordToggle.addEventListener("click", function () {
+        registerHandler.togglePasswordVisibility();
+    });
+});
+
+RegisterHandler.prototype.togglePasswordVisibility = function () {
+    const passwordIcon = document.querySelector("#reg_password ~ .uk-form-icon");
+
+    if (this.passwordInput.type === "password") {
+        this.passwordInput.type = "text";
+        this.confirmPasswordInput.type = "text";
+        passwordIcon.setAttribute("uk-icon", "icon: lock-open");
+    } else {
+        this.passwordInput.type = "password";
+        this.confirmPasswordInput.type = "password";
+        passwordIcon.setAttribute("uk-icon", "icon: unlock");
+    }
+};
+
+const regHandler = new RegisterHandler();
+</script>
+
+@endguest
+
+@auth
+
+<script>
+    class LogoutHandler {
+        constructor() {
+        this.logout = document.getElementById("logout");
+        this.logout.addEventListener("click", this.exit);
+    }
+
+    async exit(){
+        try {
+            const response = await fetch('/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+            });
+
+            if (!response.ok) {
+                // Handle the server response for unsuccessful registration
+                const responseData = await response.json();
+                if (responseData.message == undefined){
+                    console.log(response);
+                    UIkit.modal.alert(responseData.message);
+                }
+
+            } else {
+                // Registration successful, refresh the page
+                const responseData = await response.json();
+                if (responseData.message == undefined){
+                    console.log(response);
+                }
+                if (responseData.code == 0){
+                    UIkit.modal.alert(responseData.message);
+                }
+                setTimeout(() => {
+                    location.reload();
+                }, 5000);
+            }
+        } catch (error) {
+            // Handle network-related errors or exceptions
+            console.error('Error:', error.message);
+        }
+    }
+}
+const loghan = new LogoutHandler();
+</script>
+@endauth
     <!-- Add your JavaScript files here -->
     <script src="{{ asset('resources/js/uikit.js') }}"></script>
     <script src="{{ asset('resources/js/uikit-icons.js') }}"></script>
     <!-- Add more JavaScript files if needed -->
 
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const registrationForm = document.getElementById("registration-form");
-        const passwordInput = document.getElementById("reg_password");
-        const confirmPasswordInput = document.getElementById("reg_confirm-password");
-        const passwordMatchError = document.getElementById("password-match-error");
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     const registrationForm = document.getElementById("registration-form");
+    //     const passwordInput = document.getElementById("reg_password");
+    //     const confirmPasswordInput = document.getElementById("reg_confirm-password");
+    //     const passwordMatchError = document.getElementById("password-match-error");
 
-        registrationForm.addEventListener("submit", function(event) {
-            event.preventDefault();
-            if (!validateEmail()) {
-                return;
-            }
+    //     registrationForm.addEventListener("submit", function(event) {
+    //         event.preventDefault();
+    //         if (!validateEmail()) {
+    //             return;
+    //         }
 
-            if (!checkPasswordMatch()) {
-                passwordMatchError.textContent = "Passwords do not match.";
-                return;
-            } else {
-                passwordMatchError.textContent = "";
-            }
+    //         if (!checkPasswordMatch()) {
+    //             passwordMatchError.textContent = "Passwords do not match.";
+    //             return;
+    //         } else {
+    //             passwordMatchError.textContent = "";
+    //         }
 
-            // If all validations pass, submit the form to the server
-            registrationForm.submit();
-        });
+    //         // If all validations pass, submit the form to the server
+    //         registrationForm.submit();
+    //     });
 
-        function validateEmail() {
-            const emailInput = document.getElementById("reg_email");
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(emailInput.value)) {
-                alert("Invalid email address.");
-                return false;
-            }
-            return true;
-        }
+    //     function validateEmail() {
+    //         const emailInput = document.getElementById("reg_email");
+    //         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    //         if (!emailRegex.test(emailInput.value)) {
+    //             alert("Invalid email address.");
+    //             return false;
+    //         }
+    //         return true;
+    //     }
 
-        function checkPasswordMatch() {
-            if (passwordInput.value !== confirmPasswordInput.value) {
-                return false;
-            }
-            return true;
-        }
-    });
+    //     function checkPasswordMatch() {
+    //         if (passwordInput.value !== confirmPasswordInput.value) {
+    //             return false;
+    //         }
+    //         return true;
+    //     }
+    // });
 
-    function togglePasswordVisibility() {
-        const passwordInput = document.getElementById("reg_password");
-        const passwordInput2 = document.getElementById("reg_confirm-password");
-        const passwordIcon = document.querySelector("#reg_password ~ .uk-form-icon");
+    // function togglePasswordVisibility() {
+    //     const passwordInput = document.getElementById("reg_password");
+    //     const passwordInput2 = document.getElementById("reg_confirm-password");
+    //     const passwordIcon = document.querySelector("#reg_password ~ .uk-form-icon");
 
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            passwordInput2.type = "text";
-            passwordIcon.setAttribute("uk-icon", "icon: lock-open");
+    //     if (passwordInput.type === "password") {
+    //         passwordInput.type = "text";
+    //         passwordInput2.type = "text";
+    //         passwordIcon.setAttribute("uk-icon", "icon: lock-open");
 
-        } else {
-            passwordInput.type = "password";
-            passwordInput2.type = "password";
-            passwordIcon.setAttribute("uk-icon", "icon: unlock");
-        }
-    }
+    //     } else {
+    //         passwordInput.type = "password";
+    //         passwordInput2.type = "password";
+    //         passwordIcon.setAttribute("uk-icon", "icon: unlock");
+    //     }
+    // }
 
 
     class SearchBar {

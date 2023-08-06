@@ -17,3 +17,16 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// routes/api.php
+
+Route::middleware('auth.api')->group(function () {
+    // Define your authenticated routes here
+
+    // get user by $request->user()
+
+    Route::get('test', function () {
+        return "TEST OK";
+    });
+    
+});

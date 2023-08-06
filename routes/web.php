@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,6 +13,13 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::post('/login', [RegisterController::class, 'post_login']);
+Route::post('/register', [RegisterController::class, 'post_registration']);
+Route::post('/logout', [RegisterController::class, 'post_logout']);
+
+
+Route::get('/logins', [RegisterController::class, 'post_login']);
+
 
 Route::get('/', function () {
     return view('index');
