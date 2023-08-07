@@ -15,6 +15,13 @@ class EventModal {
     this.fields.push(this.field_category());
     this.fields.push(this.field_importance());
     this.fields.push(this.field_setdate());
+    this.fields.push(this.field_access());
+    this.fields.push(this.field_status());
+    this.fields.push(this.field_starred());
+    this.fields.push(this.field_pinned());
+    this.fields.push(this.field_locked());
+    this.fields.push(this.field_format());
+
     this.modalBody = this.modalEventEditor(this.fields);
   }
 
@@ -193,4 +200,127 @@ class EventModal {
     return divElement;
   }
 
+  field_access(id = 'evt_access', name = 'access', content = '')
+  {
+    const divElement = document.createElement('div');
+    divElement.classList.add('uk-margin');
+    divElement.innerHTML = `
+    <label class="uk-form-label" for="${id}">Access type:</label>
+    <div class="uk-form-controls">
+        <select class="uk-select" id="${id}" name="${name}">
+            <option value="1">Private</option>
+            <option value="2">Restricted</option>
+            <option value="3">Public</option>
+            <!-- Add more access options here -->
+        </select>
+    </div>
+    `;
+    return divElement;
+  }
+
+  field_status(id = 'evt_status', name = 'status', content = '')
+  {
+    const divElement = document.createElement('div');
+    divElement.classList.add('uk-margin');
+    divElement.innerHTML = `
+    <label class="uk-form-label" for="${id}">Status:</label>
+        <div class="uk-form-controls">
+        <select class="uk-select" id="${id}" name="${name}">
+            <option value="0">Inactive</option>
+            <option selected value="1">Active</option>
+            <option value="2">Archived</option>
+            <!-- Add more status options here -->
+        </select>
+    </div>
+    `;
+    return divElement;
+  }
+
+  field_starred(id = 'evt_starred', name = 'starred', content = '1')
+  {
+    const divElement = document.createElement('div');
+    divElement.classList.add('uk-margin');
+    divElement.innerHTML = `
+    <div class="uk-form-controls">
+      <label><input class="uk-checkbox" type="checkbox" name="${name}" value="${content}"
+            id="${id}"> Starred</label>
+    </div>
+    `;
+    return divElement;
+  }
+
+  field_pinned(id = 'evt_pinned', name = 'pinned',  content = '1')
+  {
+    const divElement = document.createElement('div');
+    divElement.classList.add('uk-margin');
+    divElement.innerHTML = `
+    <div class="uk-form-controls">
+    <label><input class="uk-checkbox" type="checkbox" name="${name}" value="${content}"
+            id="${id}"> Pinned</label>
+    </div>
+    `;
+    return divElement;
+  }
+
+  field_locked(id = 'evt_locked', name = 'locked',  content = '1')
+  {
+    const divElement = document.createElement('div');
+    divElement.classList.add('uk-margin');
+    divElement.innerHTML = `
+    <div class="uk-form-controls">
+    <label><input class="uk-checkbox" type="checkbox" name="${name}" value="${content}"
+            id="${id}"> Locked</label>
+    </div>
+    `;
+    return divElement;
+  }
+
+  field_format(id = 'evt_format', name = 'format',  content = '')
+  {
+    const divElement = document.createElement('div');
+    divElement.classList.add('uk-margin');
+    divElement.innerHTML = `
+    <label class="uk-form-label" for="${id}">Format:</label>
+    <div class="uk-form-controls">
+    <select class="uk-select" id="${id}" name="${name}">
+        <option value="0">Text</option>
+        <option value="1">HTML</option>
+    </select>
+</div>
+    `;
+    return divElement;
+  }
+
+}
+
+
+
+
+
+
+
+
+class SettingsModal
+{
+  constructor(){
+
+  }
+
+
+  get(){
+    let result = `<div id="modal-full" class="uk-modal-full" uk-modal>
+        <div class="uk-modal-dialog">
+            <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
+            <div class="uk-grid-collapse uk-child-width-1-2@s uk-flex-middle" uk-grid>
+                <div class="uk-background-cover" style="background-image: url('images/photo.jpg');" uk-height-viewport></div>
+                <div class="uk-padding-large">
+                    <h1>Headline</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                </div>
+            </div>
+        </div>
+    </div>`;
+
+    return result;
+  }
 }

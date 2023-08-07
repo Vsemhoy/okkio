@@ -19,12 +19,15 @@
         let toptools = Nav.topTools();
         let epool = Page.eventPool();
         let modalE = new EventModal();
+        let modalS = new SettingsModal();
         document.querySelector('#eventor_body').insertAdjacentHTML('afterbegin', nav);
         document.querySelector('#eventor_body').insertAdjacentHTML('afterbegin', toptools);
     
         document.querySelector('#eventor_body').appendChild(epool);
     
         document.body.appendChild(modalE.get());
+        document.querySelector('#eventor_body').insertAdjacentHTML('beforeend', modalS.get());
+        //document.body.appendChild(modalE.get());
     }
 </script>
 

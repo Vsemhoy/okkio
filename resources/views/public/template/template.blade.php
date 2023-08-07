@@ -217,6 +217,11 @@
             margin-left: 0px;
         }
     }
+    @media only screen and (max-width: 639px) {
+        .uk-modal {
+            padding: 0px !important;
+        }
+    }
 
 
 
@@ -286,6 +291,11 @@
         color: white;
         text-decoration: none;
     }
+    .th-user-go {
+        display: grid;
+    grid-template-columns: auto auto;
+    text-wrap: nowrap;
+    }
     </style>
 </head>
 
@@ -346,7 +356,11 @@
                 </a>
             </div>
             <div class='th-navbar-item th-navbar-item-dd'>
-                <a class="" href="#">
+                <a class="th-user-go" href="#">
+@auth
+<!-- Display the username -->
+{{ Auth::user()->name }}
+@endauth
                     <span uk-icon="user"></span>
                 </a>
                 <div class="uk-navbar-dropdown" uk-dropdown="mode: click">
@@ -510,6 +524,10 @@ class SidebarMenu
 
     link.className = 'nav-link active';
     link.href = itemObj.ref || '#';
+    if (itemObj.linkSingleAttribute != ""){
+
+        link.setAttribute(itemObj.linkSingleAttribute, "");
+    }
 
     iconArea.className = 'th-sn-item-icon';
     if (itemObj.ukicon) {
@@ -612,7 +630,8 @@ const demoMenu = {
             'badge'    : '25',
             'class'    : '',
             'id'       : '',
-            'params'   : ''
+            'params'   : '',
+            'linkSingleAttribute': ''
         },
         {
             'icon'     : '',
@@ -625,7 +644,8 @@ const demoMenu = {
             'badge'    : '',
             'class'    : '',
             'id'       : '',
-            'params'   : ''
+            'params'   : '',
+            'linkSingleAttribute': ''
         },
         {
             'icon'     : '',
@@ -638,13 +658,14 @@ const demoMenu = {
             'badge'    : '',
             'class'    : '',
             'id'       : '',
-            'params'   : ''
+            'params'   : '',
+            'linkSingleAttribute': ''
         },
     ],
     'setItems' : [
         {
             'icon'     : '',
-            'ref'      : '',
+            'ref'      : '#modal-full',
             'ukicon'   : 'cog',
             'name'     : 'Settings',
             'literals' : 'TI',
@@ -653,7 +674,8 @@ const demoMenu = {
             'badge'    : '',
             'class'    : '',
             'id'       : '',
-            'params'   : ''
+            'params'   : '',
+            'linkSingleAttribute': 'uk-toggle'
         },
     ],
     'color'    : "",
