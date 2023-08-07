@@ -210,6 +210,12 @@
             margin-left: 0px !important;
             width: 260px !important;
         }
+
+        .th-sidenav-show .col-main {
+            width: 100%;
+            float: left;
+            margin-left: 0px;
+        }
     }
 
 

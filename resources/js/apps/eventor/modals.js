@@ -36,6 +36,7 @@ class EventModal {
     modalCloseButton.classList.add('uk-modal-close-full', 'uk-close-large');
     modalCloseButton.setAttribute('type', 'button');
     modalCloseButton.setAttribute('uk-close', '');
+    modalCloseButton.style.background = 'none';
   
     // Modal dialog
     const modalDialog = document.createElement('div');
@@ -105,7 +106,7 @@ class EventModal {
   }
   
 
-  field_title(id = 'evt_content', name = 'title', content = '')
+  field_title(id = 'evt_title', name = 'title', content = '')
   {
     const divElement = document.createElement('div');
     divElement.classList.add('uk-margin');

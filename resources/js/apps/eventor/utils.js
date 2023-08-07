@@ -178,9 +178,15 @@ class EventorUtils
 
     static getParam(param)
     {
-      const params = new URLSearchParams(window.location.search);
-      const param1Value = params.get(param);
-      return param;
+      const params = new URLSearchParams(window.location.href);
+      console.log(params);
+      if (params.has(param)) {
+        const paramValue = params.get(param);
+        // Decode the URL parameter value
+        console.log('param: ' + paramValue);
+        return decodeURIComponent(paramValue);
+      }
+      return null;
     }
 
     static getSimpleDate(date){

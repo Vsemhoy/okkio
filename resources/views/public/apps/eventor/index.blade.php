@@ -12,18 +12,20 @@
 
 @section('page-script')
 <script>
+    // EventorUtils.changeAddressBar('page', 'bro');
+    if (EventorUtils.getParam('page') == null || EventorUtils.getParam('page') == 'start' ){
 
+        let nav = Nav.navButtons();
+        let toptools = Nav.topTools();
+        let epool = Page.eventPool();
+        let modalE = new EventModal();
+        document.querySelector('#eventor_body').insertAdjacentHTML('afterbegin', nav);
+        document.querySelector('#eventor_body').insertAdjacentHTML('afterbegin', toptools);
     
-    let nav = Nav.navButtons();
-    let toptools = Nav.topTools();
-    let epool = Page.eventPool();
-    let modalE = new EventModal();
-    document.querySelector('#eventor_body').insertAdjacentHTML('afterbegin', nav);
-    document.querySelector('#eventor_body').insertAdjacentHTML('afterbegin', toptools);
-
-    document.querySelector('#eventor_body').appendChild(epool);
-
-    document.body.appendChild(modalE.get());
+        document.querySelector('#eventor_body').appendChild(epool);
+    
+        document.body.appendChild(modalE.get());
+    }
 </script>
 
 <script>
