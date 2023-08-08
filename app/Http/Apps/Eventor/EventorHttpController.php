@@ -82,7 +82,7 @@ class EventorHttpController extends BaseController
     }
     // Close cURL resource
     curl_close($ch);
-    print_r($result);
+   return $result;
 
     //print_r($obj);
     return;

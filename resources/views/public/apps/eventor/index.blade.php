@@ -284,7 +284,8 @@ loadSections()
           if (this.responseText == -1){ alert("You are not registered!");
             return 0;
           };
-          console.log(this.responseText);
+          //console.log(this.responseText);
+          console.log(JSON.parse(this.responseText));
           // let result = JSON.parse(this.responseText);
           // console.log('рудзукы updated ' + this.responseText);
         }
@@ -292,7 +293,7 @@ loadSections()
         {
           if (counter < 1){
             alert("Oops! There is some problems with the server connection.");
-            console.log(this.responseText);
+            //console.log(this.responseText);
             counter++;
           }
         }
