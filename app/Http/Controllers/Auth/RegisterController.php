@@ -80,7 +80,7 @@ class RegisterController extends Controller
             if ($val) {
                 // Authentication passed...
                 $user = Auth::user();
-                return response()->json(['token' => $user->api_token, 'message' => 'You are successfully logged in!.', 'code' => '0']); // Replace 'api_token' with your token column name
+                return response()->json(['user_id' => $user->id, 'token' => $user->api_token, 'message' => 'You are successfully logged in!.', 'code' => '0']); // Replace 'api_token' with your token column name
             } else {
                 // Authentication failed...
                 return response()->json(['message' => 'Wrong credentials.', 'code' => '1'], 500);

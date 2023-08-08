@@ -8,7 +8,7 @@ class EventorTypes
             type: "",
             objects: [],
             where: [],
-            order: 0,
+            order: "",
             setKey: "",
             limit: 0,
             offset: 0,

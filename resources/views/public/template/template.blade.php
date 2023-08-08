@@ -796,6 +796,7 @@ const nb = new SidebarMenu(demoMenu);
                 console.log('Login successful');
                 //console.log('User token:', data.token); // Assuming the server returns a token
                 document.querySelector('meta[name="csrf-token"]').content = data.token;
+                me = data.user_id;
                 UIkit.modal('#login-modal').hide();
                 UIkit.modal.alert(data.message);
             } catch (error) {
@@ -1119,6 +1120,7 @@ const nb = new SidebarMenu(demoMenu);
 
     $sb = new SearchBar();
     $sn = new SideNav();
+    let me = '{{ Auth::user() != null ? Auth::user()->id : ""}}';
     </script>
 
 @yield('page-script')

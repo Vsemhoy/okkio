@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Components\Budger\BudgerTemplates;
 use App\Http\Controllers\Components\Budger\BudgerData;
 use DateTime;
-
+use Illuminate\Support\Facades\Auth;
 
 
 class EventorHttpController extends BaseController
@@ -32,14 +32,14 @@ class EventorHttpController extends BaseController
   {
     //return "HELLO DADDY!";
     //return $_SESSION['LoggedUser'];
-    if (empty($request->code))
-    {
-      return "WRONG CODE NUMBER";
-    }
+    // if (empty($request->code))
+    // {
+    //   return "WRONG CODE NUMBER";
+    // }
 
   //   $user = User::where('id', '=', session('LoggedUser'))->first();
 
-    $user = 9;
+    $user = Auth::user()->id;
     
     $code = $request->code;
     $json =  file_get_contents('php://input');
@@ -65,7 +65,7 @@ class EventorHttpController extends BaseController
     // Set the content type to application/json
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
       'Content-Type: application/json',
-      'Authorization: TelesePost ' . self::REMOTE_HOST_TOKEN // Include the token in the header
+      'Authorization: TelePost ' . self::REMOTE_HOST_TOKEN // Include the token in the header
     ));
     
 

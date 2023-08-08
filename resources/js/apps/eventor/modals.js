@@ -8,20 +8,56 @@ class Modals {
 
 class EventModal {
   constructor(){
-    this.fields = [];
-    this.fields.push(this.field_title());
-    this.fields.push(this.field_content());
-    this.fields.push(this.field_section());
-    this.fields.push(this.field_category());
-    this.fields.push(this.field_importance());
-    this.fields.push(this.field_setdate());
-    this.fields.push(this.field_access());
-    this.fields.push(this.field_status());
-    this.fields.push(this.field_starred());
-    this.fields.push(this.field_pinned());
-    this.fields.push(this.field_locked());
-    this.fields.push(this.field_format());
+    const options = [
+      { value: 'dmedicine', label: 'Medicine' },
+      { value: 'sselling', label: 'Selling' },
+      { value: 'gshopping', label: 'Shopping' },
+    ];
 
+    const categorises = [
+      { value: '', label: 'No category' },
+      { value: 'sselling', label: 'Selling' },
+      { value: 'gshopping', label: 'Shopping' },
+    ];
+
+    const access = [
+      { value: '0', label: 'Private' },
+      { value: '1', label: 'Restricted' },
+      { value: '2', label: 'Public' },
+    ];
+
+    const status = [
+      { value: '0', label: 'Inactive' },
+      { value: '1', label: 'Active' },
+      { value: '2', label: 'Archieved' },
+    ];
+
+    const format = [
+      { value: '0', label: 'Text' },
+      { value: '1', label: 'HTML' },
+    ];
+
+    // const textInput = createFormField('Title:', 'evt_title', 'title', 'text', [], 'Default Title');
+    // const textareaInput = createFormField('Content:', 'evt_content', 'content', 'textarea', [], 'Default Content');
+    // const selectInput = createFormField('Section:', 'evt_section', 'section', 'select', options);
+    // const checkboxInput = createFormField('Starred:', 'evt_starred', 'starred', 'checkbox', [], '1');
+    // const rangeInput = createFormField('Importance:', 'evt_importance', 'importance', 'range', [], '2');
+    // const dateInput = createFormField('Set Date:', 'evt_setdate', 'setdate', 'date');
+
+    this.fields = [];
+    this.fields.push(this.createFormField('Title:', 'evt_title', 'title', 'text', [], 'Default Title'));
+    this.fields.push(this.createFormField('Content:', 'evt_content', 'content', 'textarea', [], 'Default Content'));
+    this.fields.push(this.createFormField('Section:', 'evt_section', 'section', 'select', options));
+    this.fields.push(this.createFormField('Category:', 'evt_category', 'category', 'select', categorises));
+    this.fields.push(this.createFormField('Importance:', 'evt_importance', 'importance', 'range', [], '2'));
+    this.fields.push(this.createFormField('Set Date:', 'evt_setdate', 'setdate', 'date'));
+    this.fields.push(this.createFormField('Access:', 'evt_access', 'access', 'select', access));
+    this.fields.push(this.createFormField('Status:', 'evt_status', 'status', 'select', status));
+    this.fields.push(this.createFormField('Starred:', 'evt_starred', 'starred', 'checkbox', [], '1', true));
+    this.fields.push(this.createFormField('Pinned:', 'evt_pinned', 'pinned', 'checkbox', [], '0', true));
+    this.fields.push(this.createFormField('Locked:', 'evt_locked', 'locked', 'checkbox', [], '0', true));
+    this.fields.push(this.createFormField('Format:', 'evt_format', 'format', 'select', format));
+    
     this.modalBody = this.modalEventEditor(this.fields);
   }
 
@@ -113,183 +149,88 @@ class EventModal {
   }
   
 
-  field_title(id = 'evt_title', name = 'title', content = '')
-  {
+
+  createFormField(labelText, id, name, type, options = [], defaultValue = '', hasLabel = true) {
     const divElement = document.createElement('div');
     divElement.classList.add('uk-margin');
-    divElement.innerHTML = `
-    <label class="uk-form-label" for="${id}">Title:</label>
-    <div class="uk-form-controls">
-        <input class="uk-input" type="text" id="${id}" name="${name}" maxlength="190" required>
-    </div>
-    `;
+  
+      const labelElement = document.createElement('label');
+      labelElement.classList.add('uk-form-label');
+      labelElement.setAttribute('for', id);
+      labelElement.textContent = labelText;
+
+  
+    const formControls = document.createElement('div');
+    formControls.classList.add('uk-form-controls');
+  
+    let inputElement;
+  
+    switch (type) {
+      case 'text':
+      case 'date':
+        inputElement = document.createElement('input');
+        inputElement.classList.add('uk-input');
+        inputElement.setAttribute('type', type);
+        inputElement.id = id;
+        inputElement.name = name;
+        inputElement.value = defaultValue;
+        break;
+      case 'textarea':
+        inputElement = document.createElement('textarea');
+        inputElement.classList.add('uk-textarea');
+        inputElement.id = id;
+        inputElement.name = name;
+        inputElement.rows = '6';
+        inputElement.textContent = defaultValue;
+        break;
+      case 'select':
+        inputElement = document.createElement('select');
+        inputElement.classList.add('uk-select');
+        inputElement.id = id;
+        inputElement.name = name;
+  
+        options.forEach(option => {
+          const optionElement = document.createElement('option');
+          optionElement.value = option.value;
+          optionElement.textContent = option.label;
+          inputElement.appendChild(optionElement);
+        });
+  
+        break;
+      case 'checkbox':
+        inputElement = document.createElement('input');
+        inputElement.classList.add('uk-checkbox');
+        inputElement.setAttribute('type', 'checkbox');
+        inputElement.id = id;
+        inputElement.name = name;
+        inputElement.value = defaultValue;
+        //labelElement.appendChild(inputElement);
+        break;
+      case 'range':
+        inputElement = document.createElement('input');
+        inputElement.classList.add('uk-range');
+        inputElement.setAttribute('type', 'range');
+        inputElement.setAttribute('min', '0');
+        inputElement.setAttribute('max', '5');
+        inputElement.setAttribute('step', '1');
+        inputElement.id = id;
+        inputElement.setAttribute('aria-label', 'Range');
+        inputElement.name = name;
+        inputElement.value = defaultValue;
+        break;
+      default:
+        break;
+    }
+  
+    formControls.appendChild(inputElement);
+    divElement.appendChild(labelElement);
+    divElement.appendChild(formControls);
+  
     return divElement;
   }
 
-  field_content(id = 'evt_content', name = 'content', content = '')
-  {
-    const divElement = document.createElement('div');
-    divElement.classList.add('uk-margin');
-    divElement.innerHTML = `
-    <label class="uk-form-label" for="${id}">Content:</label>
-    <div class="uk-form-controls">
-      <textarea class="uk-textarea" id="${id}" name="${name}" rows="6"></textarea>
-    </div>
-    `;
-    return divElement;
-  }
 
-  field_section(id = 'evt_section', name = 'status', content = '')
-  {
-    const divElement = document.createElement('div');
-    divElement.classList.add('uk-margin');
-    divElement.innerHTML = `
-    <label class="uk-form-label" for="${id}">Section:</label>
-    <div class="uk-form-controls">
-        <select class="uk-select" id="${id}" name="${name}">
-          <option value="dmedicine">Medicine</option>
-          <option value="sselling">Selling</option>
-          <option value="gshopping">Shopping</option>
-        </select>
-    </div>
-    `;
-    return divElement;
-  }
-
-  field_category(id = 'evt_category', name = 'category', content = '')
-  {
-    const divElement = document.createElement('div');
-    divElement.classList.add('uk-margin');
-    divElement.innerHTML = `
-    <label class="uk-form-label" for="${id}">Category:</label>
-    <div class="uk-form-controls">
-        <select class="uk-select" id="${id}" name="${name}">
-          <option value="4medicine">Medicine</option>
-          <option value="5selling">Selling</option>
-          <option value="6shopping">Shopping</option>
-        </select>
-    </div>
-    `;
-    return divElement;
-  }
-
-  field_importance(id = 'evt_importance', name = 'importance', content = '')
-  {
-    const divElement = document.createElement('div');
-    divElement.classList.add('uk-margin');
-    divElement.innerHTML = `
-    <label class="uk-form-label" for="${id}">Importance:</label>
-    <div class="uk-form-controls">
-    <input class="uk-range" type="range" value="2" min="0" max="5" step="1"
-        id="${id}" aria-label="Range" name='${name}'>
-    </div>
-    `;
-    return divElement;
-  }
-
-  field_setdate(id = 'evt_setdate', name = 'setdate', content = '')
-  {
-    const divElement = document.createElement('div');
-    divElement.classList.add('uk-margin');
-    divElement.innerHTML = `
-    <label class="uk-form-label" for="${id}">Set date:</label>
-        <div class="uk-form-controls">
-        <input class="uk-input" type="date" id="${id}" name="${name}">
-    </div>
-    `;
-    return divElement;
-  }
-
-  field_access(id = 'evt_access', name = 'access', content = '')
-  {
-    const divElement = document.createElement('div');
-    divElement.classList.add('uk-margin');
-    divElement.innerHTML = `
-    <label class="uk-form-label" for="${id}">Access type:</label>
-    <div class="uk-form-controls">
-        <select class="uk-select" id="${id}" name="${name}">
-            <option value="1">Private</option>
-            <option value="2">Restricted</option>
-            <option value="3">Public</option>
-            <!-- Add more access options here -->
-        </select>
-    </div>
-    `;
-    return divElement;
-  }
-
-  field_status(id = 'evt_status', name = 'status', content = '')
-  {
-    const divElement = document.createElement('div');
-    divElement.classList.add('uk-margin');
-    divElement.innerHTML = `
-    <label class="uk-form-label" for="${id}">Status:</label>
-        <div class="uk-form-controls">
-        <select class="uk-select" id="${id}" name="${name}">
-            <option value="0">Inactive</option>
-            <option selected value="1">Active</option>
-            <option value="2">Archived</option>
-            <!-- Add more status options here -->
-        </select>
-    </div>
-    `;
-    return divElement;
-  }
-
-  field_starred(id = 'evt_starred', name = 'starred', content = '1')
-  {
-    const divElement = document.createElement('div');
-    divElement.classList.add('uk-margin');
-    divElement.innerHTML = `
-    <div class="uk-form-controls">
-      <label><input class="uk-checkbox" type="checkbox" name="${name}" value="${content}"
-            id="${id}"> Starred</label>
-    </div>
-    `;
-    return divElement;
-  }
-
-  field_pinned(id = 'evt_pinned', name = 'pinned',  content = '1')
-  {
-    const divElement = document.createElement('div');
-    divElement.classList.add('uk-margin');
-    divElement.innerHTML = `
-    <div class="uk-form-controls">
-    <label><input class="uk-checkbox" type="checkbox" name="${name}" value="${content}"
-            id="${id}"> Pinned</label>
-    </div>
-    `;
-    return divElement;
-  }
-
-  field_locked(id = 'evt_locked', name = 'locked',  content = '1')
-  {
-    const divElement = document.createElement('div');
-    divElement.classList.add('uk-margin');
-    divElement.innerHTML = `
-    <div class="uk-form-controls">
-    <label><input class="uk-checkbox" type="checkbox" name="${name}" value="${content}"
-            id="${id}"> Locked</label>
-    </div>
-    `;
-    return divElement;
-  }
-
-  field_format(id = 'evt_format', name = 'format',  content = '')
-  {
-    const divElement = document.createElement('div');
-    divElement.classList.add('uk-margin');
-    divElement.innerHTML = `
-    <label class="uk-form-label" for="${id}">Format:</label>
-    <div class="uk-form-controls">
-    <select class="uk-select" id="${id}" name="${name}">
-        <option value="0">Text</option>
-        <option value="1">HTML</option>
-    </select>
-</div>
-    `;
-    return divElement;
-  }
+ 
 
 }
 
