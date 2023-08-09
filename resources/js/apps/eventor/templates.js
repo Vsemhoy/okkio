@@ -36,6 +36,72 @@ class EventorTemplate
       }
 
 
+      static makeEventCard(event) {
+        let cutlength = 800;
+        let category = null;
+        let section = null;
+        let time  = new Date( event.created_at).toLocaleTimeString();
+        if (event.category != null && event.category != "")
+        {
+          for (let i = 0; i < category_container.length; i++){
+            let elem = category_container[i];
+            if (elem.id == event.category){
+              category = elem;
+              break;
+            }
+          }
+        };
+        console.log(event.section);
+        if (event.section != null && event.section != "")
+        {
+          for (let i = 0; i < section_container.length; i++){
+            let elem = section_container[i];
+            if (elem.id == event.section){
+              section = elem;
+              break;
+            }
+          }
+        };
+        let catBlock = "";
+        let secBlock = "";
+        let rootcolor = "";
+        if (category != null){
+          catBlock = `<span class='uk-badge' style='background-color: #${category.color == null ? '443399' : category.color };' data-cat='${category.id}'>${category.title}</span>`;
+        };
+        if (section != null){
+          secBlock = `<small data-sec='${section.id}'>${section.title}</small>`;
+          rootcolor = section.color == null ? "ffcc55" : section.color;
+        };
+        let content = "";
+        if (event.format == 0){
+          content = event.content.substring(0, cutlength);
+          if (event.content.length > 300){
+            content += " ...";
+          }
+          content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
+        }
+        return `
+          <div>
+            <div class="uk-card uk-box-shadow-small uk-box-shadow-hover-large 
+            uk-card-small uk-card-default uk-text-left left-corrector event-card" style='border-color: #${rootcolor};'>
+              <div class="uk-card-header">
+                <div class="uk-width-expand">
+                  <h3 class="uk-card-title uk-margin-remove-bottom">${event.title}</h3>
+                  <div class="uk-text-meta uk-margin-remove-top flex-space"><time datetime="${time}">${time}</time> ${secBlock}</div>
+                </div>
+              </div>
+              <div class="uk-card-body">
+                <p>${content}</p>
+              </div>
+              <div class="uk-card-footer flex-space">
+                <a href="#" class="uk-button uk-button-text">Edit</a>
+                ${catBlock}
+              </div>
+            </div>
+          </div>`;
+      }
+
+
       static createDayRow(date, cards = []){
         let content = "";
         for (let i = 0; i < cards.length; i++)
@@ -58,7 +124,7 @@ class EventorTemplate
             </div>
 
             <div class="uk-width-expand@m">
-                <div class="uk-child-width-1-5@xl uk-child-width-1-4@l uk-child-width-1-3@m uk-child-width-1-2@s uk-grid-small 
+                <div class="uk-child-width-1-4@xl uk-child-width-1-3@l uk-child-width-1-2@m uk-child-width-1-2@s uk-grid-small 
                 uk-grid-match start-collapse section-padding uk-grid uk-grid-stack eventor-row-content" uk-grid="">
                 ${content}
                 </div>

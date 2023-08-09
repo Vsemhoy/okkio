@@ -189,8 +189,12 @@ class EventorUtils
       return null;
     }
 
-    static getSimpleDate(date){
-      const month = String(new Date(date).getUTCMonth()).padStart(2,0);
+    static getSimpleDate(date, realize = false){
+      let relizer = 0;
+      if (realize){
+        relizer = 1;
+      }
+      const month = String(new Date(date).getUTCMonth() + relizer).padStart(2,0);
       const year = new Date(date).getFullYear();
       const day = String(new Date(date).getUTCDate()).padStart(2,0);
 

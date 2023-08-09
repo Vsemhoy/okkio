@@ -292,9 +292,12 @@
         text-decoration: none;
     }
     .th-user-go {
+        vertical-align: middle;
         display: grid;
-    grid-template-columns: auto auto;
-    text-wrap: nowrap;
+        grid-template-columns: auto auto;
+        text-wrap: nowrap;
+        align-items: center;
+        height: 100%;
     }
     </style>
 </head>
