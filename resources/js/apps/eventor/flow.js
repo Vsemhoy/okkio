@@ -31,7 +31,7 @@ class EventorFlow {
             EventorUtils.changeAddressBar("stm", EventorUtils.getFirstDayOfMonth(endDate, true));
             // console.log(EventorUtils.getLastDayOfMonth(endDate, true));
             // console.log(EventorUtils.getFirstDayOfMonth(beginDate, true));
-            endDate = EventorUtils.getFirstDayOfMonth(endDate,false);
+            endDate = EventorUtils.getFirstDayOfMonth(endDate, false);
         });
 
         this.moveBottomTrigger.addEventListener('mousedown', (e) => {
@@ -41,9 +41,9 @@ class EventorFlow {
             this.renderMonth(EventorUtils.getPrevMonth(beginDate));
             // console.log(EventorUtils.getLastDayOfMonth(beginDate, true));
             // console.log(EventorUtils.getFirstDayOfMonth(beginDate, true));
-            endDate = EventorUtils.getLastDayOfMonth( EventorUtils.getDateMinusMonth( beginDate), false, 1);
+            endDate = EventorUtils.getLastDayOfMonth(EventorUtils.getDateMinusMonth(beginDate), false, 1);
             EventorUtils.changeAddressBar("enm", EventorUtils.getLastDayOfMonth(beginDate, true));
-            beginDate = EventorUtils.getFirstDayOfMonth( endDate, false);
+            beginDate = EventorUtils.getFirstDayOfMonth(endDate, false);
         });
 
 
@@ -132,7 +132,7 @@ class EventorFlow {
         }
 
         this.loadEvents(EventorUtils.getFirstDayOfMonth(date), EventorUtils.getLastDayOfMonth(date));
-        console.log('loadcall: ',EventorUtils.getFirstDayOfMonth(date), EventorUtils.getLastDayOfMonth(date));
+        console.log('loadcall: ', EventorUtils.getFirstDayOfMonth(date), EventorUtils.getLastDayOfMonth(date));
     }
 
 
@@ -236,14 +236,14 @@ class EventorFlow {
         optionElement0.value = "";
         optionElement0.textContent = "no category";
         cats.appendChild(optionElement0);
-        Array.from( section_container).forEach((option)=>{
+        Array.from(section_container).forEach((option) => {
             const optionElement = document.createElement('option');
             optionElement.value = option.id;
             optionElement.textContent = option.title;
             sects.appendChild(optionElement);
         });
 
-        Array.from( category_container).forEach((option)=>{
+        Array.from(category_container).forEach((option) => {
             const optionElement = document.createElement('option');
             optionElement.value = option.id;
             optionElement.textContent = option.title;
@@ -264,16 +264,16 @@ class EventorFlow {
                 //console.log(this.responseText);
                 console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
-                Array.from( result.results).forEach((item)=>{
-                    if (item.type == "Section"){
+                Array.from(result.results).forEach((item) => {
+                    if (item.type == "Section") {
                         console.log(item.results);
-                        Array.from( item.results).forEach((item2)=>{
+                        Array.from(item.results).forEach((item2) => {
                             section_container.push(item2);
                         });
 
-                    } else if (item.type == "Category"){
+                    } else if (item.type == "Category") {
                         console.log(item.results);
-                        Array.from( item.results).forEach((item2)=>{
+                        Array.from(item.results).forEach((item2) => {
                             category_container.push(item2);
                         });
                     }
@@ -320,19 +320,19 @@ class EventorFlow {
 
 
 
-    static refreshEvents(){
-        Array.from( event_container).forEach((event)=>{
+    static refreshEvents() {
+        Array.from(event_container).forEach((event) => {
             // const optionElement = document.createElement('option');
             // optionElement.value = option.id;
             // optionElement.textContent = option.title;
             //sects.appendChild(optionElement);
-           if (!event.hasOwnProperty("loaded")){
+            if (!event.hasOwnProperty("loaded")) {
                 //let evDate = event.setDate;
                 console.log(event.setdate);
-                let rid  = "row_" + event.setdate;
+                let rid = "row_" + event.setdate;
 
-                let row = document.querySelector('#' +  rid);
-                if (row != null){
+                let row = document.querySelector('#' + rid);
+                if (row != null) {
                     let erc = row.querySelector('.eventor-row-content');
                     //let card = EventorTemplate.createEventCard(event.title, event.setdate, event.category, event.content);
                     let card = EventorTemplate.makeEventCard(event);
@@ -343,13 +343,13 @@ class EventorFlow {
 
                 event.loaded = true;
                 console.log(rid);
-           }
+            }
 
         });
     }
 
 
-    loadEvents(datePast, dateFuture){
+    loadEvents(datePast, dateFuture) {
         let counter = 0;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -361,17 +361,17 @@ class EventorFlow {
                 //console.log(this.responseText);
                 console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
-                Array.from( result.results).forEach((item)=>{
-                    if (item.type == "Event"){
+                Array.from(result.results).forEach((item) => {
+                    if (item.type == "Event") {
                         console.log(item.results);
-                        Array.from( item.results).forEach((item2)=>{
+                        Array.from(item.results).forEach((item2) => {
                             event_container.push(item2);
                         });
 
-                    } ;
+                    };
                 });
                 EventorFlow.refreshEvents();
-                
+
             }
             else if (this.status > 200) {
                 if (counter < 1) {
@@ -385,8 +385,8 @@ class EventorFlow {
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
 
-      console.log(datePast);
-      console.log(dateFuture);
+        console.log(datePast);
+        console.log(dateFuture);
         const where = {
             column: "user",
             value: me,

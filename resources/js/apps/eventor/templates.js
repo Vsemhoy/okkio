@@ -66,11 +66,11 @@ class EventorTemplate
         let secBlock = "";
         let rootcolor = "";
         if (category != null){
-          catBlock = `<span class='uk-badge' style='background-color: #${category.color == null ? '443399' : category.color };' data-cat='${category.id}'>${category.title}</span>`;
+          catBlock = `<span class='uk-badge' style='background-color: #${category.color == null ? 'a9a9a9' : category.color };' data-cat='${category.id}'>${category.title}</span>`;
         };
         if (section != null){
           secBlock = `<small data-sec='${section.id}'>${section.title}</small>`;
-          rootcolor = section.color == null ? "ffcc55" : section.color;
+          rootcolor = section.color == null ? "a9a9a9" : section.color;
         };
         let content = "";
         if (event.format == 0){
