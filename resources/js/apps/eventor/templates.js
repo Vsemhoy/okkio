@@ -81,9 +81,10 @@ class EventorTemplate
           content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
         }
         return `
-          <div>
+          <div id='${event.id}'>
             <div class="uk-card uk-box-shadow-small uk-box-shadow-hover-large 
-            uk-card-small uk-card-default uk-text-left left-corrector event-card" style='border-color: #${rootcolor};'>
+            uk-card-small uk-card-default uk-text-left left-corrector event-card"
+             style='border-color: #${rootcolor};'>
               <div class="uk-card-header">
                 <div class="uk-width-expand">
                   <h3 class="uk-card-title uk-margin-remove-bottom">${event.title}</h3>
@@ -117,7 +118,7 @@ class EventorTemplate
         let result = `
         <div class="uk-text-center uk-grid-collapse start-collapse uk-background-muted event-section uk-grid ${noEventClass} ${todate}" uk-grid=""
         id='row_${date}' data-date='${date}'>
-            <div class="uk-width-auto@m uk-text-left uk-padding-small uk-first-column" ${todateId}>
+            <div class="uk-width-auto@m uk-text-left th-padding-small uk-first-column" ${todateId}>
             <div class="uk-text-lead">${day} '${dnum}</div>
                 <div class="uk-card ">${date}</div>
             <a href="#" class='eventor-act-addevent'>Add event</a>

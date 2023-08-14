@@ -216,11 +216,16 @@
             float: left;
             margin-left: 0px;
         }
+
+        .section-padding {
+            padding: 6px;
+        }
     }
     @media only screen and (max-width: 639px) {
         .uk-modal {
             padding: 0px !important;
         }
+
     }
 
 
@@ -299,6 +304,10 @@
         align-items: center;
         height: 100%;
     }
+    .th-padding-small {
+    padding: 3px 12px;
+    }
+
     </style>
 </head>
 

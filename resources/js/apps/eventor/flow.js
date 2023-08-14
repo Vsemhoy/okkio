@@ -74,7 +74,8 @@ class EventorFlow {
             .addEventListener("click", () => {
                 //let obj = this.harvestModalData();
                 //alert(JSON.stringify(obj)); // Display the object as a JSON string for debugging purposes
-                this.saveEvent();
+                this.saveEvent("");
+                UIkit.modal("#modalHtmlEditor").hide();
             });
 
         document.querySelector("#callCreateModal").addEventListener("click", function (e) {
@@ -174,14 +175,19 @@ class EventorFlow {
     }
 
 
-    saveEvent() {
+    saveEvent(event_id = "") {
         let counter = 0;
         let outFormat = "number";
         let data = {};
         let formdata = this.harvestModalData();
+        if (event_id == ""){
+            formdata.trans_id = (Math.random() + 1).toString(36).substring(15);
+        }
         if (formdata.title.length == 0 && formdata.content.length == 0) {
             alert("Empty form!");
             return;
+        } else {
+            formdata.id = event_id;
         }
 
         var xhttp = new XMLHttpRequest();
@@ -192,6 +198,32 @@ class EventorFlow {
                     return 0;
                 };
                 console.log(this.responseText);
+                let result = JSON.parse(this.responseText);
+                Array.from(result.results).forEach((item) => {
+                    if (item.type == "Event") {
+                        console.log(item.results);
+                        Array.from(item.results).forEach((item2) => {
+                            if (event_id == ""){
+                                event_container.push(item2);
+                            } else {
+                                for (let i = 0; i < event_container.length ; i++){
+                                    if (event_container[i].id == event_id){
+                                        event_container[i].id = item2;
+                                        break;
+                                    }
+                                }
+                                let card = document.querySelector('#' + event_id);
+                                if (card != null){
+                                    card.remove();
+                                    // may update
+                                }
+                            }
+                        });
+
+                    };
+                });
+                EventorFlow.refreshEvents();
+
                 // let result = JSON.parse(this.responseText);
                 // console.log('рудзукы updated ' + this.responseText);
             }
@@ -219,7 +251,12 @@ class EventorFlow {
         let task = EventorTypes.GetNewTask();
         task.objects.push(formdata);
         task.user = me;
-        task.action = 3;
+        if (event_id == ""){
+            task.action = 3;
+
+        } else {
+            task.action = 5;
+        }
         task.type = "event";
         task.where.push(where);
         taskArray.push(task);
