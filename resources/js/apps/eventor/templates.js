@@ -87,7 +87,7 @@ class EventorTemplate
              style='border-color: #${rootcolor};'>
               <div class="uk-card-header">
                 <div class="uk-width-expand">
-                  <h3 class="uk-card-title uk-margin-remove-bottom">${event.title}</h3>
+                  <h3 class="evt-card-title uk-margin-remove-bottom">${event.title}</h3>
                   <div class="uk-text-meta uk-margin-remove-top flex-space"><time datetime="${time}">${time}</time> ${secBlock}</div>
                 </div>
               </div>
@@ -114,6 +114,7 @@ class EventorTemplate
         let todateId = EventorUtils.isDateToday(date) ? "id='row_today'" : "";
         let noEventClass = cards.length == 0 ? "eventor-hiddenrow" : "";
         let day = EventorTemplate.getDayOfWeek(date);
+        day = day.slice(0, 3);
         let dnum = new Date(date).getUTCDate();
         let result = `
         <div class="uk-text-center uk-grid-collapse start-collapse uk-background-muted event-section uk-grid ${noEventClass} ${todate}" uk-grid=""

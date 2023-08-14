@@ -85,6 +85,38 @@ for (let i = 1; i < 3; i++){
  // console.log( beginDate + " BEG - END " +  endDate );
 });
 
+let smenu = SidebarMenu.getNewMenu();
+let fitem = SidebarMenu.getNewItem();
+fitem.name  = "All sections";
+fitem.literals = "ALL";
+fitem.params = ["data-section", 'all'];
+smenu.items.push(fitem);
+
+for (let i = 0 ; i < section_container.length; i++){
+  let sectim = section_container[i];
+  let item = SidebarMenu.getNewItem();
+  item.name = sectim.title;
+  let litar = item.name.split(' ');
+  if (litar.length == 2){
+    var ltr = litar[0].slice(0,1).toUpperCase() + litar[1].slice(0,1).toUpperCase();
+    item.literals = ltr;
+  } else if (litar.lenght > 2){
+    var ltr = litar[0].slice(0,1).toUpperCase() + litar[1].slice(0,1).toUpperCase()+ litar[2].slice(0,1).toUpperCase();
+    item.literals = ltr;
+  } else {
+    var ltr = SidebarMenu.removeVowels(item.name);
+    ltr = (ltr).slice(0,2).toUpperCase();
+    item.literals = ltr;
+  }
+  item.params = ["data-section", sectim.id];
+
+
+  smenu.items.push(item);
+  smenu.count++;
+}
+console.log(smenu);
+sideMenu = new SidebarMenu(smenu);
+
 </script>
 
 

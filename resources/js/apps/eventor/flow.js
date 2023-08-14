@@ -286,6 +286,8 @@ class EventorFlow {
             optionElement.textContent = option.title;
             cats.appendChild(optionElement);
         });
+
+        
     }
 
 
