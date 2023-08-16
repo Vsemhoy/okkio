@@ -81,7 +81,7 @@ class EventorTemplate
           content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
         }
         return `
-          <div id='${event.id}'>
+          <div id='${event.id}' class='evt-card-wrapper'>
             <div class="uk-card uk-box-shadow-small uk-box-shadow-hover-large 
             uk-card-small uk-card-default uk-text-left left-corrector event-card"
              style='border-color: #${rootcolor};'>
@@ -95,7 +95,7 @@ class EventorTemplate
                 <p>${content}</p>
               </div>
               <div class="uk-card-footer flex-space">
-                <a href="#" class="uk-button uk-button-text">Edit</a>
+                <a href="#" class="uk-button uk-button-text evt-edit-button">Edit</a>
                 ${catBlock}
               </div>
             </div>
@@ -117,12 +117,13 @@ class EventorTemplate
         day = day.slice(0, 3);
         let dnum = new Date(date).getUTCDate();
         let result = `
-        <div class="uk-text-center uk-grid-collapse start-collapse uk-background-muted event-section uk-grid ${noEventClass} ${todate}" uk-grid=""
+        <div class="uk-text-center uk-grid-collapse start-collapse uk-background-muted event-section uk-grid 
+        ${noEventClass} ${todate}" uk-grid=""
         id='row_${date}' data-date='${date}'>
-            <div class="uk-width-auto@m uk-text-left th-padding-small uk-first-column" ${todateId}>
+            <div class="uk-width-auto@m uk-text-left th-padding-small uk-first-column eventor-act-addevent" ${todateId}>
             <div class="uk-text-lead">${day} '${dnum}</div>
                 <div class="uk-card ">${date}</div>
-            <a href="#" class='eventor-act-addevent'>Add event</a>
+
             </div>
 
             <div class="uk-width-expand@m">

@@ -55,3 +55,7 @@
     line-height: 1.3;
     font-weight: 400;
   }
+
+  .evt-modal-header-title {
+    font-size: 1.5rem;
+  }

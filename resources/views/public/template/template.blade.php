@@ -580,8 +580,8 @@
                 //console.log('User token:', data.token); // Assuming the server returns a token
                 document.querySelector('meta[name="csrf-token"]').content = data.token;
                 me = data.user_id;
-                UIkit.modal('#login-modal').hide();
-                UIkit.modal.alert(data.message);
+                //UIkit.modal('#login-modal').hide();
+                            location.reload();
             } catch (error) {
                 // Handle network-related errors or exceptions
 
@@ -816,11 +816,11 @@
                         console.log(response);
                     }
                     if (responseData.code == 0) {
-                        UIkit.modal.alert(responseData.message);
+                        //UIkit.modal.alert(responseData.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 200);
                     }
-                    setTimeout(() => {
-                        location.reload();
-                    }, 5000);
                 }
             } catch (error) {
                 // Handle network-related errors or exceptions
@@ -839,7 +839,7 @@
 
     <!-- Add more JavaScript files if needed -->
     <script>
-    const nb = new SidebarMenu(SidebarMenu.getDemoMenuItems());
+    var sideMenu = new SidebarMenu(SidebarMenu.getDemoMenuItems());
     </script>
     <script>
     class SearchBar {

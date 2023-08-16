@@ -1,4 +1,5 @@
 class EventorFlow {
+    static updatedItem = null;
     constructor() {
         this.pool = document.querySelector('#eventPool');
         //this.addEventTrigger = document.querySelectorAll(".eventor-act-addevent");
@@ -53,37 +54,87 @@ class EventorFlow {
         this.pool = document.querySelector('#eventPool');
         //this.addEventTrigger = document.querySelectorAll(".eventor-act-addevent");
 
-        document.addEventListener("click", function (e) {
-            if (e.target.classList.contains("eventor-act-addevent")) {
+        document.addEventListener("dblclick", function (e) {
+            if (e.target.parentElement.classList.contains("eventor-act-addevent")) {
                 e.preventDefault();
-                const dateInput = document.querySelector("#evt_setdate");
-                dateInput.value = EventorUtils.getCurrentDateAsString();
-
-                const target = e.target.closest(".event-section"); // Or any other selector.
-
-                if (target) {
-                    let epool = target.querySelector(".eventor-row-content");
-                    let evc = EventorTemplate.createEventCard("Title", "2022-11-07", "CAT", "THE BIG TEXT");
-                    epool.insertAdjacentHTML('beforeend', evc);
-                }
+                let date = e.target.parentElement.parentElement.getAttribute('data-date');
+                let data  = EventorFlow.harvestModalData();
+                data.setdate = date;
+                data.title = "";
+                data.content = "";
+                data.access = 1;
+                data.status = 2;
+                UIkit.modal("#modalHtmlEditor").show();
+                EventorFlow.fillFormWithData(data);
+                document.querySelector('#evt_title').focus();
+                document.querySelector('#evt_eventEditorTitle').innerHTML = "Create new event";
+                document.querySelector('#eventor_act_updateEvent').classList.add('uk-hidden');
+                document.querySelector('#eventor_act_saveEvent').classList.remove('uk-hidden');
             }
         });
 
         document
             .querySelector("#eventor_act_saveEvent")
             .addEventListener("click", () => {
-                //let obj = this.harvestModalData();
-                //alert(JSON.stringify(obj)); // Display the object as a JSON string for debugging purposes
+                
                 this.saveEvent("");
+                UIkit.modal("#modalHtmlEditor").hide();
+            });
+
+            document
+            .querySelector("#eventor_act_updateEvent")
+            .addEventListener("click", () => {
+                this.saveEvent(EventorFlow.updatedItem.id);
                 UIkit.modal("#modalHtmlEditor").hide();
             });
 
         document.querySelector("#callCreateModal").addEventListener("click", function (e) {
             const dateInput = document.querySelector("#evt_setdate");
-            dateInput.value = EventorUtils.getCurrentDateAsString();
             EventorUtils.getLocation();
+            let date = e.target.parentElement.parentElement.getAttribute('data-date');
+            let data  = EventorFlow.harvestModalData();
+            data.setdate = EventorUtils.getCurrentDateAsString();
+            data.title = "";
+            data.content = "";
+            data.access = 1;
+            data.status = 2;
+            EventorFlow.fillFormWithData(data);
+            document.querySelector('#evt_eventEditorTitle').innerHTML = "Create new event";
+            document.querySelector('#eventor_act_updateEvent').classList.add('uk-hidden');
+            document.querySelector('#eventor_act_saveEvent').classList.remove('uk-hidden');
+            document.querySelector('#evt_title').focus();
         });
+
+
+        document.addEventListener("click", function (e) {
+            if (e.target.classList.contains("evt-edit-button")) {
+                e.preventDefault();
+                document.querySelector('#eventor_act_updateEvent').classList.remove('uk-hidden');
+                document.querySelector('#eventor_act_saveEvent').classList.add('uk-hidden');
+                let element = e.target.closest('.evt-card-wrapper');
+                // get object from array
+                for (let i = 0; i < event_container.length; i++){
+                    let el = event_container[i];
+                    if (el.id == element.id){
+                        EventorFlow.fillFormWithData(el);
+                        document.querySelector('#evt_eventEditorTitle').innerHTML = "Edit event";
+                        UIkit.modal("#modalHtmlEditor").show();
+                        document.querySelector('#evt_title').focus();
+                        EventorFlow.updatedItem = el;
+                        break;
+                    }
+                }
+            }
+        });
+
+
+
     }
+
+
+
+
+    
 
     renderMonth(date, start = false) {
         // Get the month and year from the input date
@@ -141,7 +192,7 @@ class EventorFlow {
 
 
 
-    harvestModalData() {
+    static harvestModalData() {
         const myObject = {
             title: document.querySelector('#evt_title').value,
             content: document.querySelector('#evt_content').value,
@@ -159,7 +210,7 @@ class EventorFlow {
         return myObject;
     }
 
-    fillFormWithData(data) {
+    static fillFormWithData(data) {
         document.querySelector('#evt_title').value = data.title;
         document.querySelector('#evt_content').value = data.content;
         document.querySelector('#evt_format').value = data.format.toString();
@@ -179,7 +230,7 @@ class EventorFlow {
         let counter = 0;
         let outFormat = "number";
         let data = {};
-        let formdata = this.harvestModalData();
+        let formdata = EventorFlow.harvestModalData();
         if (event_id == ""){
             formdata.trans_id = (Math.random() + 1).toString(36).substring(15);
         }
@@ -197,7 +248,8 @@ class EventorFlow {
                     alert("You are not registered!");
                     return 0;
                 };
-                console.log(this.responseText);
+                //console.log(this.responseText);
+                console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Event") {
@@ -206,17 +258,26 @@ class EventorFlow {
                             if (event_id == ""){
                                 event_container.push(item2);
                             } else {
-                                for (let i = 0; i < event_container.length ; i++){
-                                    if (event_container[i].id == event_id){
-                                        event_container[i].id = item2;
+                                // for (let i = 0; i < event_container.length ; i++){
+                                //     if (event_container[i].id == event_id){
+                                //         event_container[i].id = item2;
+                                //         break;
+                                //     }
+                                // }
+                                let card = document.querySelector('#' + event_id.replace('.', `\\.`));
+                                console.log(card);
+                                if (card != null){
+                                    card.remove();
+                                }
+
+                                for (let i = 0; i < event_container.length; i++){
+                                    let el = event_container[i];
+                                    if (el.id == event_id){
+                                        event_container.splice(i);
                                         break;
                                     }
                                 }
-                                let card = document.querySelector('#' + event_id);
-                                if (card != null){
-                                    card.remove();
-                                    // may update
-                                }
+                                event_container.push(item2);
                             }
                         });
 
@@ -301,7 +362,7 @@ class EventorFlow {
                     return 0;
                 };
                 //console.log(this.responseText);
-                console.log(JSON.parse(this.responseText));
+                console.log(this.responseText);
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Section") {

@@ -96,8 +96,9 @@ class EventModal {
     modalHeader.classList.add('uk-modal-header');
   
     const modalTitle = document.createElement('h2');
-    modalTitle.classList.add('uk-modal-title');
+    modalTitle.classList.add('evt-modal-header-title');
     modalTitle.textContent = 'Headline';
+    modalTitle.id = 'evt_eventEditorTitle';
   
     // Modal body
     const modalBody = document.createElement('div');
@@ -126,6 +127,12 @@ class EventModal {
     saveButton.id = 'eventor_act_saveEvent';
     saveButton.setAttribute('type', 'button');
     saveButton.textContent = 'Save';
+
+    const updateButton = document.createElement('button');
+    updateButton.classList.add('uk-button', 'uk-button-primary');
+    updateButton.id = 'eventor_act_updateEvent';
+    updateButton.setAttribute('type', 'button');
+    updateButton.textContent = 'Update';
   
     // Append all elements together to create the modal structure
     modalHeader.appendChild(modalTitle);
@@ -137,6 +144,7 @@ class EventModal {
     modalBody.appendChild(modalForm);
     modalFooter.appendChild(cancelButton);
     modalFooter.appendChild(saveButton);
+    modalFooter.appendChild(updateButton);
     modalDialog.appendChild(modalCloseButtonInsideDialog);
     modalDialog.appendChild(modalHeader);
     modalDialog.appendChild(modalBody);
