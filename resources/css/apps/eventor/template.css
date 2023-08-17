@@ -39,12 +39,23 @@
   .event-card > div {
     padding: 5px 20px !important;
   }
+  .event-section .uk-text-lead {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: #333;
+    font-weight: 500;
+  }
   .eventor-today {
-    background: #c1c1c1;
+    color: #03A9F4;
+    border: 3px solid;
+  } 
+  .eventor-today .uk-text-lead {
+    color: #03A9F4;
   }
   .eventor-hiddenrow {
     /* display: none; */
   }
+
 
   .evt-navigation  .uk-button  {
     padding: 0 12px;
@@ -59,3 +70,14 @@
   .evt-modal-header-title {
     font-size: 1.5rem;
   }
+
+  .uk-modal-footer {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+}
+.uk-modal-footer > div {
+  display: grid;
+    grid-template-columns: auto auto auto;
+    grid-column-gap: 12px;
+}

@@ -63,12 +63,12 @@ class EventorFlow {
                 data.title = "";
                 data.content = "";
                 data.access = 1;
-                data.status = 2;
+                data.status = 1;
                 UIkit.modal("#modalHtmlEditor").show();
                 EventorFlow.fillFormWithData(data);
                 document.querySelector('#evt_title').focus();
                 document.querySelector('#evt_eventEditorTitle').innerHTML = "Create new event";
-                document.querySelector('#eventor_act_updateEvent').classList.add('uk-hidden');
+                document.querySelector('#eventor_act_editgroup').classList.add('uk-hidden');
                 document.querySelector('#eventor_act_saveEvent').classList.remove('uk-hidden');
             }
         });
@@ -88,6 +88,13 @@ class EventorFlow {
                 UIkit.modal("#modalHtmlEditor").hide();
             });
 
+            document
+            .querySelector("#eventor_act_deleteEvent")
+            .addEventListener("click", () => {
+                this.deleteEvent(EventorFlow.updatedItem.id);
+                UIkit.modal("#modalHtmlEditor").hide();
+            });
+
         document.querySelector("#callCreateModal").addEventListener("click", function (e) {
             const dateInput = document.querySelector("#evt_setdate");
             EventorUtils.getLocation();
@@ -97,10 +104,10 @@ class EventorFlow {
             data.title = "";
             data.content = "";
             data.access = 1;
-            data.status = 2;
+            data.status = 1;
             EventorFlow.fillFormWithData(data);
             document.querySelector('#evt_eventEditorTitle').innerHTML = "Create new event";
-            document.querySelector('#eventor_act_updateEvent').classList.add('uk-hidden');
+            document.querySelector('#eventor_act_editgroup').classList.add('uk-hidden');
             document.querySelector('#eventor_act_saveEvent').classList.remove('uk-hidden');
             document.querySelector('#evt_title').focus();
         });
@@ -109,7 +116,7 @@ class EventorFlow {
         document.addEventListener("click", function (e) {
             if (e.target.classList.contains("evt-edit-button")) {
                 e.preventDefault();
-                document.querySelector('#eventor_act_updateEvent').classList.remove('uk-hidden');
+                document.querySelector('#eventor_act_editgroup').classList.remove('uk-hidden');
                 document.querySelector('#eventor_act_saveEvent').classList.add('uk-hidden');
                 let element = e.target.closest('.evt-card-wrapper');
                 // get object from array
@@ -211,8 +218,8 @@ class EventorFlow {
     }
 
     static fillFormWithData(data) {
-        document.querySelector('#evt_title').value = data.title;
-        document.querySelector('#evt_content').value = data.content;
+        document.querySelector('#evt_title').value = new DOMParser().parseFromString( data.title, 'text/html').body.textContent;
+        document.querySelector('#evt_content').value = new DOMParser().parseFromString( data.content, 'text/html').body.textContent;
         document.querySelector('#evt_format').value = data.format.toString();
         document.querySelector('#evt_section').value = data.section;
         document.querySelector('#evt_category').value = data.category;
@@ -233,6 +240,8 @@ class EventorFlow {
         let formdata = EventorFlow.harvestModalData();
         if (event_id == ""){
             formdata.trans_id = (Math.random() + 1).toString(36).substring(15);
+        } else {
+            formdata.id = event_id;
         }
         if (formdata.title.length == 0 && formdata.content.length == 0) {
             alert("Empty form!");
@@ -249,11 +258,11 @@ class EventorFlow {
                     return 0;
                 };
                 //console.log(this.responseText);
-                console.log(JSON.parse(this.responseText));
+                //console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Event") {
-                        console.log(item.results);
+                        //console.log(item.results);
                         Array.from(item.results).forEach((item2) => {
                             if (event_id == ""){
                                 event_container.push(item2);
@@ -265,7 +274,7 @@ class EventorFlow {
                                 //     }
                                 // }
                                 let card = document.querySelector('#' + event_id.replace('.', `\\.`));
-                                console.log(card);
+                                //console.log(card);
                                 if (card != null){
                                     card.remove();
                                 }
@@ -325,6 +334,11 @@ class EventorFlow {
     }
 
 
+
+   
+
+
+
     static refreshCategoriesAndSections() {
         const cats = document.querySelector('#evt_category');
         const sects = document.querySelector('#evt_section');
@@ -362,17 +376,17 @@ class EventorFlow {
                     return 0;
                 };
                 //console.log(this.responseText);
-                console.log(this.responseText);
+                //console.log(this.responseText);
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Section") {
-                        console.log(item.results);
+                        //console.log(item.results);
                         Array.from(item.results).forEach((item2) => {
                             section_container.push(item2);
                         });
 
                     } else if (item.type == "Category") {
-                        console.log(item.results);
+                        //console.log(item.results);
                         Array.from(item.results).forEach((item2) => {
                             category_container.push(item2);
                         });
@@ -428,7 +442,7 @@ class EventorFlow {
             //sects.appendChild(optionElement);
             if (!event.hasOwnProperty("loaded")) {
                 //let evDate = event.setDate;
-                console.log(event.setdate);
+                //console.log(event.setdate);
                 let rid = "row_" + event.setdate;
 
                 let row = document.querySelector('#' + rid);
@@ -442,7 +456,7 @@ class EventorFlow {
 
 
                 event.loaded = true;
-                console.log(rid);
+                //console.log(rid);
             }
 
         });
@@ -459,11 +473,11 @@ class EventorFlow {
                     return 0;
                 };
                 //console.log(this.responseText);
-                console.log(JSON.parse(this.responseText));
+                //console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Event") {
-                        console.log(item.results);
+                        //console.log(item.results);
                         Array.from(item.results).forEach((item2) => {
                             event_container.push(item2);
                         });
@@ -485,8 +499,8 @@ class EventorFlow {
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
 
-        console.log(datePast);
-        console.log(dateFuture);
+        // console.log(datePast);
+        // console.log(dateFuture);
         const where = {
             column: "user",
             value: me,
@@ -497,8 +511,8 @@ class EventorFlow {
             operator: "BETWEEN",
             value2: EventorUtils.getSimpleDate(dateFuture, true),
         };
-        console.log(EventorUtils.getSimpleDate(datePast, true));
-        console.log(EventorUtils.getSimpleDate(dateFuture, true));
+        // console.log(EventorUtils.getSimpleDate(datePast, true));
+        // console.log(EventorUtils.getSimpleDate(dateFuture, true));
         let taskArray = [];
 
         let task = EventorTypes.GetNewTask();
@@ -511,6 +525,94 @@ class EventorFlow {
 
         xhttp.send(JSON.stringify(taskArray));
         //console.log(JSON.stringify(taskArray));
+    }
+
+
+    deleteEvent(event_id = "") {
+        let counter = 0;
+        let formdata = EventorFlow.harvestModalData();
+        if (event_id == ""){
+            alert("OOPS! There is no event selected!");
+            return;
+        }
+        formdata.id = event_id;
+
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                if (this.responseText == -1) {
+                    alert("You are not registered!");
+                    return 0;
+                };
+                //console.log(this.responseText);
+                //console.log(JSON.parse(this.responseText));
+                let result = JSON.parse(this.responseText);
+                Array.from(result.results).forEach((item) => {
+                    if (item.type == "Event") {
+                        console.log(item.results);
+                        Array.from(item.results).forEach((item2) => {
+                            if (event_id == ""){
+                                event_container.push(item2);
+                            } else {
+                                // for (let i = 0; i < event_container.length ; i++){
+                                //     if (event_container[i].id == event_id){
+                                //         event_container[i].id = item2;
+                                //         break;
+                                //     }
+                                // }
+                                let card = document.querySelector('#' + event_id.replace('.', `\\.`));
+                               // console.log(card);
+                                if (card != null){
+                                    card.remove();
+                                }
+
+                                for (let i = 0; i < event_container.length; i++){
+                                    let el = event_container[i];
+                                    if (el.id == event_id){
+                                        event_container.splice(i);
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+
+                    };
+                });
+                //EventorFlow.refreshEvents();
+
+                // let result = JSON.parse(this.responseText);
+                // console.log('рудзукы updated ' + this.responseText);
+            }
+            else if (this.status > 200) {
+                if (counter < 1) {
+                    alert("Oops! There is some problems with the server connection.");
+
+                    counter++;
+                }
+            }
+        };
+        xhttp.open("POST", "/eventor/postcall", false);
+        // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
+
+        //alert(JSON.stringify(data));
+
+        const where = {
+            column: "user",
+            value: me,
+        };
+
+        let taskArray = [];
+        let task = EventorTypes.GetNewTask();
+        task.objects.push(formdata);
+        task.user = me;
+        task.action = 7;
+        task.type = "event";
+        task.where.push(where);
+        taskArray.push(task);
+        xhttp.send(JSON.stringify(taskArray));
     }
 
 }

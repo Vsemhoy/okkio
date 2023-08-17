@@ -128,11 +128,32 @@ class EventModal {
     saveButton.setAttribute('type', 'button');
     saveButton.textContent = 'Save';
 
+    const editButtonGroup = document.createElement('div');
+    editButtonGroup.id = 'eventor_act_editgroup';
+
+    const lockButton = document.createElement('button');
+    
+    lockButton.classList.add('uk-button', 'uk-button-danger');
+    lockButton.id = 'eventor_act_lockEvent';
+    lockButton.setAttribute('type', 'button');
+    lockButton.textContent = 'Lock';
+
+    const deleteButton = document.createElement('button');
+    
+    deleteButton.classList.add('uk-button', 'uk-button-secondary');
+    deleteButton.id = 'eventor_act_deleteEvent';
+    deleteButton.setAttribute('type', 'button');
+    deleteButton.textContent = 'Delete';
+    
     const updateButton = document.createElement('button');
     updateButton.classList.add('uk-button', 'uk-button-primary');
     updateButton.id = 'eventor_act_updateEvent';
     updateButton.setAttribute('type', 'button');
     updateButton.textContent = 'Update';
+
+    editButtonGroup.appendChild(lockButton);
+    editButtonGroup.appendChild(deleteButton);
+    editButtonGroup.appendChild(updateButton);
   
     // Append all elements together to create the modal structure
     modalHeader.appendChild(modalTitle);
@@ -144,7 +165,7 @@ class EventModal {
     modalBody.appendChild(modalForm);
     modalFooter.appendChild(cancelButton);
     modalFooter.appendChild(saveButton);
-    modalFooter.appendChild(updateButton);
+    modalFooter.appendChild(editButtonGroup);
     modalDialog.appendChild(modalCloseButtonInsideDialog);
     modalDialog.appendChild(modalHeader);
     modalDialog.appendChild(modalBody);

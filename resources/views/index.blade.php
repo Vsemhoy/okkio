@@ -8,6 +8,7 @@
 @section('content')
 
 <h1> This is the main page </h1>
+<?php // echo $_SERVER['SERVER_ADDR']; ?>
     
 @endsection
 
