@@ -139,7 +139,7 @@
         padding: 0px;
         opacity: 0;
         cursor: pointer;
-        background: rgb(255 0 0 / 32%);
+        background: rgb(3 169 244 / 56%);
         height: 100vh;
         left: 0px;
         width: 6px;
@@ -228,7 +228,9 @@
 
     }
 
-
+    .th-com-s-nav-item.th-active {
+        background-color: #212121;
+    }
 
     .flex-column {
         flex-direction: column !important;
@@ -343,10 +345,12 @@
             <div class='th-navbar-item'>
                 <!-- here will be main nav items -->
                 <!-- Check if the user is authenticated -->
+                <?php /*
                 @auth
                     <!-- Display the username -->
                     Welcome, {{ Auth::user()->name }}
                 @endauth
+                */ ?>
             </div>
         </div>
         <div class='th-central-search uk-hidden'>
@@ -571,6 +575,7 @@
                     const errorData = await response.json();
                     console.error('Login failed:', errorData.message);
                     this.loginMessage.innerHTML = errorData.message;
+                    LoginHandler.calling = false;
                     return; // Stop the execution of the function
                 }
                 this.loginMessage.innerHTML = "";

@@ -73,6 +73,9 @@ class RegisterController extends Controller
         //$credentials['password'] =  Hash::make($credentials['password']);
 
         $user = User::get($credentials['email']);
+        if ($user == false){
+            return response()->json(['message' => "Threre is no user founded."], 401);
+        }
         $boo = Hash::check( $credentials['password'], $user->password);
 
         try {

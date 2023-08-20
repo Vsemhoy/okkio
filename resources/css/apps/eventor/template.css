@@ -19,7 +19,8 @@
   }
   
   .event-card {
-    border-left: 6px solid salmon;
+    border-left: 6px solid transparent;
+    border-radius: 9px;
   }
   .flex-space {
         display: flex;
@@ -79,5 +80,21 @@
 .uk-modal-footer > div {
   display: grid;
     grid-template-columns: auto auto auto;
-    grid-column-gap: 12px;
+}
+
+.evt-input-fullscreen {
+  display: block;
+  z-index: 999999;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+}
+.evt-textarea-toggle {
+  top: 0;
+  right: 0;
+  padding: 10px;
+  position: absolute;
+  color: white;
 }

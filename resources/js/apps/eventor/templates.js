@@ -109,8 +109,8 @@ class EventorTemplate
         {
             content += cards[i];
         }
-        const chd = new Date(date);
         let todate = EventorUtils.isDateToday(date) ? "eventor-today" : "";
+
         let todateId = EventorUtils.isDateToday(date) ? "id='row_today'" : "";
         let noEventClass = cards.length == 0 ? "eventor-hiddenrow" : "";
         let day = EventorTemplate.getDayOfWeek(date);

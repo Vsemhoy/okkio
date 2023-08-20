@@ -73,7 +73,7 @@ class SidebarMenu
     const text = document.createElement('div');
     const badge = document.createElement('span');
 
-    listItem.className = `th-com-s-nav-item ${itemObj.class || ''} ${itemObj.active == '' ? 'th-active' : ''} ${itemObj.disabled ? 'th-disabled' : ''}`;
+    listItem.className = `th-com-s-nav-item ${itemObj.class || ''} ${itemObj.active == true ? 'th-active' : ''}${itemObj.disabled ? 'th-disabled' : ''}`;
     if (itemObj.id) listItem.id = itemObj.id;
     if (itemObj.params.length > 1){
         listItem.setAttribute(itemObj.params[0], itemObj.params[1]);
@@ -117,8 +117,8 @@ class SidebarMenu
             'ukicon': item.ukicon || '',
             'name': item.name || '',
             'literals': item.literals || '',
-            'active': item.active || '',
-            'disabled': item.disabled || '',
+            'active': item.active || false,
+            'disabled': item.disabled || false,
             'badge': item.badge || '',
             'class': item.class || '',
             'id': item.id || '',
@@ -193,8 +193,8 @@ class SidebarMenu
             'ukicon'   : '',
             'name'     : 'Item',
             'literals' : 'FI',
-            'active'   : '1',
-            'disabled' : '',
+            'active'   : false,
+            'disabled' : false,
             'badge'    : '',
             'class'    : '',
             'id'       : '',

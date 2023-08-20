@@ -1,6 +1,11 @@
 class EventorFlow {
     static updatedItem = null;
+    static dateArray = []
+    static loadedSections = {};
     constructor() {
+        // [ 'date' => { 'afklsjdklfjas', 'jdlfkajsdf' }]
+
+
         this.pool = document.querySelector('#eventPool');
         //this.addEventTrigger = document.querySelectorAll(".eventor-act-addevent");
         this.expendTopTrigger = document.querySelector("#act_expandTop");
@@ -15,9 +20,9 @@ class EventorFlow {
 
         this.expendBottomTrigger.addEventListener('mousedown', (e) => {
             e.preventDefault();
-            this.renderMonth(EventorUtils.getPrevMonth(beginDate));
-            console.log(EventorUtils.getLastDayOfMonth(beginDate, true));
-            console.log(EventorUtils.getFirstDayOfMonth(beginDate, true));
+            this.renderMonth(EventorUtils.getPrevMonth(startDate));
+            console.log(EventorUtils.getLastDayOfMonth(startDate, true));
+            console.log(EventorUtils.getFirstDayOfMonth(startDate, true));
         });
 
         this.moveTopTrigger = document.querySelector("#act_moveTop");
@@ -28,10 +33,10 @@ class EventorFlow {
             event_container = [];
             this.pool.innerHTML = "";
             this.renderMonth(EventorUtils.getNextMonth(endDate), true);
-            beginDate = EventorUtils.getFirstDayOfMonth(endDate, false);
+            startDate = EventorUtils.getFirstDayOfMonth(endDate, false);
             EventorUtils.changeAddressBar("stm", EventorUtils.getFirstDayOfMonth(endDate, true));
             // console.log(EventorUtils.getLastDayOfMonth(endDate, true));
-            // console.log(EventorUtils.getFirstDayOfMonth(beginDate, true));
+            // console.log(EventorUtils.getFirstDayOfMonth(startDate, true));
             endDate = EventorUtils.getFirstDayOfMonth(endDate, false);
         });
 
@@ -39,12 +44,12 @@ class EventorFlow {
             e.preventDefault();
             event_container = [];
             this.pool.innerHTML = "";
-            this.renderMonth(EventorUtils.getPrevMonth(beginDate));
-            // console.log(EventorUtils.getLastDayOfMonth(beginDate, true));
-            // console.log(EventorUtils.getFirstDayOfMonth(beginDate, true));
-            endDate = EventorUtils.getLastDayOfMonth(EventorUtils.getDateMinusMonth(beginDate), false, 1);
-            EventorUtils.changeAddressBar("enm", EventorUtils.getLastDayOfMonth(beginDate, true));
-            beginDate = EventorUtils.getFirstDayOfMonth(endDate, false);
+            this.renderMonth(EventorUtils.getPrevMonth(startDate));
+            // console.log(EventorUtils.getLastDayOfMonth(startDate, true));
+            // console.log(EventorUtils.getFirstDayOfMonth(startDate, true));
+            endDate = EventorUtils.getLastDayOfMonth(EventorUtils.getDateMinusMonth(startDate), false, 1);
+            EventorUtils.changeAddressBar("enm", EventorUtils.getLastDayOfMonth(startDate, true));
+            startDate = EventorUtils.getFirstDayOfMonth(endDate, false);
         });
 
 
@@ -154,14 +159,14 @@ class EventorFlow {
         // Create a new Date object for the last day of the month
         let lastDayOfMonth = new Date(year, month + 1, 0);
         lastDayOfMonth = EventorUtils.getLastDayOfMonth(lastDayOfMonth);
-        if (beginDate > firstDayOfMonth) {
-            beginDate = firstDayOfMonth;
+        if (startDate > firstDayOfMonth) {
+            startDate = firstDayOfMonth;
         }
         if (endDate < lastDayOfMonth) {
             endDate = lastDayOfMonth;
         }
         EventorUtils.changeAddressBar("enm", EventorUtils.getLastDayOfMonth(endDate, true, 0));
-        EventorUtils.changeAddressBar("stm", EventorUtils.getFirstDayOfMonth(beginDate, true, 0));
+        EventorUtils.changeAddressBar("stm", EventorUtils.getFirstDayOfMonth(startDate, true, 0));
 
         let mhdr = EventorTemplate.createMonthHeader(date);
         if (start == false) {
@@ -190,8 +195,10 @@ class EventorFlow {
             this.pool.insertAdjacentHTML('afterbegin', mhdr);
         }
 
-        this.loadEvents(EventorUtils.getFirstDayOfMonth(date), EventorUtils.getLastDayOfMonth(date));
-        console.log('loadcall: ', EventorUtils.getFirstDayOfMonth(date), EventorUtils.getLastDayOfMonth(date));
+        if (me != ""){
+            this.loadEvents(EventorUtils.getFirstDayOfMonth(date), EventorUtils.getLastDayOfMonth(date));
+        }
+        //console.log('loadcall: ', EventorUtils.getFirstDayOfMonth(date), EventorUtils.getLastDayOfMonth(date));
     }
 
 
@@ -299,7 +306,7 @@ class EventorFlow {
             }
             else if (this.status > 200) {
                 if (counter < 1) {
-                    alert("Oops! There is some problems with the server connection.");
+                    alert("Oops! There is some problems with the server connection, or you are not logged in.");
 
                     counter++;
                 }
@@ -376,13 +383,24 @@ class EventorFlow {
                     return 0;
                 };
                 //console.log(this.responseText);
-                //console.log(this.responseText);
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Section") {
                         //console.log(item.results);
                         Array.from(item.results).forEach((item2) => {
                             section_container.push(item2);
+                            for (let i = 0; i < EventorFlow.dateArray.length; i++) {
+                                let cdate =  EventorUtils.getDateAsString(EventorFlow.dateArray[i]);
+                                console.log(cdate);
+                                if (EventorFlow.loadedSections[cdate] != null){
+                                    EventorFlow.loadedSections[cdate].push(item2.id);
+                                } else {
+                                    EventorFlow.loadedSections[cdate] = [];
+                                    EventorFlow.loadedSections[cdate].push(item2.id);
+                                };
+                              };
+                              
+
                         });
 
                     } else if (item.type == "Category") {
@@ -393,10 +411,14 @@ class EventorFlow {
                     }
                 });
                 EventorFlow.refreshCategoriesAndSections();
+                console.log(EventorFlow.loadedSections);
                 // let result = JSON.parse(this.responseText);
             }
             else if (this.status > 200) {
                 if (counter < 1) {
+                    if (me == ""){
+                        return;
+                    };
                     alert("Oops! There is some problems with the server connection.");
                     //console.log(this.responseText);
                     counter++;
@@ -489,6 +511,9 @@ class EventorFlow {
             }
             else if (this.status > 200) {
                 if (counter < 1) {
+                    if (me == ""){
+                        return;
+                    };
                     alert("Oops! There is some problems with the server connection.");
                     //console.log(this.responseText);
                     counter++;

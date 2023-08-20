@@ -37,65 +37,87 @@
 </script>
 
 <script>
-  // beginDate describes a month and year to start Month-calendar rendering
-  var beginDate = new Date();
-  var endDate = new Date();
+  // startDate describes a month and year to start Month-calendar rendering
 
 
-
-let evc = EventorTemplate.createEventCard("Title", "32245-44", "CAT", "THE BIG TEXT");
-let row = EventorTemplate.createDayRow('2022-11-27');
-let hdr  = EventorTemplate.createMonthHeader('2022-11-27');
 
 let pool = document.querySelector('#eventPool');
-
- 
-
-
-
-
-
-let eventor = new EventorFlow();
-
-//evf.renderMonth(EventorUtils.getDateMinusMonth( beginDate, 1));
-
-
-for (let i = 1; i < 3; i++){
-  //evf.renderMonth(EventorUtils.getDatePlusMonth( beginDate, i), true);
-}
 
 
 </script>
 
 <script>
+
+  var startDate = new Date();
+  var endDate = new Date();
+  let betParam = EventorUtils.getParam('stm');
+  let endParam = EventorUtils.getParam('enm');
+  if (betParam != null){
+    startDate2 = new Date(betParam);
+    startDate2 = EventorUtils.getNextMonth(startDate2);
+    startDate = startDate2;
+  }
+
+  let eventor = new EventorFlow();
+
+
+  if (startDate.getMonth() == endDate.getMonth()
+      && startDate.getYear() == endDate.getYear()){
+        EventorFlow.dateArray.push(startDate);
+      } else {
+        const urlParams = new URLSearchParams(window.location.search);
+        const startDateParam = urlParams.get('stm');
+        const endDateParam = urlParams.get('enm');
+        const startDate2 = startDate;
+        const endDate2 = endDate;
+        const currentDate = new Date(startDate2);
+        while (currentDate <= endDate2) {
+          const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+          EventorFlow.dateArray.push(firstDayOfMonth); // You can format the date as needed
+          currentDate.setMonth(currentDate.getMonth() + 1);
+        }
+      };
+
     if (me != ""){
         eventor.loadSectionsAndCategories();
-    }
-    eventor.renderMonth(beginDate, true);
-    beginDate = EventorUtils.getPrevMonth( beginDate);
-    if (me != ""){
-        //eventor.loadEvents(beginDate, endDate);
-    }
+    };
+
+
+    
+    for (let i = 0; i < EventorFlow.dateArray.length; i++) {
+      //console.log(eventor.dateArray[i]);
+      eventor.renderMonth(EventorFlow.dateArray[i], true);
+    };
+
+    startDate = EventorUtils.getPrevMonth(startDate);
+
 
     window.addEventListener('load', function () {
       let tod = document.getElementById("row_today");
-      if (tod != null){
+      if (tod != null && me != ""){
         tod.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
       }
- // console.log( beginDate + " BEG - END " +  endDate );
 });
+
+
+
+let getSection = EventorUtils.getParam('sect');
 
 let smenu = SidebarMenu.getNewMenu();
 let fitem = SidebarMenu.getNewItem();
 fitem.name  = "All sections";
 fitem.literals = "ALL";
 fitem.params = ["data-section", 'all'];
+if (getSection == null || getSection == ""){
+    fitem.active = true;
+  };
 smenu.items.push(fitem);
 
 for (let i = 0 ; i < section_container.length; i++){
   let sectim = section_container[i];
   let item = SidebarMenu.getNewItem();
   item.name = sectim.title;
+  item.active = false;
   let litar = item.name.split(' ');
   if (litar.length == 2){
     var ltr = litar[0].slice(0,1).toUpperCase() + litar[1].slice(0,1).toUpperCase();
@@ -110,6 +132,9 @@ for (let i = 0 ; i < section_container.length; i++){
   }
   item.params = ["data-section", sectim.id];
 
+  if (sectim.id == getSection){
+    item.active = true;
+  };
 
   smenu.items.push(item);
   smenu.count++;

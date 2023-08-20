@@ -44,12 +44,13 @@ class EventorUtils {
     // Get the current date
     const today = new Date();
     const dateIn = new Date(date);
+
     // Compare year, month, and day of the input date with today's date
     const isToday = (
       dateIn.getFullYear() === today.getFullYear() &&
       dateIn.getMonth() === today.getMonth() &&
-      dateIn.getDate() === today.getDate()
-    );
+      dateIn.getUTCDate() === today.getUTCDate()
+      );
 
     return isToday;
   }
@@ -110,6 +111,12 @@ class EventorUtils {
     return `${year}-${month}-${day}`;
   }
 
+  static getDateAsString(currentDate) {
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 
   static getLocation() {
     if (navigator.geolocation) {

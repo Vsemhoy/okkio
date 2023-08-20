@@ -59,6 +59,22 @@ class EventModal {
     this.fields.push(this.createFormField('Format:', 'evt_format', 'format', 'select', format));
     
     this.modalBody = this.modalEventEditor(this.fields);
+
+    document.querySelector("body").addEventListener('dblclick', (e) => {
+      if (e.target.id == 'evt_content'){
+        e.target.classList.toggle('evt-input-fullscreen');
+        e.target.closest("#modalHtmlEditor").querySelector('.uk-modal-close-full').classList.toggle('uk-hidden');
+        e.target.closest("#modalHtmlEditor").querySelector('.evt-textarea-toggle').classList.toggle('uk-hidden');
+      }
+    });
+    document.querySelector("body").addEventListener('click', (e) => {
+      if (e.target.id == 'evt_toggleTextarea' || e.target.parentElement.id == 'evt_toggleTextarea'){
+        document.querySelector('#evt_content').classList.toggle('evt-input-fullscreen');
+        document.querySelector("#modalHtmlEditor").querySelector('.uk-modal-close-full').classList.toggle('uk-hidden');
+        document.querySelector("#modalHtmlEditor").querySelector('.evt-textarea-toggle').classList.toggle('uk-hidden');
+      }
+    });
+
   }
 
   get()
@@ -80,6 +96,13 @@ class EventModal {
     modalCloseButton.setAttribute('type', 'button');
     modalCloseButton.setAttribute('uk-close', '');
     modalCloseButton.style.background = 'none';
+
+    const modalExpandTextareaButton = document.createElement('button');
+    modalExpandTextareaButton.classList.add('evt-textarea-toggle', 'uk-hidden');
+    modalExpandTextareaButton.setAttribute('type', 'button');
+    modalExpandTextareaButton.setAttribute('uk-icon', 'minus');
+    modalExpandTextareaButton.style.background = 'none';
+    modalExpandTextareaButton.id = 'evt_toggleTextarea';
   
     // Modal dialog
     const modalDialog = document.createElement('div');
@@ -170,6 +193,7 @@ class EventModal {
     modalDialog.appendChild(modalHeader);
     modalDialog.appendChild(modalBody);
     modalDialog.appendChild(modalFooter);
+    modalContainer.appendChild(modalExpandTextareaButton);
     modalContainer.appendChild(modalCloseButton);
     modalContainer.appendChild(modalDialog);
   
