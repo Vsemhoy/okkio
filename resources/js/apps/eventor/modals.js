@@ -205,7 +205,7 @@ class EventModal {
 
   createFormField(labelText, id, name, type, options = [], defaultValue = '', hasLabel = true) {
     const divElement = document.createElement('div');
-    divElement.classList.add('uk-margin');
+    divElement.classList.add('uk-margin-small');
   
       const labelElement = document.createElement('label');
       labelElement.classList.add('uk-form-label');

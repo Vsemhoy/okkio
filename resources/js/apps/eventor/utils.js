@@ -181,12 +181,15 @@ class EventorUtils {
     window.history.pushState({}, '', url);
   }
 
-  static getParam(param) {
+  static getParam(param, clearHash = true) {
     const params = new URLSearchParams(window.location.href);
     console.log(params);
     if (params.has(param)) {
-      const paramValue = params.get(param);
+      let paramValue = params.get(param);
       // Decode the URL parameter value
+      if (clearHash){
+        paramValue = paramValue.replace('#', '');
+      }
       console.log('param: ' + paramValue);
       return decodeURIComponent(paramValue);
     }

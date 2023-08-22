@@ -84,7 +84,6 @@ class SidebarMenu
 
         link.setAttribute(itemObj.linkSingleAttribute, "");
     }
-
     iconArea.className = 'th-sn-item-icon';
     if (itemObj.ukicon) {
         iconArea.innerHTML = `<span uk-icon="icon: ${itemObj.ukicon}"></span>`;
@@ -93,12 +92,13 @@ class SidebarMenu
     } else {
         iconArea.textContent = itemObj.literals;
     }
+    iconArea.setAttribute('uk-tooltip', "title: " + itemObj.name + "; pos: right");
 
     text.className = 'th-sn-item-text';
     text.textContent = itemObj.name;
 
-    badge.setAttribute('data-feather', 'home');
-    badge.className = 'align-text-bottom';
+    // badge.setAttribute('data-feather', 'home');
+    badge.className = 'th-nav-counter';
     badge.textContent = itemObj.badge || '';
 
     // Append the elements to build the structure

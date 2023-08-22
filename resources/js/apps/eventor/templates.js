@@ -9,7 +9,7 @@ class EventorTemplate
 
       static getMonthName(date) {
         let month = new Date(date).getMonth();   
-        console.log(month, date); 
+        //console.log(month, date); 
         return isNaN(month) ? null : 
         ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month];
       }
@@ -51,7 +51,7 @@ class EventorTemplate
             }
           }
         };
-        console.log(event.section);
+        //console.log(event.section);
         if (event.section != null && event.section != "")
         {
           for (let i = 0; i < section_container.length; i++){

@@ -8,6 +8,42 @@
 @section('content')
 <div id='eventor_body' class='app-content'>
 </div>
+
+<div id="modal_sectionManager" class="uk-modal-full" uk-modal>
+    <div class="uk-modal-dialog" uk-height-viewport style='background-image: linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);'>
+        <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
+        <div class="">
+            
+            <div class="uk-padding-large">
+                <h1>Headline</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal_categoryManager" class="uk-modal-full" uk-modal>
+    <div class="uk-modal-dialog" uk-height-viewport style='background-image: linear-gradient(to right bottom, #f6efb4, #ffe2b4, #ffd6be, #ffcecc, #ffcada, #f8cde8, #ecd1f5, #ddd6ff, #c7dfff, #b3e7ff, #a8eefd, #abf2ee);'>
+        <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
+        <div class="">
+            
+            <div class="uk-padding-large">
+                <h1>Headline</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal_settingsManager" class="uk-modal-full" uk-modal>
+    <div class="uk-modal-dialog" uk-height-viewport style='background-image: linear-gradient(to right bottom, #b4d7f6, #abe0f8, #a7e8f6, #a9efef, #b2f5e6, #baf7dd, #c4f8d4, #d1f8cb, #d8f5c2, #e0f2b9, #e9eeb1, #f2eaab);'>
+        <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
+        <div class="">
+            
+            <div class="uk-padding-large">
+                <h1>Headline</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('page-script')
@@ -15,19 +51,18 @@
     var event_container = [];
     var section_container = [];
     var category_container = [];
+    var activeSection = 'all';
     // EventorUtils.changeAddressBar('page', 'bro');
     if (EventorUtils.getParam('page') == null || EventorUtils.getParam('page') == 'start' ){
 
-        let nav = Nav.navButtons();
-        let toptools = Nav.topTools();
+        let nav = EventorNav.navButtons();
+        let toptools = EventorNav.topTools();
         let epool = Page.eventPool();
         let modalE = new EventModal();
         let modalS = new SettingsModal();
         document.querySelector('#eventor_body').insertAdjacentHTML('afterbegin', nav);
-        document.querySelector('#eventor_body').insertAdjacentHTML('afterbegin', toptools);
-    
+        document.querySelector('#eventor_body').insertAdjacentHTML('beforeend', toptools);
         document.querySelector('#eventor_body').appendChild(epool);
-    
         document.body.appendChild(modalE.get());
         document.querySelector('#eventor_body').insertAdjacentHTML('beforeend', modalS.get());
         //document.body.appendChild(modalE.get());
@@ -65,9 +100,9 @@ let pool = document.querySelector('#eventPool');
       && startDate.getYear() == endDate.getYear()){
         EventorFlow.dateArray.push(startDate);
       } else {
-        const urlParams = new URLSearchParams(window.location.search);
-        const startDateParam = urlParams.get('stm');
-        const endDateParam = urlParams.get('enm');
+        //const urlParams = new URLSearchParams(window.location.search);
+        const startDateParam = EventorUtils.getParam('stm');
+        const endDateParam = EventorUtils.getParam('enm');
         const startDate2 = startDate;
         const endDate2 = endDate;
         const currentDate = new Date(startDate2);
@@ -139,9 +174,34 @@ for (let i = 0 ; i < section_container.length; i++){
   smenu.items.push(item);
   smenu.count++;
 }
-console.log(smenu);
-sideMenu = new SidebarMenu(smenu);
 
+let setItem1 = SidebarMenu.getNewItem();
+setItem1.name  = "Sections";
+setItem1.ukicon = 'thumbnails';
+setItem1.id = "djsfaks";
+setItem1.ref='#modal_sectionManager';
+setItem1.linkSingleAttribute = "uk-toggle";
+smenu.setItems.push(setItem1);
+
+let setItem2 = SidebarMenu.getNewItem();
+setItem2.name  = "Categories";
+setItem2.ukicon = 'social';
+setItem2.id = "djsfaks";
+setItem2.ref='#modal_categoryManager';
+setItem2.linkSingleAttribute = "uk-toggle";
+smenu.setItems.push(setItem2);
+
+let setItem3 = SidebarMenu.getNewItem();
+setItem3.name  = "Settings";
+setItem3.ukicon = 'settings';
+setItem3.id = "djsfaks";
+setItem3.ref='#modal_settingsManager';
+setItem3.linkSingleAttribute = "uk-toggle";
+smenu.setItems.push(setItem3);
+
+//console.log(smenu);
+sideMenu = new SidebarMenu(smenu);
+let menuHandler = new EventorNav();
 </script>
 
 

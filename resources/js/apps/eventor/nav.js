@@ -1,4 +1,103 @@
-class Nav {
+class EventorNav {
+
+  static expendedRows = true;
+  constructor()
+  {
+    this.mainMenuItemsContainer = document.querySelector('#th_sidenav_items');
+    this.sectionNameBlock = document.querySelector('#evt_tool_sectionName');
+    this.expendor = document.querySelector('#evt_expandRows');
+
+    this.mainMenuItemsContainer.addEventListener('click', (e) => {
+      //console.log(e.target.closest('.th-com-s-nav-item'));
+      if (e.target.closest('.th-com-s-nav-item')){
+        let section  = e.target.closest('.th-com-s-nav-item').getAttribute('data-section');
+        if (activeSection == section){ return;};
+        let text  = e.target.closest('.th-com-s-nav-item').querySelector('.th-sn-item-text').innerHTML;
+        this.sectionNameBlock.innerHTML = text;
+        
+        //alert(section);
+        let prevExpended = EventorNav.expendedRows;
+        if (EventorNav.expendedRows == false){
+          EventorNav.expendAllRows();
+        };
+        EventorNav.recheckMenuItems(section);
+        EventorUtils.changeAddressBar('sect', section);
+        EventorFlow.clearAllCardBodyFromChart();
+        activeSection = section;
+        console.log('section to load :>> ', section);
+        eventor.reloadSectionEvents(section);
+        if (prevExpended == false){
+          EventorNav.shrinkAllRows();
+        }
+      }
+    });
+
+    let cursect = EventorUtils.getParam('sect');
+    if (cursect == null){
+      cursect = 'all';
+    }
+    EventorNav.recheckMenuItems(cursect);
+
+    for (let i = 0; i < section_container.length; i++) {
+      const element = section_container[i];
+      if (element.id == activeSection){
+        document.querySelector('#evt_tool_sectionName').innerHTML = element.title;
+        break;
+      }
+      
+    }
+
+    this.expendor.addEventListener('click', (e) => {
+      
+
+      if (EventorNav.expendedRows == true){
+        EventorNav.shrinkAllRows();
+        this.expendor.setAttribute('uk-icon', 'icon: expand');
+        this.expendor.setAttribute('title', 'Expand rows');
+        EventorNav.expendedRows = false;
+      } else {
+        this.expendor.setAttribute('uk-icon', 'icon: shrink');
+        this.expendor.setAttribute('title', 'Shrink rows');
+        EventorNav.expendAllRows();
+        EventorNav.expendedRows = true;
+      }
+    });
+
+  }
+
+  static shrinkAllRows(){
+    let evesec = document.querySelectorAll('.event-section');
+    for (let i = 0; i < evesec.length; i++) {
+      const element = evesec[i];
+      let cards = element.querySelectorAll('.evt-card-wrapper');
+      if (cards.length == 0){
+        element.classList.add('uk-hidden');
+      }
+    }
+    EventorNav.expendedRows = false;
+  }
+
+  static expendAllRows(){
+    let evesec = document.querySelectorAll('.event-section');
+    for (let i = 0; i < evesec.length; i++) {
+      const element = evesec[i];
+      element.classList.remove('uk-hidden');
+    }
+    EventorNav.expendedRows = true;
+  }
+
+  static recheckMenuItems(section = "")
+  {
+    let items  = document.querySelector('#th_sidenav_items').querySelectorAll('.th-com-s-nav-item');
+    for (let i = 0; i < items.length; i++) {
+      const element = items[i];
+      element.classList.remove('th-active');
+      if (element.getAttribute('data-section') == section){
+        element.classList.add('th-active');
+      }
+    }
+  }
+
 
 
     static navButtons(containerId = "", position = "") {
@@ -47,22 +146,22 @@ class Nav {
 
       static topTools() {
         let result = `
-        <div class="uk-card uk-card-default flex-space">
-          <div class="uk-text-bold uk-padding-small uk-text-large">Section: All</div>
-          <div class="uk-padding-small">
-            <div class="uk-margin" uk-margin="">
-              <div uk-form-custom="target: true" class="uk-form-custom uk-first-column">
-                <input class="uk-input uk-form-width-auto" type="text" placeholder="Select file" aria-label="Custom controls">
-              </div>
-              <button class="uk-button uk-button-default">Search</button>
+        <div class="flex-space th-sticky-bottom-box evt-tooltop" uk-sticky="position: top">
+          <div class="evt-toolbar-sectionname" id='evt_tool_sectionName' title='Active section'>Section: All</div>
+          <div class="uk-padding-remove">
+            <div class="">
+              
             </div> 
           </div>
-          <div class="uk-padding-small">
-            <button class="uk-button uk-button-default">Filter</button>
-            <a class="uk-button uk-button-default" id="callCreateModal" href="#modalHtmlEditor" uk-toggle="" aria-expanded="false">Add Event</a>
+          <div class="uk-padding-remove" title='Create an event'>
+          <a class="uk-button" id='evt_expandRows' uk-icon="icon: shrink" title='shrink rows'></a>
+            <a class="uk-button " id="callCreateModal" href="#modalHtmlEditor" uk-toggle="" aria-expanded="false" uk-icon="icon: plus"></a>
           </div>
         </div>
         `;
         return result;
       }
+
+
+
 }

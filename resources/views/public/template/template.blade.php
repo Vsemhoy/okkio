@@ -134,7 +134,7 @@
 
     .th-nav-rail {
         position: fixed;
-        z-index: 26;
+        z-index: 99999;
         transition: all ease 0.3s;
         padding: 0px;
         opacity: 0;
@@ -156,9 +156,9 @@
     }
 
     .th-sidenav-show .col-main {
-        width: calc(100% - 42px);
+        width: calc(100% - 46px);
         float: left;
-        margin-left: 42px;
+        margin-left: 46px;
     }
 
     .th-sidenav-trigger,
@@ -194,6 +194,9 @@
 
     .th-sidebar-opened .th-col-sidenav {
         width: 260px;
+    }
+    #sidebarMenu {
+        z-index: 999;
     }
 
     @media only screen and (max-width: 992px) {
@@ -283,7 +286,7 @@
     .th-com-s-nav-item>a {
         display: grid;
         display: grid;
-        grid-template-columns: 42px auto auto;
+        grid-template-columns: 42px auto min-content;
     }
 
     .th-sn-column {
@@ -294,6 +297,9 @@
         margin-top: 6px;
     }
 
+    .th-com-s-nav-item:hover {
+        background-color: #03A9F4;
+    }
     .th-com-s-nav-item:hover a {
         color: white;
         text-decoration: none;
@@ -310,6 +316,10 @@
     padding: 3px 12px;
     }
 
+    .th-sticky-bottom-box {
+        background: white;
+        box-shadow: 1px 6px 16px -10px #00000040;
+    }
     </style>
 </head>
 

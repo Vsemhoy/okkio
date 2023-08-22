@@ -98,3 +98,22 @@
   position: absolute;
   color: white;
 }
+
+#eventor_body .uk-sticky-placeholder {
+  display: none;
+}
+#eventor_body {
+  padding-bottom: 88px;
+}
+.evt-toolbar-sectionname {
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 12px;
+  font-weight: 500;
+}
+
+.evt-tooltop .uk-button {
+  padding: 0 12px;
+}
