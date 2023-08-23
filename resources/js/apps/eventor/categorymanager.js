@@ -1,0 +1,7 @@
+class CategoryManager
+{
+    constructor()
+    {
+        
+    }
+}

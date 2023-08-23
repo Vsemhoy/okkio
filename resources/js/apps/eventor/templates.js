@@ -62,6 +62,10 @@ class EventorTemplate
             }
           }
         };
+        let starredMark = "";
+        if (event.starred == 1){
+          starredMark = " evt-starred";
+        }
         let catBlock = "";
         let secBlock = "";
         let rootcolor = "";
@@ -75,13 +79,13 @@ class EventorTemplate
         let content = "";
         if (event.format == 0){
           content = event.content.substring(0, cutlength);
-          if (event.content.length > 300){
-            content += " ...";
+          if (event.content.length > cutlength){
+            content = content.trim() + "...";
           }
           content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
         }
         return `
-          <div id='${event.id}' class='evt-card-wrapper'>
+          <div id='${event.id}' class='evt-card-wrapper${starredMark}'>
             <div class="uk-card uk-box-shadow-small uk-box-shadow-hover-large 
             uk-card-small uk-card-default uk-text-left left-corrector event-card"
              style='border-color: #${rootcolor};'>

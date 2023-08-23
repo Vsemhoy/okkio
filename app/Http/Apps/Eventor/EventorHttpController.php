@@ -30,15 +30,6 @@ class EventorHttpController extends BaseController
 
   public function postCall(Request $request)
   {
-    //return "HELLO DADDY!";
-    //return $_SESSION['LoggedUser'];
-    // if (empty($request->code))
-    // {
-    //   return "WRONG CODE NUMBER";
-    // }
-
-  //   $user = User::where('id', '=', session('LoggedUser'))->first();
-
     $user = Auth::user()->id;
     
     $code = $request->code;
@@ -47,9 +38,6 @@ class EventorHttpController extends BaseController
 
     $task = self::makeTask($data, $user);
 
-
-
-  
 
 
     $url = 'http://microservice?remoteservice=' . self::REMOTE_SERVICE_NAME;
@@ -83,23 +71,8 @@ class EventorHttpController extends BaseController
     // Close cURL resource
     curl_close($ch);
    return $result;
-
-    //print_r($obj);
     return;
 
-  //   if ($user == null || empty($user)) // 
-  //   {
-  //     return false;
-  //   }
-  //   //return $data->name;
-  //  //return $_REQUEST['code'];
-
-  //   /// ------- CREATE NEW ITEMS ------------ ///
-  //   if ($code == 100)
-  //   {
-  //     // returns plain integer of item ID
-    
-  //   }
 
   }
 

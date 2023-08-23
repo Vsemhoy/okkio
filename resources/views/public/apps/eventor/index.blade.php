@@ -11,8 +11,8 @@
 
 <div id="modal_sectionManager" class="uk-modal-full" uk-modal>
     <div class="uk-modal-dialog" uk-height-viewport style='background-image: linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);'>
-        <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
-        <div class="">
+        <button class="uk-modal-close-full" type="button" uk-close></button>
+        <div class="" id='evt_sectionmanager_body'>
             
             <div class="uk-padding-large">
                 <h1>Headline</h1>
@@ -202,7 +202,17 @@ smenu.setItems.push(setItem3);
 //console.log(smenu);
 sideMenu = new SidebarMenu(smenu);
 let menuHandler = new EventorNav();
+
+
+
+
+let sectionManager = new SectionManager();
+
 </script>
+
+
+
+
 
 
 @endsection
@@ -216,4 +226,6 @@ let menuHandler = new EventorNav();
 <script src="{{ asset('resources/js/apps/eventor/nav.js') }}"></script>
 <script src="{{ asset('resources/js/apps/eventor/modals.js') }}"></script>
 <script src="{{ asset('resources/js/apps/eventor/flow.js') }}"></script>
+<script src="{{ asset('resources/js/apps/eventor/sectionmanager.js') }}"></script>
+<script src="{{ asset('resources/js/apps/eventor/categorymanager.js') }}"></script>
 @endsection
