@@ -145,22 +145,24 @@
   border-radius: 9px;
   margin-bottom: 6px;
   background-color: white;
+  padding: 9px;
+  padding-bottom: 3px;
 }
 .evt-cat-group-list {
   display: flex;
-  padding-top: 12px;
+  padding-top: 3px;
 }
 .evt-catgroup-s-item {
   display: block;
     font-size: 0.9rem;
     background: #e5e5e5;
-    margin: 6px;
+    margin: 2px;
     border-radius: 12px;
     padding: 0px 12px;
 }
 .evt-sect-card-content {
   color: gray;
-  padding-top: 12px;
+  padding-top: 3px;
 }
 @media only screen and (max-width: 639px) {
   .evt-modal-container-wrapper {
