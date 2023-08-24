@@ -12,6 +12,7 @@ class SectionManager
             item.content ='Description...';
             item.color = 'ffffff';
             item.user = me;
+            item.ordered = section_container.length + 1;
             this.saveSection(item);
 
         });
@@ -112,6 +113,23 @@ class SectionManager
         //         }
         //     }
         // });
+
+        UIkit.util.on('#evt_sectionList', 'moved', function(e) {
+            // This code will run after an item is moved within the sortable container
+            let items = e.target.querySelectorAll('.card-box');
+            let array = [];
+            for (let i = 0; i < items.length; i++) {
+                const element = items[i];
+                let id = element.getAttribute('data-id');
+                console.log(id, i + 1);
+                let item = {};
+                item.id = id;
+                item.ordered = i + 1;
+                array.push(item);
+            };
+            SectionManager.updateEventOrder(array);
+            // Perform additional actions here
+        });
     }
 
 
@@ -197,8 +215,7 @@ class SectionManager
 
 
             <div class='evt-sect-card-content'>
-            <textarea class='evt-section-content-in' placeholder='Event description'>${content}
-            </textarea>
+            <textarea class='evt-section-content-in' placeholder='Event description'>${content}</textarea>
             </div>
 
         <div class='evt-cat-group-list'>`;
@@ -308,6 +325,69 @@ class SectionManager
         task.where.push(where);
         taskArray.push(task);
         console.log(taskArray);
+        xhttp.send(JSON.stringify(taskArray));
+    }
+
+
+
+    static updateEventOrder(sections) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                if (this.responseText == -1) {
+                    alert("You are not registered!");
+                    return 0;
+                };
+                console.log(this.responseText);
+                console.log(JSON.parse(this.responseText));
+                let result = JSON.parse(this.responseText);
+                Array.from(result.results).forEach((item) => {
+                    if (item.type == "Section") {
+                        console.log(item.results);
+                        Array.from(item.results).forEach((item2) => {
+                                for (let i = 0; i < section_container.length; i++){
+                                    let el = section_container[i];
+                                    if (el.id == item2.id){
+                                        section_container[i].ordered == item2.ordered;
+                                        break;
+                                    }
+                                }
+                        });
+                        section_container.sort(function(a, b) {
+                            return b.ordered - a.ordered;
+                          });
+                    };
+                });
+            }
+            else if (this.status > 200) {
+                if (counter < 1) {
+                    alert("Oops! There is some problems with the server connection, or you are not logged in.");
+
+                    counter++;
+                }
+            }
+        };
+        xhttp.open("POST", "/eventor/postcall", false);
+        // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
+
+        const where = {
+            column: "user",
+            value: me,
+        };
+
+        let taskArray = [];
+        for (let i = 0; i < sections.length; i++) {
+            const section = sections[i];
+            let task = EventorTypes.GetNewTask();
+            task.objects.push(section);
+            task.user = me;
+            task.action = 6;
+            task.type = "section";
+            task.where.push(where);
+            taskArray.push(task);
+        }
         xhttp.send(JSON.stringify(taskArray));
     }
 }

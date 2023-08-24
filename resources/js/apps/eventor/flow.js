@@ -603,7 +603,18 @@ class EventorFlow {
                     if (item.type == "Event") {
                         //console.log(item.results);
                         Array.from(item.results).forEach((item2) => {
-                            event_container.push(item2);
+                            let exists = false;
+                            let newId = item2.id;
+                            for (let i = 0; i < event_container.length; i++) {
+                                const element = event_container[i];
+                                if (element.id == newId){
+                                    exists = true;
+                                    break;
+                                }
+                            }
+                            if (exists == false){
+                                event_container.push(item2);
+                            }
 
                             
                                 for (let i = 0; i < EventorFlow.dateArray.length; i++) {
