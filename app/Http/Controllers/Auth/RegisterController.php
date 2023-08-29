@@ -69,9 +69,9 @@ class RegisterController extends Controller
 
     public function post_login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('email', 'password', );
         //$credentials['password'] =  Hash::make($credentials['password']);
-
+        $remember = $request->has('remember');
         $user = User::get($credentials['email']);
         if ($user == false){
             return response()->json(['message' => "Threre is no user founded."], 401);
@@ -79,7 +79,7 @@ class RegisterController extends Controller
         $boo = Hash::check( $credentials['password'], $user->password);
 
         try {
-            $val = Auth::attempt($credentials);
+            $val = Auth::attempt($credentials, $remember);
             if ($val) {
                 // Authentication passed...
                 $user = Auth::user();
@@ -241,10 +241,12 @@ class RegisterController extends Controller
     *
     * @return response()
     */
-    public function post_logout() {
+    public function post_logout(Request $request) {
         $user = Auth::user();
-        Session::flush();
+        //Session::flush();
         Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return response()->json(['message' => 'You are successfully logout.', 'code' => '0'], 200);
     }
     /**
@@ -332,6 +334,3 @@ class RegisterController extends Controller
     }
 
 }
-
-
-?>

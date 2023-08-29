@@ -535,6 +535,9 @@
                     <label class="uk-form-label" for="password">Password:</label>
                     <input class="uk-input" type="password" id="password" placeholder="Enter your password">
                 </div>
+                <div class="uk-margin">
+                <label><input class="uk-checkbox" id='rememberme' type="checkbox"> Remember me</label>
+                </div>
                 <div class="uk-margin uk-text-danger" id="wrong-credentials_error"></div>
                 <div
                     class="uk-modal-footer uk-text-right uk-padding-remove-left uk-padding-remove-right uk-padding-remove-bottom">
@@ -571,7 +574,8 @@
             LoginHandler.calling = true;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-
+            let remember =  document.getElementById('rememberme').checked;
+console.log(remember);
             if (!this.validateEmail(email)) {
                 this.loginMessage.innerHTML = "Email not valid!"
                 return;
@@ -597,8 +601,9 @@
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                     },
                     body: JSON.stringify({
-                        email,
-                        password
+                        'email' : email,
+                        'password' : password,
+                        'remember': remember
                     }),
                 });
 
