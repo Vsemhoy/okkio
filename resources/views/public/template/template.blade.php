@@ -304,6 +304,12 @@
         color: white;
         text-decoration: none;
     }
+    .th-com-s-nav-item:hover .th-sn-round {
+        opacity: 1;
+        padding: 5px;
+        margin-left: 35px;
+        margin-top: -12px;
+    }
     .th-user-go {
         vertical-align: middle;
         display: grid;
@@ -319,6 +325,22 @@
     .th-sticky-bottom-box {
         background: white;
         box-shadow: 1px 6px 16px -10px #00000040;
+    }
+    .th-sn-round {
+        display: block;
+        padding: 3px;
+        position: absolute;
+        margin-left: 37px;
+        margin-top: -10px;
+        opacity: 0.6;
+        transition: all ease 0.3s;
+        border-radius: 2px;
+    }
+    .th-sidebar-opened .th-sn-round {
+        margin-left: 248px;
+    }
+    .th-sidebar-opened .th-com-s-nav-item:hover .th-sn-round {
+        margin-left: 246px;
     }
     </style>
 </head>
@@ -873,6 +895,8 @@
                 e.preventDefault;
                 this.trigSearchBar();
             });
+
+
         }
 
         trigSearchBar() {
@@ -901,7 +925,19 @@
                     this.body.classList.toggle('th-sidebar-opened');
                 });
             });
+            document.addEventListener('click', (e)=> {
+            let elem = e.target;
+            if (elem.classList.contains('th-sidenav-trigger') || elem.closest('.th-sidenav-trigger')){ return;};
+            if (!elem.closest('.th-col-sidenav')){
+                if (this.body.classList.contains('th-sidebar-opened')){
+                    this.body.classList.remove('th-sidebar-opened');
+                }
+            }
 
+                if (elem.closest('.th-com-s-nav-item')){
+                    this.body.classList.remove('th-sidebar-opened');
+                }
+            });
 
         }
 

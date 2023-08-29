@@ -166,6 +166,7 @@ for (let i = 0 ; i < section_container.length; i++){
     item.literals = ltr;
   }
   item.params = ["data-section", sectim.id];
+  item.color = sectim == null ? '' : sectim.color;
 
   if (sectim.id == getSection){
     item.active = true;

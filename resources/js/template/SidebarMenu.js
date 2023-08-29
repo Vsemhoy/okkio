@@ -67,6 +67,7 @@ class SidebarMenu
     }
 
     makeItem(itemObj) {
+        
     const listItem = document.createElement('li');
     const link = document.createElement('a');
     const iconArea = document.createElement('span');
@@ -94,6 +95,8 @@ class SidebarMenu
     }
     iconArea.setAttribute('uk-tooltip', "title: " + itemObj.name + "; pos: right");
 
+
+
     text.className = 'th-sn-item-text';
     text.textContent = itemObj.name;
 
@@ -105,8 +108,19 @@ class SidebarMenu
     link.appendChild(iconArea);
     link.appendChild(text);
     link.appendChild(badge);
+    
     listItem.appendChild(link);
+    
+    // if (itemObj.color){
+    //     listItem.setAttribute('style', "background-color: #" + itemObj.color + ";");
+    // }
 
+    if (itemObj.color){
+        const round = document.createElement('div');
+        round.className = 'th-sn-round';
+        round.setAttribute('style', "background-color: #" + itemObj.color + ";");
+        listItem.appendChild(round);
+    }
     return listItem;
     }
 
@@ -191,6 +205,7 @@ class SidebarMenu
             'icon'     : '',
             'ref'      : '#',
             'ukicon'   : '',
+            'color'    : '',
             'name'     : 'Item',
             'literals' : 'FI',
             'active'   : false,

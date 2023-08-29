@@ -458,7 +458,7 @@ class EventorFlow {
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 if (this.responseText == -1) {
-                    alert("You are not registered!");
+                    console.log("You are not registered!");
                     return 0;
                 };
                 //console.log(this.responseText);
@@ -501,7 +501,7 @@ class EventorFlow {
                     if (me == ""){
                         return;
                     };
-                    alert("Oops! There is some problems with the server connection.");
+                    console.log("Oops! There is some problems with the server connection.");
                     //console.log(this.responseText);
                     counter++;
                 }
@@ -593,7 +593,7 @@ class EventorFlow {
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 if (this.responseText == -1) {
-                    alert("You are not registered!");
+                    console.log("You are not registered!");
                     return 0;
                 };
                 //console.log(this.responseText);
@@ -642,7 +642,7 @@ class EventorFlow {
                     if (me == ""){
                         return;
                     };
-                    alert("Oops! There is some problems with the server connection.");
+                    console.log("Oops! There is some problems with the server connection.");
                     //console.log(this.responseText);
                     counter++;
                 }
