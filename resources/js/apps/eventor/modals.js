@@ -68,7 +68,7 @@ class EventModal {
       }
     });
     document.querySelector("body").addEventListener('click', (e) => {
-      if (e.target.id == 'evt_toggleTextarea' || e.target.parentElement.id == 'evt_toggleTextarea'){
+      if (e.target.id == 'evt_toggleTextarea' || e.target.parentElement != null && e.target.parentElement.id == 'evt_toggleTextarea'){
         document.querySelector('#evt_content').classList.toggle('evt-input-fullscreen');
         document.querySelector("#modalHtmlEditor").querySelector('.uk-modal-close-full').classList.toggle('uk-hidden');
         document.querySelector("#modalHtmlEditor").querySelector('.evt-textarea-toggle').classList.toggle('uk-hidden');

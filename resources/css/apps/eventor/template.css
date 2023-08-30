@@ -140,7 +140,7 @@
 .evt-modal-container .uk-button {
  border-radius: 6px;
 }
-.evt-section-card {
+.evt-section-card, .evt-category-card {
   border-left: 9px solid white;
   border-radius: 9px;
   margin-bottom: 6px;
@@ -170,12 +170,12 @@
     height: 100vh;
   }
 }
-.evt-section-name-in {
+.evt-section-name-in, .evt-category-name-in {
   width: calc(100% - 100px);
   border: 0px;
   font-size: 1.1rem;
 }
-.evt-section-content-in {
+.evt-section-content-in, .evt-category-content-in {
 width: 100%;
 color: gray;
 border: none;

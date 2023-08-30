@@ -24,7 +24,7 @@
     <div id="modal_categoryManager" class="uk-modal-full" uk-modal>
     <div class="uk-modal-dialog" uk-height-viewport style='background-image: linear-gradient(to right bottom, #f6efb4, #ffe2b4, #ffd6be, #ffcecc, #ffcada, #f8cde8, #ecd1f5, #ddd6ff, #c7dfff, #b3e7ff, #a8eefd, #abf2ee);'>
         <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
-        <div class="">
+        <div class=""  id='evt_categorymanager_body'>
             
             <div class="uk-padding-large">
                 <h1>Headline</h1>
@@ -208,6 +208,7 @@ let menuHandler = new EventorNav();
 
 
 let sectionManager = new SectionManager();
+let categoryManager = new CategoryManager();
 
 </script>
 
