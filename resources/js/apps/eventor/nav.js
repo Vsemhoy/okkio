@@ -10,6 +10,7 @@ class EventorNav {
     this.mainMenuItemsContainer.addEventListener('click', (e) => {
       //console.log(e.target.closest('.th-com-s-nav-item'));
       if (e.target.closest('.th-com-s-nav-item')){
+        e.preventDefault();
         let section  = e.target.closest('.th-com-s-nav-item').getAttribute('data-section');
         if (activeSection == section){ return;};
         let text  = e.target.closest('.th-com-s-nav-item').querySelector('.th-sn-item-text').innerHTML;
@@ -29,6 +30,12 @@ class EventorNav {
         if (prevExpended == false){
           EventorNav.shrinkAllRows();
         }
+        if (EventorFlow.dateArray.length ){
+          let tod = document.getElementById("row_today");
+          if (tod != null && me != ""){
+            tod.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+          };
+      };
       }
     });
 
@@ -61,6 +68,20 @@ class EventorNav {
         EventorNav.expendAllRows();
         EventorNav.expendedRows = true;
       }
+    });
+
+
+    const restrictors = document.querySelectorAll('.evt-restrictor');
+    const toolbarDatemark = document.querySelector('.evt-toolbar-datemark');
+
+    window.addEventListener('scroll', () => {
+      restrictors.forEach(restrictor => {
+        const rect = restrictor.getBoundingClientRect();
+        if (rect.top <= 0) {
+          const dataRestrictor = restrictor.getAttribute('data-restrictor');
+          toolbarDatemark.textContent = dataRestrictor;
+        }
+      });
     });
 
   }
@@ -147,7 +168,11 @@ class EventorNav {
       static topTools() {
         let result = `
         <div class="flex-space th-sticky-bottom-box evt-tooltop" uk-sticky="position: top">
-          <div class="evt-toolbar-sectionname" id='evt_tool_sectionName' title='Active section'>Section: All</div>
+        <div style='display: flex;
+        align-items: center; grid-gap: 8px;'>  
+        <div class="evt-toolbar-sectionname" id='evt_tool_sectionName' title='Active section'>Section: All</div>
+          <div class="evt-toolbar-datemark"></div>
+          </div>
           <div class="uk-padding-remove">
             <div class="">
               

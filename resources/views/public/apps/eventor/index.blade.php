@@ -118,11 +118,12 @@ let pool = document.querySelector('#eventPool');
     };
 
 
-    
+    let callParamsArray = [];
     for (let i = 0; i < EventorFlow.dateArray.length; i++) {
       //console.log(eventor.dateArray[i]);
-      eventor.renderMonth(EventorFlow.dateArray[i], true);
+      callParamsArray.push( eventor.renderMonth(EventorFlow.dateArray[i], true));
     };
+    eventor.loadEvents(callParamsArray);
 
     startDate = EventorUtils.getPrevMonth(startDate);
 
@@ -131,7 +132,7 @@ let pool = document.querySelector('#eventPool');
       let tod = document.getElementById("row_today");
       if (tod != null && me != ""){
         tod.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-      }
+      };
 });
 
 
@@ -179,7 +180,7 @@ for (let i = 0 ; i < section_container.length; i++){
 let setItem1 = SidebarMenu.getNewItem();
 setItem1.name  = "Sections";
 setItem1.ukicon = 'thumbnails';
-setItem1.id = "djsfaks";
+setItem1.id = "djsfgaks";
 setItem1.ref='#modal_sectionManager';
 setItem1.linkSingleAttribute = "uk-toggle";
 smenu.setItems.push(setItem1);
@@ -187,7 +188,7 @@ smenu.setItems.push(setItem1);
 let setItem2 = SidebarMenu.getNewItem();
 setItem2.name  = "Categories";
 setItem2.ukicon = 'social';
-setItem2.id = "djsfaks";
+setItem2.id = "djsfakfs";
 setItem2.ref='#modal_categoryManager';
 setItem2.linkSingleAttribute = "uk-toggle";
 smenu.setItems.push(setItem2);

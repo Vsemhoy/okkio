@@ -19,14 +19,16 @@ class EventorFlow {
 
         this.expendTopTrigger.addEventListener('mousedown', (e) => {
             e.preventDefault();
-            this.renderMonth(EventorUtils.getNextMonth(endDate), true);
+            let callparams = [this.renderMonth(EventorUtils.getNextMonth(endDate), true)];
+            this.loadEvents(callparams);
             console.log(EventorUtils.getLastDayOfMonth(endDate, true));
             console.log(EventorUtils.getFirstDayOfMonth(endDate, true));
         });
 
         this.expendBottomTrigger.addEventListener('mousedown', (e) => {
             e.preventDefault();
-            this.renderMonth(EventorUtils.getPrevMonth(startDate));
+            let callparams = [this.renderMonth(EventorUtils.getPrevMonth(startDate))];
+            this.loadEvents(callparams);
             console.log(EventorUtils.getLastDayOfMonth(startDate, true));
             console.log(EventorUtils.getFirstDayOfMonth(startDate, true));
         });
@@ -38,7 +40,8 @@ class EventorFlow {
             e.preventDefault();
             event_container = [];
             this.pool.innerHTML = "";
-            this.renderMonth(EventorUtils.getNextMonth(endDate), true);
+            let callparams = [this.renderMonth(EventorUtils.getNextMonth(endDate), true)];
+            this.loadEvents(callparams);
             startDate = EventorUtils.getFirstDayOfMonth(endDate, false);
             EventorUtils.changeAddressBar("stm", EventorUtils.getFirstDayOfMonth(endDate, true));
             // console.log(EventorUtils.getLastDayOfMonth(endDate, true));
@@ -50,7 +53,8 @@ class EventorFlow {
             e.preventDefault();
             event_container = [];
             this.pool.innerHTML = "";
-            this.renderMonth(EventorUtils.getPrevMonth(startDate));
+            let callparams = [this.renderMonth(EventorUtils.getPrevMonth(startDate))];
+            this.loadEvents(callparams);
             // console.log(EventorUtils.getLastDayOfMonth(startDate, true));
             // console.log(EventorUtils.getFirstDayOfMonth(startDate, true));
             endDate = EventorUtils.getLastDayOfMonth(EventorUtils.getDateMinusMonth(startDate), false, 1);
@@ -153,7 +157,6 @@ class EventorFlow {
         });
 
 
-
     }
 
 
@@ -209,7 +212,7 @@ class EventorFlow {
         }
 
         if (me != ""){
-            this.loadEvents(EventorUtils.getFirstDayOfMonth(date), EventorUtils.getLastDayOfMonth(date), activeSection);
+            return [EventorUtils.getFirstDayOfMonth(date), EventorUtils.getLastDayOfMonth(date), activeSection];
         }
         //console.log('loadcall: ', EventorUtils.getFirstDayOfMonth(date), EventorUtils.getLastDayOfMonth(date));
     }
@@ -359,6 +362,7 @@ class EventorFlow {
    {
     console.log('command :>> ', 'reloadSectionEvents');
         // check if there not events in the array for this section
+        let loadArray = [];
         if (activeSection != 'all'){
             for (let i = 0; i < EventorFlow.dateArray.length; i++) {
                 let cdate =  EventorUtils.getDateAsString(EventorFlow.dateArray[i]);
@@ -368,7 +372,7 @@ class EventorFlow {
 
                     if (!EventorFlow.loadedSections[cdate].includes(sectionid)){
                         EventorFlow.loadedSections[cdate].push(sectionid);
-                        this.loadEvents(EventorUtils.getFirstDayOfMonth(startDate), EventorUtils.getLastDayOfMonth(endDate), sectionid);
+                        loadArray.push([EventorUtils.getFirstDayOfMonth(startDate), EventorUtils.getLastDayOfMonth(endDate), sectionid]);
                         EventorFlow.refreshEvents();
                         console.log('section when try' , activeSection);
                     } else {
@@ -382,6 +386,11 @@ class EventorFlow {
                     console.log('NO DATE IN THE ARRAY');
                 };
             };
+            if (loadArray.length){
+                this.loadEvents(loadArray);
+            }
+
+
         } else {
             let sectionsToLoad = [];
             for (let i = 0; i < section_container.length; i++) {
@@ -405,6 +414,14 @@ class EventorFlow {
             }
             
             EventorFlow.refreshEvents();
+
+            if (dateArray.length ){
+                let tod = document.getElementById("row_today");
+                if (tod != null && me != ""){
+                  tod.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+                };
+            };
+
         }
 
 
@@ -585,7 +602,7 @@ class EventorFlow {
       }
 
 
-    loadEvents(datePast, dateFuture, section = '') {
+    loadEvents(callArray) {
         console.log('command :>> ', 'loadEvents');
         console.log('Called section' , activeSection);
         let counter = 0;
@@ -596,7 +613,7 @@ class EventorFlow {
                     console.log("You are not registered!");
                     return 0;
                 };
-                //console.log(this.responseText);
+                console.log(this.responseText);
                 //console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
@@ -658,31 +675,39 @@ class EventorFlow {
         // console.log(EventorUtils.getSimpleDate(dateFuture, true));
         let taskArray = [];
         
-        let task = EventorTypes.GetNewTask();
-        task.user = me;
-        task.action = 1;
-        task.type = "event";
-        const where = {
-            column: "user",
-            value: me,
-        };
-        task.where.push(where);
-        const where2 = {
-            column: "setdate",
-            value: EventorUtils.getSimpleDate(datePast, true),
-            operator: "BETWEEN",
-            value2: EventorUtils.getSimpleDate(dateFuture, true),
-        };
-        task.where.push(where2);
-        if (section != 'all' && section != ''){
-            const where3 = {
-                column: "section",
-                value: activeSection,
+        for (let ind = 0; ind < callArray.length; ind++) {
+            const element = callArray[ind];
+            let datePast = element[0];
+            let dateFuture = element[1];
+            let section = element[2];
+
+            let task = EventorTypes.GetNewTask();
+            task.user = me;
+            task.action = 1;
+            task.type = "event";
+            const where = {
+                column: "user",
+                value: me,
             };
-            task.where.push(where3);
-            console.log('WHERE SECTION: ', activeSection);
+            task.where.push(where);
+            const where2 = {
+                column: "setdate",
+                value: EventorUtils.getSimpleDate(datePast, true),
+                operator: "BETWEEN",
+                value2: EventorUtils.getSimpleDate(dateFuture, true),
+            };
+            task.where.push(where2);
+            if (section != 'all' && section != ''){
+                const where3 = {
+                    column: "section",
+                    value: activeSection,
+                };
+                task.where.push(where3);
+                console.log('WHERE SECTION: ', activeSection);
+            }
+            taskArray.push(task);
         }
-        taskArray.push(task);
+
 
         xhttp.send(JSON.stringify(taskArray));
         //console.log(JSON.stringify(taskArray));

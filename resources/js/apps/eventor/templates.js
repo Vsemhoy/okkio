@@ -29,7 +29,7 @@ class EventorTemplate
               </div>
               <div class="uk-card-footer flex-space">
                 <a href="#" class="uk-button uk-button-text">Read more</a>
-                <span class="uk-badge">${category}</span>
+                <span class="uk-badge evt-badge">${category}</span>
               </div>
             </div>
           </div>`;
@@ -70,7 +70,7 @@ class EventorTemplate
         let secBlock = "";
         let rootcolor = "";
         if (category != null){
-          catBlock = `<span class='uk-badge' style='background-color: #${category.color == null ? 'a9a9a9' : category.color };' data-cat='${category.id}'>${category.title}</span>`;
+          catBlock = `<span class='uk-badge evt-badge' style='background-color: #${category.color == null ? 'a9a9a9' : category.color };' data-cat='${category.id}'>${category.title}</span>`;
         };
         if (section != null){
           secBlock = `<small data-sec='${section.id}'>${section.title}</small>`;
@@ -146,8 +146,8 @@ class EventorTemplate
         let monum = new Date(date).getMonth();
         let year = new Date(date).getFullYear();
         let color = EventorUtils.getMonthColor(monum);
-        let result = `<div class="uk-text-center uk-grid-collapse uk-background-muted uk-grid uk-grid-stack" uk-grid=""
-        style='background-color: ${color}; box-shadow: inset 1px 1px 100px #ffffff6b;'>
+        let result = `<div class="evt-restrictor uk-text-center uk-grid-collapse uk-background-muted uk-grid uk-grid-stack" uk-grid=""
+        style='background-color: ${color}; box-shadow: inset 1px 1px 100px #ffffff6b;' data-restrictor='${month} ${year}'>
             <div class="uk-width-1-1 uk-first-column">
                 <div class="uk-card  uk-text-bold uk-padding-small uk-text-lead">${month} ${year}</div>
             </div>
