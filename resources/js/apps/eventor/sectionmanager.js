@@ -130,6 +130,26 @@ class SectionManager
             SectionManager.updateEventOrder(array);
             // Perform additional actions here
         });
+        
+
+        document.body.addEventListener('click', (e)=> {
+            if (e.target.closest('.evt-section-group-trigger')){
+                let trig = e.target.closest('.evt-section-group-trigger');
+                let modal = document.querySelector('.evt-cat-group-modal'); // Element to set position to
+                modal.classList.remove('uk-hidden');
+                // Get the bounding rectangle of the trig element
+                let trigRect = trig.getBoundingClientRect();
+                
+                // Set the left and top positions of the modal element
+                modal.style.left = (trigRect.left - 200) + 'px';
+                modal.style.top = trigRect.top + 'px';
+                this.updateCategoryList();
+            }
+            if (!e.target.closest('.evt-section-group-trigger') && !e.target.closest('.evt-cat-group-modal')){
+                let modal = document.querySelector('.evt-cat-group-modal'); // Element to set position to
+                modal.classList.add('uk-hidden');
+            }
+        });
     }
 
 
@@ -158,7 +178,7 @@ class SectionManager
     </div>
     
     <div class='evt-cat-group-modal uk-hidden'>
-    <select multiple size="1">
+    <select multiple id='evt_catGroupSelector' size="1">
     <option>Чебурашка</option>
     <option>Крокодил Гена</option>
     <option>Шапокляк</option>
@@ -174,6 +194,25 @@ class SectionManager
     `;
     document.querySelector('#evt_sectionmanager_body').innerHTML = result;
     return result;
+    }
+
+
+    updateCategoryList(selectedArray = []){
+        let select = document.querySelector('#evt_catGroupSelector');
+        select.innerHTML="";
+        for (let i = 0; i < category_container.length; i++) {
+            const element = category_container[i];
+            if (element.status == 1){
+                let option = document.createElement("option");
+                option.value = element.id;
+                option.innerHTML = element.title;
+                option.style.backgroundColor = "#" + element.color;
+                if (selectedArray.includes(element.id)){
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            }
+        }
     }
 
     renderSectionList(){

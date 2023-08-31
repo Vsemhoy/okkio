@@ -218,16 +218,16 @@ class CategoryManager
             </div>
 
         <div class='evt-cat-group-list'>`;
-        // for (let i = 0; i < catgroups.length; i++) {
-        //     const cgr = catgroups[i];
-        //     result += CategoryManager.getCatItem(cgr);
-        // }
         result += `</div>
         
         </div>
         </div>`;
         return result;
     }
+    // for (let i = 0; i < catgroups.length; i++) {
+    //     const cgr = catgroups[i];
+    //     result += CategoryManager.getCatItem(cgr);
+    // }
 
     static getCatItem(name){
         let result = `
@@ -269,8 +269,11 @@ class CategoryManager
                         Array.from(item.results).forEach((item2) => {
                             if (category_id == ""){
                                 category_container.push(item2);
+                                // let sortableContainer = UIkit.sortable('#evt_categoryList');
                                 let card = CategoryManager.getCategoryCard(item2, category_container.length);
                                 document.querySelector('#evt_categoryList').insertAdjacentHTML('beforeend', card);
+                                // Update the sortable container
+                                // sortableContainer.update();
 
                             } else {
                                 let card = document.querySelector('#' + category_id.replace('.', `\\.`));
