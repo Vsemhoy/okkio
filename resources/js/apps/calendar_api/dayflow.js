@@ -1,10 +1,10 @@
-class EventorFlow {
+class DayFlow {
     static updatedItem = null;
     static dateArray = [];
     static loadedSections = {};
     constructor() {
         // { 'date' => [ 'afklsjdklfjas', 'jdlfkajsdf' ]}
-        let cursect = EventorUtils.getParam('sect');
+        let cursect = DateUtils.getParam('sect');
         if (cursect == null){
             activeSection = 'all';
         } else {
@@ -19,18 +19,18 @@ class EventorFlow {
 
         this.expendTopTrigger.addEventListener('mousedown', (e) => {
             e.preventDefault();
-            let callparams = [this.renderMonth(EventorUtils.getNextMonth(endDate), true)];
+            let callparams = [this.renderMonth(DateUtils.getNextMonth(endDate), true)];
             this.loadEvents(callparams);
-            console.log(EventorUtils.getLastDayOfMonth(endDate, true));
-            console.log(EventorUtils.getFirstDayOfMonth(endDate, true));
+            console.log(DateUtils.getLastDayOfMonth(endDate, true));
+            console.log(DateUtils.getFirstDayOfMonth(endDate, true));
         });
 
         this.expendBottomTrigger.addEventListener('mousedown', (e) => {
             e.preventDefault();
-            let callparams = [this.renderMonth(EventorUtils.getPrevMonth(startDate))];
+            let callparams = [this.renderMonth(DateUtils.getPrevMonth(startDate))];
             this.loadEvents(callparams);
-            console.log(EventorUtils.getLastDayOfMonth(startDate, true));
-            console.log(EventorUtils.getFirstDayOfMonth(startDate, true));
+            console.log(DateUtils.getLastDayOfMonth(startDate, true));
+            console.log(DateUtils.getFirstDayOfMonth(startDate, true));
         });
 
         this.moveTopTrigger = document.querySelector("#act_moveTop");
@@ -40,26 +40,26 @@ class EventorFlow {
             e.preventDefault();
             event_container = [];
             this.pool.innerHTML = "";
-            let callparams = [this.renderMonth(EventorUtils.getNextMonth(endDate), true)];
+            let callparams = [this.renderMonth(DateUtils.getNextMonth(endDate), true)];
             this.loadEvents(callparams);
-            startDate = EventorUtils.getFirstDayOfMonth(endDate, false);
-            EventorUtils.changeAddressBar("stm", EventorUtils.getFirstDayOfMonth(endDate, true));
-            // console.log(EventorUtils.getLastDayOfMonth(endDate, true));
-            // console.log(EventorUtils.getFirstDayOfMonth(startDate, true));
-            endDate = EventorUtils.getFirstDayOfMonth(endDate, false);
+            startDate = DateUtils.getFirstDayOfMonth(endDate, false);
+            DateUtils.changeAddressBar("stm", DateUtils.getFirstDayOfMonth(endDate, true));
+            // console.log(DateUtils.getLastDayOfMonth(endDate, true));
+            // console.log(DateUtils.getFirstDayOfMonth(startDate, true));
+            endDate = DateUtils.getFirstDayOfMonth(endDate, false);
         });
 
         this.moveBottomTrigger.addEventListener('mousedown', (e) => {
             e.preventDefault();
             event_container = [];
             this.pool.innerHTML = "";
-            let callparams = [this.renderMonth(EventorUtils.getPrevMonth(startDate))];
+            let callparams = [this.renderMonth(DateUtils.getPrevMonth(startDate))];
             this.loadEvents(callparams);
-            // console.log(EventorUtils.getLastDayOfMonth(startDate, true));
-            // console.log(EventorUtils.getFirstDayOfMonth(startDate, true));
-            endDate = EventorUtils.getLastDayOfMonth(EventorUtils.getDateMinusMonth(startDate), false, 1);
-            EventorUtils.changeAddressBar("enm", EventorUtils.getLastDayOfMonth(startDate, true));
-            startDate = EventorUtils.getFirstDayOfMonth(endDate, false);
+            // console.log(DateUtils.getLastDayOfMonth(startDate, true));
+            // console.log(DateUtils.getFirstDayOfMonth(startDate, true));
+            endDate = DateUtils.getLastDayOfMonth(DateUtils.getDateMinusMonth(startDate), false, 1);
+            DateUtils.changeAddressBar("enm", DateUtils.getLastDayOfMonth(startDate, true));
+            startDate = DateUtils.getFirstDayOfMonth(endDate, false);
 
         });
 
@@ -74,7 +74,7 @@ class EventorFlow {
             if (e.target.parentElement.classList.contains("eventor-act-addevent")) {
                 e.preventDefault();
                 let date = e.target.parentElement.parentElement.getAttribute('data-date');
-                let data  = EventorFlow.harvestModalData();
+                let data  = DayFlow.harvestModalData();
                 if (activeSection != 'all'){
                     data.section = activeSection;
                 };
@@ -84,7 +84,7 @@ class EventorFlow {
                 data.access = 1;
                 data.status = 1;
                 UIkit.modal("#modalHtmlEditor").show();
-                EventorFlow.fillFormWithData(data);
+                DayFlow.fillFormWithData(data);
                 document.querySelector('#evt_title').focus();
                 document.querySelector('#evt_eventEditorTitle').innerHTML = "Create new event";
                 document.querySelector('#eventor_act_editgroup').classList.add('uk-hidden');
@@ -103,23 +103,23 @@ class EventorFlow {
             document
             .querySelector("#eventor_act_updateEvent")
             .addEventListener("click", () => {
-                this.saveEvent(EventorFlow.updatedItem.id);
+                this.saveEvent(DayFlow.updatedItem.id);
                 UIkit.modal("#modalHtmlEditor").hide();
             });
 
             document
             .querySelector("#eventor_act_deleteEvent")
             .addEventListener("click", () => {
-                this.deleteEvent(EventorFlow.updatedItem.id);
+                this.deleteEvent(DayFlow.updatedItem.id);
                 UIkit.modal("#modalHtmlEditor").hide();
             });
 
         document.querySelector("#callCreateModal").addEventListener("click", function (e) {
             const dateInput = document.querySelector("#evt_setdate");
-            EventorUtils.getLocation();
+            DateUtils.getLocation();
             let date = e.target.parentElement.parentElement.getAttribute('data-date');
-            let data  = EventorFlow.harvestModalData();
-            data.setdate = EventorUtils.getCurrentDateAsString();
+            let data  = DayFlow.harvestModalData();
+            data.setdate = DateUtils.getCurrentDateAsString();
             if (activeSection != 'all'){
                 data.section = activeSection;
             };
@@ -127,7 +127,7 @@ class EventorFlow {
             data.content = "";
             data.access = 1;
             data.status = 1;
-            EventorFlow.fillFormWithData(data);
+            DayFlow.fillFormWithData(data);
             document.querySelector('#evt_eventEditorTitle').innerHTML = "Create new event";
             document.querySelector('#eventor_act_editgroup').classList.add('uk-hidden');
             document.querySelector('#eventor_act_saveEvent').classList.remove('uk-hidden');
@@ -145,11 +145,11 @@ class EventorFlow {
                 for (let i = 0; i < event_container.length; i++){
                     let el = event_container[i];
                     if (el.id == element.id){
-                        EventorFlow.fillFormWithData(el);
+                        DayFlow.fillFormWithData(el);
                         document.querySelector('#evt_eventEditorTitle').innerHTML = "Edit event";
                         UIkit.modal("#modalHtmlEditor").show();
                         document.querySelector('#evt_title').focus();
-                        EventorFlow.updatedItem = el;
+                        DayFlow.updatedItem = el;
                         break;
                     }
                 }
@@ -174,15 +174,15 @@ class EventorFlow {
 
         // Create a new Date object for the last day of the month
         let lastDayOfMonth = new Date(year, month + 1, 0);
-        lastDayOfMonth = EventorUtils.getLastDayOfMonth(lastDayOfMonth);
+        lastDayOfMonth = DateUtils.getLastDayOfMonth(lastDayOfMonth);
         if (startDate > firstDayOfMonth) {
             startDate = firstDayOfMonth;
         }
         if (endDate < lastDayOfMonth) {
             endDate = lastDayOfMonth;
         }
-        EventorUtils.changeAddressBar("enm", EventorUtils.getLastDayOfMonth(endDate, true, 0));
-        EventorUtils.changeAddressBar("stm", EventorUtils.getFirstDayOfMonth(startDate, true, 0));
+        DateUtils.changeAddressBar("enm", DateUtils.getLastDayOfMonth(endDate, true, 0));
+        DateUtils.changeAddressBar("stm", DateUtils.getFirstDayOfMonth(startDate, true, 0));
 
         let mhdr = EventorTemplate.createMonthHeader(date);
         if (start == false) {
@@ -212,9 +212,9 @@ class EventorFlow {
         }
 
         if (me != ""){
-            return [EventorUtils.getFirstDayOfMonth(date), EventorUtils.getLastDayOfMonth(date), activeSection];
+            return [DateUtils.getFirstDayOfMonth(date), DateUtils.getLastDayOfMonth(date), activeSection];
         }
-        //console.log('loadcall: ', EventorUtils.getFirstDayOfMonth(date), EventorUtils.getLastDayOfMonth(date));
+        //console.log('loadcall: ', DateUtils.getFirstDayOfMonth(date), DateUtils.getLastDayOfMonth(date));
     }
 
 
@@ -260,7 +260,7 @@ class EventorFlow {
         let counter = 0;
         let outFormat = "number";
         let data = {};
-        let formdata = EventorFlow.harvestModalData();
+        let formdata = DayFlow.harvestModalData();
         if (event_id == ""){
             formdata.trans_id = (Math.random() + 1).toString(36).substring(15);
         } else {
@@ -315,7 +315,7 @@ class EventorFlow {
 
                     };
                 });
-                EventorFlow.refreshEvents();
+                DayFlow.refreshEvents();
 
                 // let result = JSON.parse(this.responseText);
                 // console.log('рудзукы updated ' + this.responseText);
@@ -364,25 +364,25 @@ class EventorFlow {
         // check if there not events in the array for this section
         let loadArray = [];
         if (activeSection != 'all'){
-            for (let i = 0; i < EventorFlow.dateArray.length; i++) {
-                let cdate =  EventorUtils.getDateAsString(EventorFlow.dateArray[i]);
+            for (let i = 0; i < DayFlow.dateArray.length; i++) {
+                let cdate =  DateUtils.getDateAsString(DayFlow.dateArray[i]);
                 console.log(cdate);
-                if (EventorFlow.loadedSections[cdate] != null){
+                if (DayFlow.loadedSections[cdate] != null){
                     console.log('not null cdate');
 
-                    if (!EventorFlow.loadedSections[cdate].includes(sectionid)){
-                        EventorFlow.loadedSections[cdate].push(sectionid);
-                        loadArray.push([EventorUtils.getFirstDayOfMonth(startDate), EventorUtils.getLastDayOfMonth(endDate), sectionid]);
-                        EventorFlow.refreshEvents();
+                    if (!DayFlow.loadedSections[cdate].includes(sectionid)){
+                        DayFlow.loadedSections[cdate].push(sectionid);
+                        loadArray.push([DateUtils.getFirstDayOfMonth(startDate), DateUtils.getLastDayOfMonth(endDate), sectionid]);
+                        DayFlow.refreshEvents();
                         console.log('section when try' , activeSection);
                     } else {
                         console.log('includes');
                         
-                        EventorFlow.refreshEvents();
+                        DayFlow.refreshEvents();
                     }
                 } else {
-                    // EventorFlow.loadedSections[cdate] = [];
-                    // EventorFlow.loadedSections[cdate].push(sectionid);
+                    // DayFlow.loadedSections[cdate] = [];
+                    // DayFlow.loadedSections[cdate].push(sectionid);
                     console.log('NO DATE IN THE ARRAY');
                 };
             };
@@ -395,11 +395,11 @@ class EventorFlow {
             let sectionsToLoad = [];
             for (let i = 0; i < section_container.length; i++) {
                 const targetSection = section_container[i].id;
-                for (let i = 0; i < EventorFlow.dateArray.length; i++) {
-                    let cdate =  EventorUtils.getDateAsString(EventorFlow.dateArray[i]);
-                    if (EventorFlow.loadedSections[cdate] != null){
-                        if (!EventorFlow.loadedSections[cdate].includes(targetSection)){
-                            EventorFlow.loadedSections[cdate].push(targetSection);
+                for (let i = 0; i < DayFlow.dateArray.length; i++) {
+                    let cdate =  DateUtils.getDateAsString(DayFlow.dateArray[i]);
+                    if (DayFlow.loadedSections[cdate] != null){
+                        if (!DayFlow.loadedSections[cdate].includes(targetSection)){
+                            DayFlow.loadedSections[cdate].push(targetSection);
                             if (!sectionsToLoad.includes(targetSection)){
                                 sectionsToLoad.push(targetSection);
                             }
@@ -409,11 +409,11 @@ class EventorFlow {
             }
             for (let io = 0; io < sectionsToLoad.length; io++) {
                 const secid = sectionsToLoad[io];
-                //this.loadEvents(EventorUtils.getFirstDayOfMonth(startDate), EventorUtils.getLastDayOfMonth(endDate), secid);
+                //this.loadEvents(DateUtils.getFirstDayOfMonth(startDate), DateUtils.getLastDayOfMonth(endDate), secid);
                 
             }
             
-            EventorFlow.refreshEvents();
+            DayFlow.refreshEvents();
 
 
 
@@ -422,7 +422,7 @@ class EventorFlow {
 
 
         // load it
-        console.log(EventorFlow.loadedSections);
+        console.log(DayFlow.loadedSections);
         console.log(event_container);
    }
 
@@ -458,7 +458,7 @@ class EventorFlow {
 
     loadSectionsAndCategories() {
         console.log('command :>> ', 'loadSectionsAndCategories');
-        let cursect = EventorUtils.getParam('sect');
+        let cursect = DateUtils.getParam('sect');
         if (cursect == null){
             activeSection = 'all';
         } else {
@@ -483,13 +483,13 @@ class EventorFlow {
 
                             if (activeSection == 'all'){
                                 console.log('cursect :>> ', activeSection);
-                                for (let i = 0; i < EventorFlow.dateArray.length; i++) {
-                                    let cdate =  EventorUtils.getDateAsString(EventorFlow.dateArray[i]);
-                                    if (EventorFlow.loadedSections[cdate] != null){
-                                        EventorFlow.loadedSections[cdate].push(item2.id);
+                                for (let i = 0; i < DayFlow.dateArray.length; i++) {
+                                    let cdate =  DateUtils.getDateAsString(DayFlow.dateArray[i]);
+                                    if (DayFlow.loadedSections[cdate] != null){
+                                        DayFlow.loadedSections[cdate].push(item2.id);
                                     } else {
-                                        EventorFlow.loadedSections[cdate] = [];
-                                        EventorFlow.loadedSections[cdate].push(item2.id);
+                                        DayFlow.loadedSections[cdate] = [];
+                                        DayFlow.loadedSections[cdate].push(item2.id);
                                     };
                                   };
                             };
@@ -504,8 +504,8 @@ class EventorFlow {
                         });
                     }
                 });
-                EventorFlow.refreshCategoriesAndSections();
-                console.log(EventorFlow.loadedSections);
+                DayFlow.refreshCategoriesAndSections();
+                console.log(DayFlow.loadedSections);
                 // let result = JSON.parse(this.responseText);
             }
             else if (this.status > 200) {
@@ -629,15 +629,15 @@ class EventorFlow {
                             }
 
                             
-                                for (let i = 0; i < EventorFlow.dateArray.length; i++) {
-                                    let cdate =  EventorUtils.getDateAsString(EventorFlow.dateArray[i]);
-                                    if (EventorFlow.loadedSections[cdate] != null){
-                                        if (!EventorFlow.loadedSections[cdate].includes(item2.section)){
-                                            EventorFlow.loadedSections[cdate].push(item2.section);
+                                for (let i = 0; i < DayFlow.dateArray.length; i++) {
+                                    let cdate =  DateUtils.getDateAsString(DayFlow.dateArray[i]);
+                                    if (DayFlow.loadedSections[cdate] != null){
+                                        if (!DayFlow.loadedSections[cdate].includes(item2.section)){
+                                            DayFlow.loadedSections[cdate].push(item2.section);
                                         };
                                     } else {
-                                        EventorFlow.loadedSections[cdate] = [];
-                                        EventorFlow.loadedSections[cdate].push(item2.section);
+                                        DayFlow.loadedSections[cdate] = [];
+                                        DayFlow.loadedSections[cdate].push(item2.section);
                                     };
                                 };
                      
@@ -646,7 +646,7 @@ class EventorFlow {
 
                     };
                 });
-                EventorFlow.refreshEvents();
+                DayFlow.refreshEvents();
 
             }
             else if (this.status > 200) {
@@ -666,8 +666,8 @@ class EventorFlow {
 
         // console.log(datePast);
         // console.log(dateFuture);
-        // console.log(EventorUtils.getSimpleDate(datePast, true));
-        // console.log(EventorUtils.getSimpleDate(dateFuture, true));
+        // console.log(DateUtils.getSimpleDate(datePast, true));
+        // console.log(DateUtils.getSimpleDate(dateFuture, true));
         let taskArray = [];
         
         for (let ind = 0; ind < callArray.length; ind++) {
@@ -687,9 +687,9 @@ class EventorFlow {
             task.where.push(where);
             const where2 = {
                 column: "setdate",
-                value: EventorUtils.getSimpleDate(datePast, true),
+                value: DateUtils.getSimpleDate(datePast, true),
                 operator: "BETWEEN",
-                value2: EventorUtils.getSimpleDate(dateFuture, true),
+                value2: DateUtils.getSimpleDate(dateFuture, true),
             };
             task.where.push(where2);
             if (section != 'all' && section != ''){
@@ -711,7 +711,7 @@ class EventorFlow {
 
     deleteEvent(event_id = "") {
         let counter = 0;
-        let formdata = EventorFlow.harvestModalData();
+        let formdata = DayFlow.harvestModalData();
         if (event_id == ""){
             alert("OOPS! There is no event selected!");
             return;
@@ -760,7 +760,7 @@ class EventorFlow {
 
                     };
                 });
-                //EventorFlow.refreshEvents();
+                //DayFlow.refreshEvents();
 
                 // let result = JSON.parse(this.responseText);
                 // console.log('рудзукы updated ' + this.responseText);

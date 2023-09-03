@@ -40,7 +40,7 @@ class EventorHttpController extends BaseController
 
 
 
-    $url = 'http://microservice?remoteservice=' . self::REMOTE_SERVICE_NAME;
+    $url = 'http://microservice?remoteservice=' . self::REMOTE_SERVICE_NAME . "&XDEBUG_SESSION_START=vscode";
 
     // Create a new cURL resource
     $ch = curl_init($url);

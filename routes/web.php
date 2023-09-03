@@ -32,7 +32,9 @@ Route::get('/budget', function () {
     return view('public.apps.budget.index');
 })->name('budget');
 
-
+Route::get('/calendar', function () {
+    return view('public.apps.calendar_api.index');
+})->name('calendar');
 
 Route::prefix('eventor')->group(function () {
     Route::get('/', function () {
