@@ -60,20 +60,78 @@ class EventModal {
     
     this.modalBody = this.modalEventEditor(this.fields);
 
-    document.querySelector("body").addEventListener('dblclick', (e) => {
-      if (e.target.id == 'evt_content'){
-        e.target.classList.toggle('evt-input-fullscreen');
-        e.target.closest("#modalHtmlEditor").querySelector('.uk-modal-close-full').classList.toggle('uk-hidden');
-        e.target.closest("#modalHtmlEditor").querySelector('.evt-textarea-toggle').classList.toggle('uk-hidden');
-      }
-    });
+    // let timeoutId;
+    // document.querySelector("body").addEventListener('mousedown', (e) => {
+    //   if (e.target.id == 'evt_content'){
+    //     timeoutId = setTimeout(() => {
+    //       // Long-press event
+    //       console.log('Long-press detected');
+    //       e.target.classList.toggle('evt-input-fullscreen');
+    //       e.target.closest("#modalHtmlEditor").querySelector('.uk-modal-close-full').classList.toggle('uk-hidden');
+    //       e.target.closest("#modalHtmlEditor").querySelector('.evt-textarea-toggle').classList.toggle('uk-hidden');
+    //       // You can perform your desired action here
+    //     }, 1000); // Adjust the duration (in milliseconds) as needed
+    //   }
+    // });
+
+    // document.querySelector("body").addEventListener('mouseup', (e) => {
+    //   if (e.target.id == 'evt_content'){
+    //     clearTimeout(timeoutId); // Clear the timeout if mouse is released before the long-press duration
+    //   }
+    // });
+
+
     document.querySelector("body").addEventListener('click', (e) => {
-      if (e.target.id == 'evt_toggleTextarea' || e.target.parentElement != null && e.target.parentElement.id == 'evt_toggleTextarea'){
+
+    });
+
+
+    document.querySelector("body").addEventListener('click', (e) => {
+      if (e.target.closest('.evt-full-trigger') || e.target.id == 'evt_toggleTextarea' || e.target.parentElement != null && e.target.parentElement.id == 'evt_toggleTextarea'){
         document.querySelector('#evt_content').classList.toggle('evt-input-fullscreen');
+        document.querySelector('.evt-full-trigger').classList.toggle('evt-full-trigger-fullscreen');
         document.querySelector("#modalHtmlEditor").querySelector('.uk-modal-close-full').classList.toggle('uk-hidden');
         document.querySelector("#modalHtmlEditor").querySelector('.evt-textarea-toggle').classList.toggle('uk-hidden');
       }
     });
+
+    document.body.addEventListener('dblclick', (e) => {
+      if (e.target.closest('.evt-card-body')){
+
+        let elem = e.target.closest('.evt-card-wrapper');
+        if (elem != null && elem.id != null)
+        {
+          for (let i = 0; i < event_container.length; i++) {
+            if (elem.id == event_container[i].id){
+
+              let el = event_container[i];
+              let lines = el.content.split('\n');
+  
+              // Get a reference to the parent container where you want to append the divs
+              document.querySelector('.evt-reader-body').innerHTML = '';
+              let parentContainer = document.querySelector('.evt-reader-body'); // Replace 'parentContainer' with the actual ID or selector of your parent container
+              
+              // Loop through the lines and create a div for each line
+              lines.forEach(line => {
+                  const div = document.createElement('div'); // Create a new div element
+                  div.innerHTML = line; // Set the div's text content to the current line
+                  if (line.startsWith('- ')) {
+                    div.classList.add('evt-list-item');
+                    div.innerHTML = line.replace(/^-\s*/, '');
+                  };
+                  parentContainer.appendChild(div); // Append the div to the parent container
+              });
+  
+              document.querySelector('.evt-reader-title').innerHTML = el.title;
+  
+              break;
+            }
+          }
+        }
+
+        UIkit.modal("#modal_eventReader").show();
+      }
+    })
 
   }
 
@@ -197,6 +255,11 @@ class EventModal {
     modalContainer.appendChild(modalCloseButton);
     modalContainer.appendChild(modalDialog);
   
+    let triggerFull = document.createElement('div');
+    triggerFull.classList.add('evt-full-trigger');
+    triggerFull.textContent = ' ';
+    triggerFull.setAttribute("uk-icon", "icon: tablet");
+    modalContainer.querySelector('#evt_content').parentElement.prepend(triggerFull);
     // Append the modal container to the body
     return modalContainer;
   }

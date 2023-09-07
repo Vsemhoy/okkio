@@ -15,6 +15,7 @@ class EventorTemplate
       }
 
     static createEventCard(title, date, category, description) {
+
         return `
           <div>
             <div class="uk-card uk-box-shadow-small uk-box-shadow-hover-large uk-card-small uk-card-default uk-text-left left-corrector event-card">
@@ -24,9 +25,7 @@ class EventorTemplate
                   <div class="uk-text-meta uk-margin-remove-top flex-space"><time datetime="${date}">${date}</time> <small>${category}</small></div>
                 </div>
               </div>
-              <div class="uk-card-body">
-                <p>${description}</p>
-              </div>
+              ${body}
               <div class="uk-card-footer flex-space">
                 <a href="#" class="uk-button uk-button-text">Read more</a>
                 <span class="uk-badge evt-badge">${category}</span>
@@ -84,6 +83,12 @@ class EventorTemplate
           }
           content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
         }
+        let body = '';
+        if (event.content != ''){
+          body = `              <div class="uk-card-body evt-card-body">
+            <p>${content}</p>
+          </div>`;
+        };
         return `
           <div id='${event.id}' class='evt-card-wrapper${starredMark}'>
             <div class="uk-card uk-box-shadow-small uk-box-shadow-hover-large 
@@ -95,10 +100,8 @@ class EventorTemplate
                   <div class="uk-text-meta uk-margin-remove-top flex-space"><time datetime="${time}">${time}</time> ${secBlock}</div>
                 </div>
               </div>
-              <div class="uk-card-body">
-                <p>${content}</p>
-              </div>
-              <div class="uk-card-footer flex-space">
+              ${body}
+              <div class="flex-space">
                 <a href="#" class="uk-button uk-button-text evt-edit-button">Edit</a>
                 ${catBlock}
               </div>

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Apps\Eventor\EventorHttpController;
+use App\Http\Middleware\UserAuthCheck;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,27 +20,37 @@ Route::post('/register', [RegisterController::class, 'post_registration']);
 Route::post('/logout', [RegisterController::class, 'post_logout']);
 
 
-Route::get('/logins', [RegisterController::class, 'post_login']);
+Route::get('/logins', [RegisterController::class, 'get_login']);
 
 
 Route::get('/', function () {
-    return view('index');
+    return view('entrance');
+})->name('entrance');
+
+Route::get('/entrance', function () {
+    return view('entrance');
 });
 
+Route::group(['middleware' => ['App\Http\Middleware\UserAuthCheck']], function () {
 
+    Route::get('/index', function () {
+        return view('public.index');
+    })->name('index');
 
-Route::get('/budget', function () {
-    return view('public.apps.budget.index');
-})->name('budget');
+    Route::get('/budget', function () {
+        return view('public.apps.budget.index');
+    })->name('budget');
 
-Route::get('/calendar', function () {
-    return view('public.apps.calendar_api.index');
-})->name('calendar');
+    Route::get('/calendar', function () {
+        return view('public.apps.calendar_api.index');
+    })->name('calendar');
 
-Route::prefix('eventor')->group(function () {
-    Route::get('/', function () {
-        return view('public.apps.eventor.index');
-    })->name('eventor');
-  
-    Route::post('/postcall', [EventorHttpController::class, 'postcall']);
+    Route::prefix('eventor')->group(function () {
+        Route::get('/', function () {
+            return view('public.apps.eventor.index');
+        })->name('eventor');
+    
+        Route::post('/postcall', [EventorHttpController::class, 'postcall']);
   });
+
+});

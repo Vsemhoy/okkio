@@ -71,9 +71,12 @@ class EventorFlow {
         //this.addEventTrigger = document.querySelectorAll(".eventor-act-addevent");
 
         document.addEventListener("dblclick", function (e) {
-            if (e.target.parentElement.classList.contains("eventor-act-addevent")) {
+            if (e.target.closest(".event-section") && !e.target.closest(".event-card")) {
                 e.preventDefault();
                 let date = e.target.parentElement.parentElement.getAttribute('data-date');
+                if (date == null){
+                    date = e.target.closest('.event-section').getAttribute('data-date');
+                }
                 let data  = EventorFlow.harvestModalData();
                 if (activeSection != 'all'){
                     data.section = activeSection;

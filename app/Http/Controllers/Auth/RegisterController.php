@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\BaseHelpers\Input;
 use App\Rules\AlphaNumericWithOneUnderscore;
+use App\Http\Middleware\UserAuthCheck;
 
 class RegisterController extends Controller
 {
@@ -81,8 +82,9 @@ class RegisterController extends Controller
         try {
             $val = Auth::attempt($credentials, $remember);
             if ($val) {
-                // Authentication passed...
+                // Authentication passed... 
                 $user = Auth::user();
+                $request->session()->put('LoggedUser', $user->id);
                 return response()->json(['user_id' => $user->id, 'token' => $user->api_token, 'message' => 'You are successfully logged in!.', 'code' => '0']); // Replace 'api_token' with your token column name
             } else {
                 // Authentication failed...
@@ -96,6 +98,60 @@ class RegisterController extends Controller
             return response()->json(['message' => 'Something went wrong. Please try again later.'], 500);
         }
     }
+
+
+
+    public function get_login(Request $request)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Verify if the CSRF token from the form matches the one in the session
+            if (isset($_GET['csrf_token']) && $_GET['csrf_token'] === $_SESSION['csrf_token']) {
+                // Proceed with form processing
+            } else {
+                // Handle CSRF attack or invalid token
+                echo "CSRF token validation failed. This request may be forged.";
+                return view('entrance');
+            }
+        }
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Regenerate CSRF token
+
+
+        $credentials = $request->only('email', 'password', );
+        //$credentials['password'] =  Hash::make($credentials['password']);
+        $remember = $request->has('remember');
+        $user = User::get($credentials['email']);
+        if ($user == false){
+
+        
+            return view('entrance');
+        }
+        $boo = Hash::check( $credentials['password'], $user->password);
+
+        try {
+            $val = Auth::attempt($credentials, $remember);
+            if ($val) {
+                // Authentication passed...
+                $user = Auth::user();
+                $request->session()->put('LoggedUser', $user->id);
+                return view('index');
+
+               
+            } else {
+                // Authentication failed...
+
+                return view('entrance');
+            }
+        } catch (ValidationException $e) {
+            // Handle validation errors (e.g., invalid credentials)
+            return view('entrance');
+        } catch (\Exception $e) {
+            // Handle other exceptions (e.g., database connection issues, server errors)
+            return view('entrance');
+        }
+    }
+
+
+
 
     public function generateApiToken()
     {
