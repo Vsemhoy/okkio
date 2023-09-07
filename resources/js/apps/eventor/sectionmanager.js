@@ -221,7 +221,7 @@ class SectionManager
         <div uk-sortable="group: sortable-group; handle: .uk-sortable-hand" class="uk-sortable" id='evt_sections'>`;
         for (let index = 0; index < section_container.length; index++) {
             const item = section_container[index];
-            console.log(item);
+            // console.log(item);
             let cats = ['Super', 'New category', 'alpha bond', 'hero'];
             result += SectionManager.getSectionCard(item, index, cats);
         };

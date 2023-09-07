@@ -118,6 +118,15 @@ class ShortDate {
         return result;
     }
 
+    /**
+     * Get native date object
+     *
+     * @returns {Date} - The current date in "YYYY-MM" format as a string.
+     */
+    getDate(){
+        return new Date(this.year, this.month - 1, 1);
+    }
+
     toString(){
         return this.getShortDate();
     }
@@ -137,7 +146,7 @@ class ShortDate {
     /**
      * Move the current date to the next month.
      *
-     * @returns {string} - The updated date in "YYYY-MM" format as a string.
+     * @returns {ShortDate} - The updated date in "YYYY-MM" format as a string.
      */
     moveNextMonth() {
         if (this.month === 12) {
@@ -157,14 +166,14 @@ class ShortDate {
             );
         }
         this.triggerDateChanged();
-        return result;
+        return this;
     }
 
 
     /**
      * Move the current date to the previous month.
      *
-     * @returns {string} - The updated date in "YYYY-MM" format as a string.
+     * @returns {ShortDate} - The updated date in "YYYY-MM" format as a string.
      */
     movePreviousMonth() {
         if (this.month === 1) {
@@ -184,14 +193,14 @@ class ShortDate {
             );
         }
         this.triggerDateChanged();
-        return result;
+        return this;
     }
 
 
     /**
      * Move the current date to the next year.
      *
-     * @returns {string} - The updated date in "YYYY-MM" format as a string.
+     * @returns {ShortDate} - The updated date in "YYYY-MM" format as a string.
      */
     moveNextYear() {
         this.year++;
@@ -206,14 +215,14 @@ class ShortDate {
             );
         }
         this.triggerDateChanged();
-        return result;
+        return this;
     }
 
 
     /**
      * Move the current date to the previous year.
      *
-     * @returns {string} - The updated date in "YYYY-MM" format as a string.
+     * @returns {ShortDate} - The updated date in "YYYY-MM" format as a string.
      */
     movePreviousYear() {
         this.year--;
@@ -228,7 +237,7 @@ class ShortDate {
             );
         }
         this.triggerDateChanged();
-        return result;
+        return this;
     }
 
 
@@ -237,9 +246,9 @@ class ShortDate {
      *
      * @returns {number} - The last day of the current month as a number.
      */
-    getLastDayOfMonth() {
+    getLastDayOfMonth(asString = true) {
         // Calculate the last day of the current month
-        const lastDay = new Date(this.year, this.month, 0).getDate();
+        const lastDay = new Date(this.year, this.month, 0);
         if (this.debug) {
             console.log(
                 'object id: ' + this.id,
@@ -249,10 +258,65 @@ class ShortDate {
                 'result: ' + lastDay
             );
         }
+        if (asString){
+            return lastDay.getDate();
+        }
+        return lastDay;
+    }
+
+    
+    /**
+     * Get the last date of the current month.
+     *
+     * @param {boolean} asString - If true, returns the result as a formatted string in "YYYY-MM-DD" format; if false, returns a Date object.
+     * @param {string} delimiter - The delimiter used in the formatted string (ignored if asString is false).
+     * @returns {string|Date} - The last date of the current month, either as a formatted string or a Date object, depending on the 'asString' parameter.
+     */
+    getLastDate(asString = true) {
+        // Calculate the last day of the current month
+        const lastDay = new Date(this.year, this.month, 0);
+        if (this.debug) {
+            console.log(
+                'object id: ' + this.id,
+                this.debugDelimeter,
+                'method: getLastDayOfMonth',
+                this.debugDelimeter,
+                'result: ' + lastDay
+            );
+        }
+        if (asString){
+            return this.year + this.delimeter + this.month + this.delimeter + (lastDay.getDate()).toString().padStart(2, '0');
+        }
         return lastDay;
     }
 
 
+    /**
+     * Get the first date of the current month.
+     *
+     * @param {boolean} asString - If true, returns the result as a formatted string in "YYYY-MM-DD" format; if false, returns a Date object.
+     * @param {string} delimiter - The delimiter used in the formatted string (ignored if asString is false).
+     * @returns {string|Date} - The first date of the current month, either as a formatted string or a Date object, depending on the 'asString' parameter.
+     */
+    getFirstDate(asString = true) {
+        // Calculate the last day of the current month
+        const firstday = new Date(this.year, this.month, 1);
+        if (this.debug) {
+            console.log(
+                'object id: ' + this.id,
+                this.debugDelimeter,
+                'method: getLastDayOfMonth',
+                this.debugDelimeter,
+                'result: ' + firstday
+            );
+        }
+        if (asString){
+            return this.year + this.delimeter + this.month + this.delimeter + '01';
+        }
+        return lastDay;
+    }
+
+    
     /**
      * Calculate the last date of the previous month based on the current date.
      *
@@ -491,7 +555,7 @@ class ShortDate {
             dateRange.push(currentDate.clone()); // Push a clone of the current date to the array
             currentDate.moveNextMonth();
         }
-
+        dateRange.reverse();
         return dateRange;
     }
 
@@ -501,6 +565,17 @@ class ShortDate {
         clon.debug = this.debug;
         clon.delimeter = this.delimeter;
         clon.debugDelimeter = this.debugDelimeter;
+        if (this.debug){
+            console.log(
+                'object id: ' + this.id,
+                this.debugDelimeter,
+                'method: clone',
+                this.debugDelimeter,
+                'params: source.month = ' + this.month,
+                this.debugDelimeter,
+                'result: clone.month = ' + clon.month
+            );
+        }
         return clon;
     }
 
@@ -534,156 +609,10 @@ class ShortDate {
         );
         console.log(this);
     }
-
-    static info() {
-        return `
-            <div>
-                <h1>ShortDate Class</h1>
-                <p>
-                    The ShortDate class is a JavaScript class designed to simplify the handling of date-related operations,
-                    particularly focused on month and year representations.
-                </p>
-                <h2>Constructor</h2>
-                <p>
-                    <code>constructor(input = false, debug = false)</code>: The constructor method initializes a new instance of the ShortDate class.
-                    It accepts an optional input parameter, which can be a Date object or a date string in "MM/YYYY" or "MM-YYYY" format.
-                    Additionally, it allows you to enable debugging mode by setting the debug parameter to true.
-                    When debugging is enabled, the class logs detailed information about method calls and their results, helping with code analysis and troubleshooting.
-                </p>
-                <!-- Add descriptions for properties and methods here -->
-                <h2>Properties</h2>
-                <p>
-                    <code>id: </code>Each instance of the ShortDate class is assigned a unique random id. 
-                    This id serves as a helpful identifier when debugging code that involves multiple instances of the class.
-                </p>
-                <p>
-                <code>debug: </code>The debug property is a boolean that can be set to true or false. When set to true, it enables debugging mode, causing the class to log information about method calls and their outcomes. This is useful for tracking the behavior of the class during debugging.
-                </p>
-                <h2>Methods</h2>
-                <p>
-                    <code>getShortDate(delimiter = '-'): </code>This method returns the current date in "YYYY-MM" format as a string. You can specify a custom delimiter (e.g., "/", "-") as an optional parameter.
-                </p>
-                <p>
-                    <code>moveNextMonth(): </code>Moves the current date to the next month and returns the updated date in "YYYY-MM" format as a string.
-                </p>
-                <p>
-                <code>movePreviousMonth(): </code>Moves the current date to the previous month and returns the updated date in "YYYY-MM" format as a string.
-                </p>
-                <p>
-                <code>moveNextYear(): </code>Moves the current date to the next year and returns the updated date in "YYYY-MM" format as a string.
-                </p>
-                <p>
-                <code>movePreviousYear(): </code>Moves the current date to the previous year and returns the updated date in "YYYY-MM" format as a string.
-                </p>
-                <p>
-                <code>getLastDayOfMonth(): </code>Calculates and returns the last day of the current month as a number.
-                </p>
-                <p>
-                <code>getLastDateOfPreviousMonth(asString = true, delimiter = '-'): </code>Calculates and returns the last date of the previous month based on the current date. You can specify whether to return the result as a string or a Date object and set a custom delimiter.
-                </p>
-                <p>
-                <code>getFirstDateOfNextMonth(asString = true, delimiter = '-'): </code>Calculates and returns the first date of the next month based on the current date. You can specify whether to return the result as a string or a Date object and set a custom delimiter.
-                </p>
-                <p>
-                <code>moveMonth(operator = 1): </code>Allows you to move the current date forward or backward by a specified number of months (the operator parameter). It returns the updated date in "YYYY-MM" format as a string.
-                </p>
-
-
-            </div>
-        `;
-    }
-    
-/*
-
-To enhance the functionality and usability of the ShortDate class, you can consider adding the following methods:
-
-Comparison Methods:
-
-Methods for comparing ShortDate instances, such as isEqual, isBefore, and isAfter, to compare dates.
-Date Formatting Methods:
-
-Additional methods for formatting dates in different styles or locales.
-Date Parsing Methods:
-
-Methods for parsing date strings in various formats into ShortDate objects.
-Arithmetic Methods:
-
-Methods for performing date arithmetic, such as adding or subtracting days, weeks, or other time units.
-Day-of-the-Week Methods:
-
-Methods to determine the day of the week (e.g., Monday, Tuesday) for a given date.
-Holidays and Special Dates:
-
-Methods for detecting holidays or special dates based on the current date.
-Date Range Methods:
-
-Methods for working with date ranges, such as checking if a date falls within a specific range.
-Time Zone Handling:
-
-Methods for handling time zones and conversions between time zones.
-Custom Formatting Options:
-
-Additional options for customizing date formatting, including custom date and time patterns.
-Event Handling:
-
-Event listeners or hooks that allow users of the class to execute custom code when specific events or date changes occur.
-Localization and Internationalization:
-
-Methods to handle different languages and cultural conventions for date formatting and parsing.
-Calendar Functions:
-
-Methods for generating calendars, including displaying multiple months or weeks.
-Validation Methods:
-
-Methods for validating date strings or ShortDate instances to ensure they are valid dates.
-Consider adding these methods based on the specific requirements and use cases of your application. These additions can make the ShortDate class even more versatile and useful for date-related tasks.
-
-*/
 }
 
 
 class DateUtils {
-    static location = { x: 0, y: 0 }
-    static getDateMinusMonth(date, monthCount = 1) {
-      const month = date.getMonth();
-      const year = date.getFullYear();
-  
-      // Calculate the total months to subtract
-      const totalMonthsToSubtract = month + (year * 12);
-  
-      // Calculate the new total months after subtracting the specified months
-      const newTotalMonths = totalMonthsToSubtract - monthCount;
-  
-      // Calculate the new year and month from the new total months
-      const newYear = Math.floor(newTotalMonths / 12);
-      const newMonth = newTotalMonths % 12;
-  
-      // Create a new Date object with the updated month, year, and the same date of the month
-      const newDate = new Date(newYear, newMonth, date.getDate());
-  
-      return newDate;
-    }
-  
-    static getDatePlusMonth(date, monthCount = 1) {
-      const month = date.getMonth();
-      const year = date.getFullYear();
-  
-      // Calculate the total months to subtract
-      const totalMonthsToSubtract = month + (year * 12);
-  
-      // Calculate the new total months after subtracting the specified months
-      const newTotalMonths = totalMonthsToSubtract + monthCount;
-  
-      // Calculate the new year and month from the new total months
-      const newYear = Math.floor(newTotalMonths / 12);
-      const newMonth = newTotalMonths % 12;
-  
-      // Create a new Date object with the updated month, year, and the same date of the month
-      const newDate = new Date(newYear, newMonth, date.getDate());
-  
-      return newDate;
-    }
-  
     static isDateToday(date) {
       // Get the current date
       const today = new Date();
@@ -746,71 +675,7 @@ class DateUtils {
       $num;
       return monthColors[$num];
     }
-  
-    static getCurrentDateAsString() {
-      const currentDate = new Date();
-      const year = currentDate.getFullYear();
-      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-      const day = String(currentDate.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    }
-  
-    static getDateAsString(currentDate) {
-      const year = currentDate.getFullYear();
-      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-      const day = String(currentDate.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    }
-  
-    static getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(EventorUtils.setPosition, EventorUtils.showError);
-      } else {
-        console.log("Geolocation is not supported by this browser.");
-      }
-    }
-  
-    static setPosition(position) {
-      console.log("Latitude:", position.coords.latitude);
-      console.log("Longitude:", position.coords.longitude);
-  
-      EventorUtils.location.x = position.coords.latitude;
-      EventorUtils.location.y = position.coords.longitude;
-      console.log("Location:", EventorUtils.location);
-    }
-  
-    static showError(error) {
-      switch (error.code) {
-        case error.PERMISSION_DENIED:
-          console.log("User denied the request for geolocation.");
-          break;
-        case error.POSITION_UNAVAILABLE:
-          console.log("Location information is unavailable.");
-          break;
-        case error.TIMEOUT:
-          console.log("The request to get user location timed out.");
-          break;
-        case error.UNKNOWN_ERROR:
-          console.log("An unknown error occurred.");
-          break;
-      }
-    }
-  
-    static getNextMonth(date) {
-      const month = new Date(date).getMonth();
-      const year = new Date(date).getFullYear();
-      const day = new Date(date).getDate();
-  
-      return new Date(year, month + 1, 1);
-    }
-  
-    static getPrevMonth(date) {
-      const month = new Date(date).getMonth();
-      const year = new Date(date).getFullYear();
-      const day = new Date(date).getDate();
-  
-      return new Date(year, month - 1, day);
-    }
+
   
     static changeAddressBar(param, value) {
       // Get the current URL and its search params
@@ -826,8 +691,8 @@ class DateUtils {
     }
   
     static getParam(param, clearHash = true) {
-      const params = new URLSearchParams(window.location.href);
-      console.log(params);
+      const params = new URLSearchParams(window.location.search);
+    //   console.log(params);
       if (params.has(param)) {
         let paramValue = params.get(param);
         // Decode the URL parameter value
@@ -838,38 +703,5 @@ class DateUtils {
         return decodeURIComponent(paramValue);
       }
       return null;
-    }
-  
-    static getSimpleDate(date, realize = false) {
-      let relizer = 0;
-      if (realize) {
-        relizer = 1;
-      }
-      const month = String(new Date(date).getUTCMonth() + relizer).padStart(2, 0);
-      const year = new Date(date).getFullYear();
-      const day = String(new Date(date).getUTCDate()).padStart(2, 0);
-  
-      return (year + "-" + month + "-" + day);
-    }
-  
-    static getFirstDayOfMonth(date, simplify = false, plusmonth = 0) {
-      const month = new Date(date).getUTCMonth() + plusmonth;
-      const year = new Date(date).getFullYear();
-      if (simplify) {
-        return (year + "-" + String(month + 1).padStart(2, 0) + "-" + "01");
-      }
-      return new Date(year, month, 1);
-    }
-  
-    static getLastDayOfMonth(date, simplify = false, plusmonths = 0) {
-      const month = new Date(date).getMonth() + plusmonths;
-      const year = new Date(date).getFullYear();
-      let nd = new Date(year, month + 1, 1); // Set day to 1 for the next month
-      nd.setDate(nd.getDate() - 1); // Subtract 1 day to get the last day of the current month
-      const day = String(nd.getUTCDate()).padStart(2, '0');
-      if (simplify) {
-        return year + "-" + String(nd.getMonth() + 1).padStart(2, '0') + "-" + day;
-      }
-      return nd;
     }
 }

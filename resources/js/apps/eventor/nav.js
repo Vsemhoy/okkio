@@ -30,7 +30,7 @@ class EventorNav {
         if (prevExpended == false){
           EventorNav.shrinkAllRows();
         }
-        if (EventorFlow.dateArray.length ){
+        if (DayFlow.dateArray.length ){
           let tod = document.getElementById("row_today");
           if (tod != null && me != ""){
             tod.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
@@ -166,26 +166,68 @@ class EventorNav {
 
 
       static topTools() {
-        let result = `
-        <div class="flex-space th-sticky-bottom-box evt-tooltop" uk-sticky="position: top">
-        <div style='display: flex;
-        align-items: center; grid-gap: 8px;'>  
-        <div class="evt-toolbar-sectionname" id='evt_tool_sectionName' title='Active section'>Section: All</div>
-          <div class="evt-toolbar-datemark"></div>
-          </div>
-          <div class="uk-padding-remove">
-            <div class="">
-              
-            </div> 
-          </div>
-          <div class="uk-padding-remove" title='Create an event'>
-          <a class="uk-button" id='evt_expandRows' uk-icon="icon: shrink" title='shrink rows'></a>
-            <a class="uk-button " id="callCreateModal" href="#modalHtmlEditor" uk-toggle="" aria-expanded="false" uk-icon="icon: plus"></a>
-          </div>
-        </div>
-        `;
-        return result;
-      }
+        // Create the main container div
+        const containerDiv = document.createElement('div');
+        containerDiv.classList.add('flex-space', 'th-sticky-bottom-box');
+        containerDiv.setAttribute('uk-sticky', 'position: top');
+    
+        // Create the first flex container
+        const flexContainer1 = document.createElement('div');
+        flexContainer1.style.display = 'flex';
+        flexContainer1.style.alignItems = 'center';
+        flexContainer1.style.gridGap = '8px';
+    
+        // Create the section name div
+        const sectionNameDiv = document.createElement('div');
+        sectionNameDiv.classList.add('evt-toolbar-sectionname');
+        sectionNameDiv.id = 'evt_tool_sectionName';
+        sectionNameDiv.title = 'Active section';
+        sectionNameDiv.textContent = 'Section: All';
+    
+        // Create the date mark div
+        const dateMarkDiv = document.createElement('div');
+        dateMarkDiv.classList.add('evt-toolbar-datemark');
+    
+        // Append sectionNameDiv and dateMarkDiv to flexContainer1
+        flexContainer1.appendChild(sectionNameDiv);
+        flexContainer1.appendChild(dateMarkDiv);
+    
+        // Create the second flex container
+        const flexContainer2 = document.createElement('div');
+    
+        // Create additional content for flexContainer2 if needed
+    
+        // Create the third flex container
+        const flexContainer3 = document.createElement('div');
+        flexContainer3.title = 'Create an event';
+    
+        // Create the "shrink rows" button
+        const shrinkRowsButton = document.createElement('a');
+        shrinkRowsButton.classList.add('uk-button');
+        shrinkRowsButton.id = 'evt_expandRows';
+        shrinkRowsButton.setAttribute('uk-icon', 'icon: shrink');
+        shrinkRowsButton.title = 'shrink rows';
+    
+        // Create the "create event" button
+        const createEventButton = document.createElement('a');
+        createEventButton.classList.add('uk-button');
+        createEventButton.id = 'callCreateModal';
+        createEventButton.href = '#modalHtmlEditor';
+        createEventButton.setAttribute('uk-toggle', '');
+        createEventButton.setAttribute('aria-expanded', 'false');
+        createEventButton.setAttribute('uk-icon', 'icon: plus');
+    
+        // Append shrinkRowsButton and createEventButton to flexContainer3
+        flexContainer3.appendChild(shrinkRowsButton);
+        flexContainer3.appendChild(createEventButton);
+    
+        // Append flexContainer1, flexContainer2, and flexContainer3 to the main container div
+        containerDiv.appendChild(flexContainer1);
+        containerDiv.appendChild(flexContainer2);
+        containerDiv.appendChild(flexContainer3);
+    
+        return containerDiv;
+    }
 
 
 

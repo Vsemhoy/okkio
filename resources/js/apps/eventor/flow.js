@@ -1,8 +1,9 @@
 class EventorFlow {
     static updatedItem = null;
-    static dateArray = [];
+
     static loadedSections = {};
-    constructor() {
+    static dayFlow = null;
+    constructor(selector) {
         // { 'date' => [ 'afklsjdklfjas', 'jdlfkajsdf' ]}
         let cursect = EventorUtils.getParam('sect');
         if (cursect == null){
@@ -12,63 +13,10 @@ class EventorFlow {
         }
 
 
-        this.pool = document.querySelector('#eventPool');
-        //this.addEventTrigger = document.querySelectorAll(".eventor-act-addevent");
-        this.expendTopTrigger = document.querySelector("#act_expandTop");
-        this.expendBottomTrigger = document.querySelector("#act_expandBottom");
+        this.pool = document.querySelector(selector);
+        EventorFlow.dayFlow = new DayFlow(selector);
+        
 
-        this.expendTopTrigger.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            let callparams = [this.renderMonth(EventorUtils.getNextMonth(endDate), true)];
-            this.loadEvents(callparams);
-            console.log(EventorUtils.getLastDayOfMonth(endDate, true));
-            console.log(EventorUtils.getFirstDayOfMonth(endDate, true));
-        });
-
-        this.expendBottomTrigger.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            let callparams = [this.renderMonth(EventorUtils.getPrevMonth(startDate))];
-            this.loadEvents(callparams);
-            console.log(EventorUtils.getLastDayOfMonth(startDate, true));
-            console.log(EventorUtils.getFirstDayOfMonth(startDate, true));
-        });
-
-        this.moveTopTrigger = document.querySelector("#act_moveTop");
-        this.moveBottomTrigger = document.querySelector("#act_moveBottom");
-
-        this.moveTopTrigger.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            event_container = [];
-            this.pool.innerHTML = "";
-            let callparams = [this.renderMonth(EventorUtils.getNextMonth(endDate), true)];
-            this.loadEvents(callparams);
-            startDate = EventorUtils.getFirstDayOfMonth(endDate, false);
-            EventorUtils.changeAddressBar("stm", EventorUtils.getFirstDayOfMonth(endDate, true));
-            // console.log(EventorUtils.getLastDayOfMonth(endDate, true));
-            // console.log(EventorUtils.getFirstDayOfMonth(startDate, true));
-            endDate = EventorUtils.getFirstDayOfMonth(endDate, false);
-        });
-
-        this.moveBottomTrigger.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            event_container = [];
-            this.pool.innerHTML = "";
-            let callparams = [this.renderMonth(EventorUtils.getPrevMonth(startDate))];
-            this.loadEvents(callparams);
-            // console.log(EventorUtils.getLastDayOfMonth(startDate, true));
-            // console.log(EventorUtils.getFirstDayOfMonth(startDate, true));
-            endDate = EventorUtils.getLastDayOfMonth(EventorUtils.getDateMinusMonth(startDate), false, 1);
-            EventorUtils.changeAddressBar("enm", EventorUtils.getLastDayOfMonth(startDate, true));
-            startDate = EventorUtils.getFirstDayOfMonth(endDate, false);
-
-        });
-
-
-
-
-        // second 
-        this.pool = document.querySelector('#eventPool');
-        //this.addEventTrigger = document.querySelectorAll(".eventor-act-addevent");
 
         document.addEventListener("dblclick", function (e) {
             if (e.target.closest(".event-section") && !e.target.closest(".event-card")) {
@@ -160,67 +108,20 @@ class EventorFlow {
         });
 
 
-    }
-
-
-
-
-    
-
-    renderMonth(date, start = false) {
-        // Get the month and year from the input date
-        const month = new Date(date).getMonth();
-        const year = new Date(date).getFullYear();
-
-        // Create a new Date object for the first day of the month
-        let firstDayOfMonth = new Date(year, month, 1);
-
-        // Create a new Date object for the last day of the month
-        let lastDayOfMonth = new Date(year, month + 1, 0);
-        lastDayOfMonth = EventorUtils.getLastDayOfMonth(lastDayOfMonth);
-        if (startDate > firstDayOfMonth) {
-            startDate = firstDayOfMonth;
-        }
-        if (endDate < lastDayOfMonth) {
-            endDate = lastDayOfMonth;
-        }
-        EventorUtils.changeAddressBar("enm", EventorUtils.getLastDayOfMonth(endDate, true, 0));
-        EventorUtils.changeAddressBar("stm", EventorUtils.getFirstDayOfMonth(startDate, true, 0));
-
-        let mhdr = EventorTemplate.createMonthHeader(date);
-        if (start == false) {
-            this.pool.insertAdjacentHTML('beforeend', mhdr);
-            // Loop from the first day to the last day of the month
-            for (let day = lastDayOfMonth; day >= firstDayOfMonth; day.setDate(day.getDate() - 1)) {
-                // Get the date of the current day
-                const currentDate = day.getDate();
-
-                // Format the date and log it to the console
-                //console.log(`${year}-${(month + 1).toString().padStart(2, '0')}-${currentDate.toString().padStart(2, '0')}`);
-                let mrow = EventorTemplate.createDayRow(`${year}-${(month + 1).toString().padStart(2, '0')}-${currentDate.toString().padStart(2, '0')}`);
-                this.pool.insertAdjacentHTML('beforeend', mrow);
-            }
-        } else {
-            // Loop from the first day to the last day of the month
-            for (let day = firstDayOfMonth; day <= lastDayOfMonth; day.setDate(day.getDate() + 1)) {
-                // Get the date of the current day
-                const currentDate = day.getDate();
-
-                // Format the date and log it to the console
-                //console.log(`${year}-${(month + 1).toString().padStart(2, '0')}-${currentDate.toString().padStart(2, '0')}`);
-                let mrow = EventorTemplate.createDayRow(`${year}-${(month + 1).toString().padStart(2, '0')}-${currentDate.toString().padStart(2, '0')}`);
-                this.pool.insertAdjacentHTML('afterbegin', mrow);
-            }
-            this.pool.insertAdjacentHTML('afterbegin', mhdr);
-        }
-
         if (me != ""){
-            return [EventorUtils.getFirstDayOfMonth(date), EventorUtils.getLastDayOfMonth(date), activeSection];
-        }
-        //console.log('loadcall: ', EventorUtils.getFirstDayOfMonth(date), EventorUtils.getLastDayOfMonth(date));
+            this.loadSectionsAndCategories();
+
+            let callParamsArray = [];
+            for (let i = 0; i < DayFlow.dateArray.length; i++) {
+              //console.log(eventor.dateArray[i]);
+              callParamsArray.push( [DayFlow.dateArray[i], activeSection]);
+            };
+            EventorFlow.loadEvents(callParamsArray);
+            EventorFlow.dayFlow.onMoved(this.reloadSectionEvents);
+        };
+
+
     }
-
-
 
 
 
@@ -361,21 +262,22 @@ class EventorFlow {
 
 
 
-   reloadSectionEvents(sectionid)
+   reloadSectionEvents()
    {
+    let sectionid = this.activeSection;
     console.log('command :>> ', 'reloadSectionEvents');
         // check if there not events in the array for this section
         let loadArray = [];
         if (activeSection != 'all'){
-            for (let i = 0; i < EventorFlow.dateArray.length; i++) {
-                let cdate =  EventorUtils.getDateAsString(EventorFlow.dateArray[i]);
+            for (let i = 0; i < DayFlow.dateArray.length; i++) {
+                let cdate =  DayFlow.dateArray[i].getShortDate();
                 console.log(cdate);
                 if (EventorFlow.loadedSections[cdate] != null){
                     console.log('not null cdate');
 
                     if (!EventorFlow.loadedSections[cdate].includes(sectionid)){
                         EventorFlow.loadedSections[cdate].push(sectionid);
-                        loadArray.push([EventorUtils.getFirstDayOfMonth(startDate), EventorUtils.getLastDayOfMonth(endDate), sectionid]);
+                        loadArray.push([DayFlow.dateArray[i], sectionid]);
                         EventorFlow.refreshEvents();
                         console.log('section when try' , activeSection);
                     } else {
@@ -390,43 +292,45 @@ class EventorFlow {
                 };
             };
             if (loadArray.length){
-                this.loadEvents(loadArray);
+                EventorFlow.loadEvents(loadArray);
             }
 
 
         } else {
-            let sectionsToLoad = [];
+            let loadArray = [];
             for (let i = 0; i < section_container.length; i++) {
                 const targetSection = section_container[i].id;
-                for (let i = 0; i < EventorFlow.dateArray.length; i++) {
-                    let cdate =  EventorUtils.getDateAsString(EventorFlow.dateArray[i]);
+                for (let i = 0; i < DayFlow.dateArray.length; i++) {
+                    let cdate =  DayFlow.dateArray[i].getShortDate();
                     if (EventorFlow.loadedSections[cdate] != null){
                         if (!EventorFlow.loadedSections[cdate].includes(targetSection)){
-                            EventorFlow.loadedSections[cdate].push(targetSection);
-                            if (!sectionsToLoad.includes(targetSection)){
-                                sectionsToLoad.push(targetSection);
-                            }
+                            // EventorFlow.loadedSections[cdate].push(targetSection);
+                            // if (!sectionsToLoad.includes(targetSection)){
+                            //     sectionsToLoad.push(targetSection);
+                            // }
+                            loadArray.push([DayFlow.dateArray[i], targetSection]);
                         } 
-                    };
+                    } else {
+                        loadArray.push([DayFlow.dateArray[i], targetSection]);
+                    }
                 };
             }
-            for (let io = 0; io < sectionsToLoad.length; io++) {
-                const secid = sectionsToLoad[io];
-                //this.loadEvents(EventorUtils.getFirstDayOfMonth(startDate), EventorUtils.getLastDayOfMonth(endDate), secid);
+            // for (let io = 0; io < sectionsToLoad.length; io++) {
+            //     const secid = sectionsToLoad[io];
+            //     //this.loadEvents(EventorUtils.getFirstDayOfMonth(startDate), EventorUtils.getLastDayOfMonth(endDate), secid);
                 
+            // }
+            if (loadArray.length){
+                EventorFlow.loadEvents(loadArray);
             }
             
-            EventorFlow.refreshEvents();
-
-
-
+            
         }
-
-
+        
+        EventorFlow.refreshEvents();
 
         // load it
-        console.log(EventorFlow.loadedSections);
-        console.log(event_container);
+
    }
 
 
@@ -486,8 +390,8 @@ class EventorFlow {
 
                             if (activeSection == 'all'){
                                 console.log('cursect :>> ', activeSection);
-                                for (let i = 0; i < EventorFlow.dateArray.length; i++) {
-                                    let cdate =  EventorUtils.getDateAsString(EventorFlow.dateArray[i]);
+                                for (let i = 0; i < DayFlow.dateArray.length; i++) {
+                                    let cdate =  DayFlow.dateArray[i].getShortDate();
                                     if (EventorFlow.loadedSections[cdate] != null){
                                         EventorFlow.loadedSections[cdate].push(item2.id);
                                     } else {
@@ -555,42 +459,37 @@ class EventorFlow {
 
     static refreshEvents() {
         console.log('command :>> ', 'refreshEvents');
-        Array.from(event_container).forEach((event) => {
-            // const optionElement = document.createElement('option');
-            // optionElement.value = option.id;
-            // optionElement.textContent = option.title;
-            //sects.appendChild(optionElement);
-            if (!event.hasOwnProperty("loaded")) {
-                event.loaded = false;
-            };
-            if (event.loaded == false){
-                if (activeSection == 'all' || event.section == activeSection){
-                    //console.log(event.setdate);
-                    let rid = "row_" + event.setdate;
-    
-                    let row = document.querySelector('#' + rid);
-                    if (row != null) {
-                        let erc = row.querySelector('.eventor-row-content');
-                        //let card = EventorTemplate.createEventCard(event.title, event.setdate, event.category, event.content);
-                        let card = EventorTemplate.makeEventCard(event);
-                        erc.insertAdjacentHTML('beforeend', card);
-                        //erc.appendChild(card);
-                    }
-                    event.loaded = true;
-                    //console.log(rid);
+        let arsenal = document.querySelectorAll('.evt-card-wrapper');
+        for (let ind = arsenal.length - 1; ind >= 0; ind--) {
+            const element = arsenal[ind];
+            element.remove();
+        }
 
+        Array.from(event_container).forEach((event) => {
+            if (activeSection == 'all' || event.section == activeSection){
+                //console.log(event.setdate);
+                // if (document.querySelector('#' + event.id) != null){
+                //     document.querySelector('#' + event.id).remove();
+                // }
+                let rid = "row_" + event.setdate;
+
+                let row = document.querySelector('#' + rid);
+                if (row != null) {
+                    let erc = row.querySelector('.eventor-row-content');
+                    //let card = EventorTemplate.createEventCard(event.title, event.setdate, event.category, event.content);
+                    let card = EventorTemplate.makeEventCard(event);
+                    erc.insertAdjacentHTML('beforeend', card);
+                    //erc.appendChild(card);
                 }
                 
-            } 
-                
-
-            
+                //console.log(rid);
+            }
 
         });
     }
 
     static clearAllCardBodyFromChart(){
-        let cards = document.querySelector('#eventPool').querySelectorAll(".evt-card-wrapper");
+        let cards = document.querySelectorAll(".evt-card-wrapper");
         for (let i = 0; i < cards.length; i++) {
           const element = cards[i].remove();
         }
@@ -600,7 +499,7 @@ class EventorFlow {
       }
 
 
-    loadEvents(callArray) {
+    static loadEvents(callArray) {
         console.log('command :>> ', 'loadEvents');
         console.log('Called section' , activeSection);
         let counter = 0;
@@ -611,12 +510,12 @@ class EventorFlow {
                     console.log("You are not registered!");
                     return 0;
                 };
-                console.log(this.responseText);
+                //console.log(this.responseText);
                 //console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Event") {
-                        //console.log(item.results);
+                        // console.log(item.results);
                         Array.from(item.results).forEach((item2) => {
                             let exists = false;
                             let newId = item2.id;
@@ -632,8 +531,8 @@ class EventorFlow {
                             }
 
                             
-                                for (let i = 0; i < EventorFlow.dateArray.length; i++) {
-                                    let cdate =  EventorUtils.getDateAsString(EventorFlow.dateArray[i]);
+                                for (let i = 0; i < DayFlow.dateArray.length; i++) {
+                                    let cdate =  DayFlow.dateArray[i].getShortDate();
                                     if (EventorFlow.loadedSections[cdate] != null){
                                         if (!EventorFlow.loadedSections[cdate].includes(item2.section)){
                                             EventorFlow.loadedSections[cdate].push(item2.section);
@@ -675,9 +574,8 @@ class EventorFlow {
         
         for (let ind = 0; ind < callArray.length; ind++) {
             const element = callArray[ind];
-            let datePast = element[0];
-            let dateFuture = element[1];
-            let section = element[2];
+            let shortdate = element[0];
+            let section = element[1];
 
             let task = EventorTypes.GetNewTask();
             task.user = me;
@@ -690,19 +588,20 @@ class EventorFlow {
             task.where.push(where);
             const where2 = {
                 column: "setdate",
-                value: EventorUtils.getSimpleDate(datePast, true),
+                value: EventorUtils.getSimpleDate(shortdate.getFirstDate(true), true),
                 operator: "BETWEEN",
-                value2: EventorUtils.getSimpleDate(dateFuture, true),
+                value2: EventorUtils.getSimpleDate(shortdate.getLastDate(true), true),
             };
             task.where.push(where2);
-            if (section != 'all' && section != ''){
+            if (section != undefined && section != 'all' && section != ''){
                 const where3 = {
                     column: "section",
-                    value: activeSection,
+                    value: section,
                 };
                 task.where.push(where3);
-                console.log('WHERE SECTION: ', activeSection);
+                console.log('WHERE SECTION: ', section);
             }
+            console.log(task);
             taskArray.push(task);
         }
 

@@ -55,7 +55,6 @@ class BudgetFlow
 
             event.target.closest('.bud-droparea').appendChild(document.getElementById(data));
         }
-
     }
 
     drag(event) {

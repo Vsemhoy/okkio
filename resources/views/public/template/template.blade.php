@@ -360,8 +360,7 @@
                 <li class="{{ Request::routeIs('eventor') ? 'uk-active' : '' }}"><a
                         href="{{ route('eventor') }}">Eventor</a></li>
 
-                        <li class="{{ Request::routeIs('calendar') ? 'uk-active' : '' }}"><a
-                        href="{{ route('calendar') }}">Calendar_api</a></li>
+
                 <!-- Add more menu items if needed -->
             </ul>
         </div>

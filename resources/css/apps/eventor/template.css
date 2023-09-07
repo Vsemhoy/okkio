@@ -259,3 +259,72 @@ font-family: system-ui;
   right: 22px;
   margin-top: 0px;
 }
+
+.evt-restrictor {
+  display: grid;
+}
+.evt-restrictor > * {
+  font-size: 1.2rem;
+  padding: 3px;
+}
+
+.cl-nav {
+  margin-top: 12px;
+  display: flex;
+  margin-right: auto;
+  margin-left: auto;
+  justify-content: center;
+  font-family: monospace;
+}
+.cl-nav-button {
+  padding: 3px;
+  font-size: 1.1rem;
+  min-width: 22px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: bold;
+  border: 1px solid #ebebeb;
+  border-left: 0px;
+  border-right: 0px;
+  background-color: #f3f3f3;
+  color: dimgray;
+  transition: all ease 0.3s;
+}
+.cl-nav-button:last-child {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 2px;
+  border-right: 1px solid #ebebeb;
+}
+.cl-nav-button:first-child {
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-left: 1px solid #ebebeb;
+}
+.cl-nav-button:hover {
+  background-color: lightgray;
+}
+.cl-nav-button:active {
+  background-color: rgb(180, 191, 204);
+}
+
+.cl-row {
+  display: grid;
+  grid-template-columns: 110px auto;
+}
+.cl-row:last-child {
+
+  border-bottom: 0px;
+}
+@media screen and (max-width: 900px) {
+  .cl-row {
+  display: grid;
+  grid-template-columns: auto;
+  }
+}
+.cl-row > div, .cl-restrictor > div {
+  
+}
+.cl-restrictor {
+  text-align: center;
+  font-weight: bold;
+}

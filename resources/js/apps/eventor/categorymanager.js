@@ -40,9 +40,9 @@ class CategoryManager
                 if (card) {
                     let id = card.getAttribute('data-id');
                     let value = card.querySelector('.evt-category-colorpicker').value;
-                    console.log(value, id, category_container.length);
+                    // console.log(value, id, category_container.length);
                     for (let i = 0; i < category_container.length; i++) {
-                        console.log(i);
+                        // console.log(i);
                         let element = category_container[i];
                         if (element.id == id){
                             element.color = value.replace('#', '');
@@ -182,7 +182,7 @@ class CategoryManager
         <div uk-sortable="group: sortable-group; handle: .uk-sortable-hand" class="uk-sortable" id='evt_categorys'>`;
         for (let index = 0; index < category_container.length; index++) {
             const item = category_container[index];
-            console.log(item);
+            // console.log(item);
             result += CategoryManager.getCategoryCard(item, index);
         };
 
@@ -260,12 +260,12 @@ class CategoryManager
                     alert("You are not registered!");
                     return 0;
                 };
-                console.log(this.responseText);
-                console.log(JSON.parse(this.responseText));
+                // console.log(this.responseText);
+                // console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Category") {
-                        console.log(item.results);
+                        // console.log(item.results);
                         Array.from(item.results).forEach((item2) => {
                             if (category_id == ""){
                                 category_container.push(item2);
@@ -326,8 +326,8 @@ class CategoryManager
         task.type = "Category";
         task.where.push(where);
         taskArray.push(task);
-        console.log(taskArray);
-        console.log(formdata);
+        // console.log(taskArray);
+        // console.log(formdata);
         xhttp.send(JSON.stringify(taskArray));
     }
 
@@ -341,8 +341,8 @@ class CategoryManager
                     alert("You are not registered!");
                     return 0;
                 };
-                console.log(this.responseText);
-                console.log(JSON.parse(this.responseText));
+                // console.log(this.responseText);
+                // console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "category") {

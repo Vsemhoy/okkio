@@ -7,6 +7,20 @@
 
 @section('content')
 <div id='eventor_body' class='app-content'>
+  <div id="calendar_nav">
+          
+          </div>
+          <br>
+          <div id="pre_eventor_content">
+              
+              </div>
+          <div id="eventor_content">
+              
+          </div>
+          <br>
+          <div id="calendar_nav_down">
+              
+          </div>
 </div>
 
 <div id="modal_sectionManager" class="uk-modal-full" uk-modal>
@@ -57,24 +71,6 @@
 
         <div class="uk-modal-body evt-reader-body" uk-overflow-auto>
 
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
         </div>
 
         <div class="uk-modal-footer uk-text-right">
@@ -93,16 +89,19 @@
     var category_container = [];
     var activeSection = 'all';
     // EventorUtils.changeAddressBar('page', 'bro');
+
+
     if (EventorUtils.getParam('page') == null || EventorUtils.getParam('page') == 'start' ){
 
-        let nav = EventorNav.navButtons();
+
         let toptools = EventorNav.topTools();
         let epool = Page.eventPool();
         let modalE = new EventModal();
         let modalS = new SettingsModal();
-        document.querySelector('#eventor_body').insertAdjacentHTML('afterbegin', nav);
-        document.querySelector('#eventor_body').insertAdjacentHTML('beforeend', toptools);
-        document.querySelector('#eventor_body').appendChild(epool);
+
+        
+
+        document.querySelector('#pre_eventor_content').appendChild(toptools);
         document.body.appendChild(modalE.get());
         document.querySelector('#eventor_body').insertAdjacentHTML('beforeend', modalS.get());
         //document.body.appendChild(modalE.get());
@@ -115,57 +114,25 @@
   // startDate describes a month and year to start Month-calendar rendering
 
 
-
-let pool = document.querySelector('#eventPool');
-
-
 </script>
 
 <script>
+  
+  const eventor = new EventorFlow('#eventor_content');
 
-  var startDate = new Date();
-  var endDate = new Date();
-  let betParam = EventorUtils.getParam('stm');
-  let endParam = EventorUtils.getParam('enm');
-  if (betParam != null){
-    startDate2 = new Date(betParam);
-    startDate2 = EventorUtils.getNextMonth(startDate2);
-    startDate = startDate2;
-  }
+    const navbutts = CalTemplate.navButtons(EventorFlow.dayFlow.endMonth.getShortDate());
+    document.querySelector('#calendar_nav').appendChild(navbutts);
 
-  let eventor = new EventorFlow();
+    const navbutts2 = CalTemplate.navButtons(EventorFlow.dayFlow.startMonth.getShortDate(), true);
+    document.querySelector('#calendar_nav_down').appendChild(navbutts2);
 
 
-  if (startDate.getMonth() == endDate.getMonth()
-      && startDate.getYear() == endDate.getYear()){
-        EventorFlow.dateArray.push(startDate);
-      } else {
-        //const urlParams = new URLSearchParams(window.location.search);
-        const startDateParam = EventorUtils.getParam('stm');
-        const endDateParam = EventorUtils.getParam('enm');
-        const startDate2 = startDate;
-        const endDate2 = endDate;
-        const currentDate = new Date(startDate2);
-        while (currentDate <= endDate2) {
-          const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-          EventorFlow.dateArray.push(firstDayOfMonth); // You can format the date as needed
-          currentDate.setMonth(currentDate.getMonth() + 1);
-        }
-      };
-
-    if (me != ""){
-        eventor.loadSectionsAndCategories();
-    };
 
 
-    let callParamsArray = [];
-    for (let i = 0; i < EventorFlow.dateArray.length; i++) {
-      //console.log(eventor.dateArray[i]);
-      callParamsArray.push( eventor.renderMonth(EventorFlow.dateArray[i], true));
-    };
-    eventor.loadEvents(callParamsArray);
 
-    startDate = EventorUtils.getPrevMonth(startDate);
+
+
+   // startDate = EventorUtils.getPrevMonth(startDate);
 
 
     window.addEventListener('load', function () {
@@ -270,6 +237,10 @@ let categoryManager = new CategoryManager();
 @endsection
 
 @section('page-scripts')
+<script src="{{ asset('resources/js/apps/eventor/dayFlow/caltemplate.js') }}"></script>
+<script src="{{ asset('resources/js/apps/eventor/dayFlow/shortdate.js') }}"></script>
+<script src="{{ asset('resources/js/apps/eventor/dayFlow/dayflow.js') }}"></script>
+
 <script src="{{ asset('resources/js/apps/eventor/page.js') }}"></script>
 <script src="{{ asset('resources/js/apps/eventor/sidemenu.js') }}"></script>
 <script src="{{ asset('resources/js/apps/eventor/templates.js') }}"></script>
