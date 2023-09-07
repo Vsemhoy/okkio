@@ -121,6 +121,9 @@
 .evt-card-wrapper.evt-starred > div {
   background: #fffad1;
 }
+.evt-card-wrapper:not(:last-child){
+  margin-bottom: 6px;
+}
 
 .evt-modal-container-wrapper {
   padding:  12px;

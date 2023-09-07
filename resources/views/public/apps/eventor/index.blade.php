@@ -10,10 +10,9 @@
   <div id="calendar_nav">
           
           </div>
-          <br>
           <div id="pre_eventor_content">
               
-              </div>
+          </div>
           <div id="eventor_content">
               
           </div>
@@ -101,7 +100,7 @@
 
         
 
-        document.querySelector('#pre_eventor_content').appendChild(toptools);
+        document.querySelector('#pre_eventor_content').replaceWith(toptools);
         document.body.appendChild(modalE.get());
         document.querySelector('#eventor_body').insertAdjacentHTML('beforeend', modalS.get());
         //document.body.appendChild(modalE.get());
