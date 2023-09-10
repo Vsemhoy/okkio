@@ -53,10 +53,10 @@ class EventModal {
     this.fields.push(this.createFormField('Set Date:', 'evt_setdate', 'setdate', 'date'));
     this.fields.push(this.createFormField('Access:', 'evt_access', 'access', 'select', access));
     this.fields.push(this.createFormField('Status:', 'evt_status', 'status', 'select', status));
-    this.fields.push(this.createFormField('Starred:', 'evt_starred', 'starred', 'checkbox', [], '1', true));
-    this.fields.push(this.createFormField('Pinned:', 'evt_pinned', 'pinned', 'checkbox', [], '0', true));
-    this.fields.push(this.createFormField('Locked:', 'evt_locked', 'locked', 'checkbox', [], '0', true));
-    this.fields.push(this.createFormField('Format:', 'evt_format', 'format', 'select', format));
+    this.fields.push(this.createFormField('Starred', 'evt_starred', 'starred', 'checkbox', [], '1', true));
+    this.fields.push(this.createFormField('Pinned', 'evt_pinned', 'pinned', 'checkbox', [], '0', true));
+    this.fields.push(this.createFormField('Locked', 'evt_locked', 'locked', 'checkbox', [], '0', true));
+    this.fields.push(this.createFormField('Format:', 'evt_format', 'format', 'select', format, 0, true, true));
     
     this.modalBody = this.modalEventEditor(this.fields);
 
@@ -266,9 +266,12 @@ class EventModal {
   
 
 
-  createFormField(labelText, id, name, type, options = [], defaultValue = '', hasLabel = true) {
+  createFormField(labelText, id, name, type, options = [], defaultValue = '', hasLabel = true, hidden = false) {
     const divElement = document.createElement('div');
     divElement.classList.add('uk-margin-small');
+    if (hidden){
+      divElement.classList.add('uk-hidden');
+    }
   
       const labelElement = document.createElement('label');
       labelElement.classList.add('uk-form-label');
@@ -338,8 +341,19 @@ class EventModal {
         break;
     }
   
-    formControls.appendChild(inputElement);
-    divElement.appendChild(labelElement);
+    if (type == 'checkbox'){
+      labelElement.innerHTML = '';
+      labelElement.classList.add('uk-form-label');
+      let span = document.createElement('span');
+      span.textContent = " " + labelText;
+
+      labelElement.appendChild(inputElement);
+      labelElement.appendChild(span);
+      divElement.appendChild(labelElement);
+    } else {
+      formControls.appendChild(inputElement);
+      divElement.appendChild(labelElement);
+    }
     divElement.appendChild(formControls);
   
     return divElement;

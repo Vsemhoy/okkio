@@ -230,4 +230,28 @@ class EventorUtils {
   }
 
 
+
+  static getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+      const [cookieName, cookieValue] = cookie.split('=');
+      if (cookieName.trim() === name) {
+        return cookieValue;
+      }
+    }
+    return null;
+  }
+
+  // saveCookie(key, value, expired = 7){
+  //   // Save the user input to a cookie named 'userDraft'
+  //   setCookie(key, value, expired); // Expires in 7 days (adjust as needed)
+  //   // Perform any other necessary actions, e.g., send the data to the server.
+  // }
+
+
+  static setCookie(name, value, days = 7) {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+  }
 }

@@ -35,11 +35,20 @@ class EventorFlow {
                 data.access = 1;
                 data.status = 1;
                 UIkit.modal("#modalHtmlEditor").show();
+                let cook = EventorUtils.getCookie('eventorEventDraft');
+                if (cook != null && cook != '' && cook != false ){
+                    let daco = JSON.parse(cook);
+                    if (daco != null){
+                        data = daco;
+                    }
+                }
+
                 EventorFlow.fillFormWithData(data);
                 document.querySelector('#evt_title').focus();
                 document.querySelector('#evt_eventEditorTitle').innerHTML = "Create new event";
                 document.querySelector('#eventor_act_editgroup').classList.add('uk-hidden');
                 document.querySelector('#eventor_act_saveEvent').classList.remove('uk-hidden');
+
             }
         });
 
@@ -120,7 +129,10 @@ class EventorFlow {
             EventorFlow.dayFlow.onMoved(this.reloadSectionEvents);
         };
 
-
+        let sects = document.querySelector('#evt_section');
+        sects.addEventListener('change', (e) => {
+           EventorFlow.refreshCategoriesAndSections(sects.value); 
+        });
     }
 
 
@@ -145,6 +157,7 @@ class EventorFlow {
     }
 
     static fillFormWithData(data) {
+        EventorFlow.refreshCategoriesAndSections(data.section);
         document.querySelector('#evt_title').value = new DOMParser().parseFromString( data.title, 'text/html').body.textContent;
         document.querySelector('#evt_content').value = new DOMParser().parseFromString( data.content, 'text/html').body.textContent;
         document.querySelector('#evt_format').value = data.format.toString();
@@ -167,6 +180,7 @@ class EventorFlow {
         let formdata = EventorFlow.harvestModalData();
         if (event_id == ""){
             formdata.trans_id = (Math.random() + 1).toString(36).substring(15);
+            EventorUtils.setCookie('eventorEventDraft', JSON.stringify(formdata));
         } else {
             formdata.id = event_id;
         }
@@ -193,6 +207,7 @@ class EventorFlow {
                         Array.from(item.results).forEach((item2) => {
                             if (event_id == ""){
                                 event_container.push(item2);
+                                EventorUtils.setCookie('eventorEventDraft', '', 1);
                             } else {
                                 // for (let i = 0; i < event_container.length ; i++){
                                 //     if (event_container[i].id == event_id){
@@ -335,7 +350,7 @@ class EventorFlow {
 
 
 
-    static refreshCategoriesAndSections() {
+    static refreshCategoriesAndSections(section) {
         console.log('command :>> ', 'refreshCategoriesAndSections');
         const cats = document.querySelector('#evt_category');
         const sects = document.querySelector('#evt_section');
@@ -345,21 +360,50 @@ class EventorFlow {
         optionElement0.value = "";
         optionElement0.textContent = "no category";
         cats.appendChild(optionElement0);
+
+        let counter = 0;
+        let selected = false;
         Array.from(section_container).forEach((option) => {
             const optionElement = document.createElement('option');
             optionElement.value = option.id;
             optionElement.textContent = option.title;
+            if (section == option.id){
+                optionElement.setAttribute('selected', 'selected');
+                selected = true;
+            }
             sects.appendChild(optionElement);
+            counter++;
         });
+        const optionElement2 = document.createElement('option');
+        optionElement2.value = "";
+        optionElement2.textContent = "no section";
+        sects.appendChild(optionElement2);
+        if (selected == false){
+            sects.selectedIndex = counter;
+        }
 
+        let strcats = '';
+        if (section != null && section != ''){
+            for (let i = 0; i < section_container.length; i++) {
+                const element = section_container[i];
+                if (element.id == section){
+                    strcats = element.categories;
+                    break;
+                }
+            }
+        }
+        let catar = strcats.split(',');
+        console.log('catar :>> ', catar);
         Array.from(category_container).forEach((option) => {
-            const optionElement = document.createElement('option');
-            optionElement.value = option.id;
-            optionElement.textContent = option.title;
-            cats.appendChild(optionElement);
+            if (catar.includes(option.id) || section == "" || section == 'all'){
+                const optionElement = document.createElement('option');
+                optionElement.value = option.id;
+                optionElement.textContent = option.title;
+                cats.appendChild(optionElement);
+            };
         });
 
-        
+        cats.selectedIndex = 0;
     }
 
 

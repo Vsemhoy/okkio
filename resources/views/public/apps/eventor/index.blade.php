@@ -8,18 +8,64 @@
 @section('content')
 <div id='eventor_body' class='app-content'>
   <div id="calendar_nav">
-          
-          </div>
-          <div id="pre_eventor_content">
-              
-          </div>
-          <div id="eventor_content">
-              
-          </div>
-          <br>
-          <div id="calendar_nav_down">
-              
-          </div>
+  </div>
+  <div id="pre_eventor_content">
+      
+  </div>
+  <div id="eventor_content">
+      
+  </div>
+  <br>
+  <div id="calendar_nav_down">
+      
+  </div>
+
+  <div id='eventor_search_body' class='uk-hidden'>
+    <div class="uk-padding-small">
+
+      <form class="uk-grid-small" uk-grid>
+        <div class="uk-width-1-1">
+            <input class="uk-input" type="text" placeholder="100" aria-label="100">
+        </div>
+        <div class="uk-width-1-4@s">
+        <select class="uk-select" id="form-horizontal-select">
+                    <option>Option 01</option>
+                    <option>Option 02</option>
+                </select>
+        </div>
+        <div class="uk-width-1-4@s">
+        <select class="uk-select" id="form-horizontal-select">
+                    <option>Option 01</option>
+                    <option>Option 02</option>
+                </select>
+        </div>
+        <div class="uk-width-1-4@s">
+        <select class="uk-select" id="form-horizontal-select">
+                    <option>Option 01</option>
+                    <option>Option 02</option>
+                </select>
+        </div>
+        <div class="uk-width-1-4@s">
+        <select class="uk-select" id="form-horizontal-select">
+                    <option>Option 01</option>
+                    <option>Option 02</option>
+                </select>
+        </div>
+        <div class="uk-width-1-2@s">
+            <input class="uk-input" type="text" placeholder="50" aria-label="50">
+        </div>
+        <div class="uk-width-1-4@s">
+            <input class="uk-input" type="text" placeholder="25" aria-label="25">
+        </div>
+        <div class="uk-width-1-2@s">
+            <input class="uk-input" type="text" placeholder="50" aria-label="50">
+        </div>
+        <div class="uk-width-1-2@s">
+            <input class="uk-input" type="text" placeholder="50" aria-label="50">
+        </div>
+    </form>
+    </div>
+  </div>
 </div>
 
 <div id="modal_sectionManager" class="uk-modal-full" uk-modal>

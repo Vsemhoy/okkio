@@ -9,14 +9,21 @@ class UserAuthCheck
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!session()->has('LoggedUser') && !in_array($request->path(), ['/', '/logins'])) {
-            return redirect('/')->with('fail', 'You must be logged in');
+        $checked = auth()->check();
+        if (!$checked) {
+            return redirect('/')->with('fail', 'You must be logged in'); // Перенаправление для зарегистрированных пользователей
         }
+    
+        return $next($request); // Пользователи без аутентификации имеют доступ к странице
 
-        if (!session()->has('LoggedUser') && $request->path() == 'admin/check') {
-            $AC = new UserAuthCheck;
-            return $AC->check($request);
-        }
+        // if (!session()->has('LoggedUser') && !in_array($request->path(), ['/', '/logins'])) {
+        //     return redirect('/')->with('fail', 'You must be logged in');
+        // }
+
+        // if (!session()->has('LoggedUser') && $request->path() == 'admin/check') {
+        //     $AC = new UserAuthCheck;
+        //     return $AC->check($request);
+        // }
 
         return $next($request)->header('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate')
             ->header('Pragma', 'no-cache')

@@ -14,25 +14,7 @@ class EventorTemplate
         ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month];
       }
 
-    static createEventCard(title, date, category, description) {
 
-        return `
-          <div>
-            <div class="uk-card uk-box-shadow-small uk-box-shadow-hover-large uk-card-small uk-card-default uk-text-left left-corrector event-card">
-              <div class="uk-card-header">
-                <div class="uk-width-expand">
-                  <h3 class="uk-card-title uk-margin-remove-bottom">${title}</h3>
-                  <div class="uk-text-meta uk-margin-remove-top flex-space"><time datetime="${date}">${date}</time> <small>${category}</small></div>
-                </div>
-              </div>
-              ${body}
-              <div class="uk-card-footer flex-space">
-                <a href="#" class="uk-button uk-button-text">Read more</a>
-                <span class="uk-badge evt-badge">${category}</span>
-              </div>
-            </div>
-          </div>`;
-      }
 
 
       static makeEventCard(event) {
@@ -64,6 +46,13 @@ class EventorTemplate
         let starredMark = "";
         if (event.starred == 1){
           starredMark = " evt-starred";
+        }
+        if (event.status == 0){
+          starredMark += " evt-disabled";
+          cutlength = 300;
+        } else if (event.status == 2){
+          starredMark += " evt-archieved";
+          cutlength = 500;
         }
         let catBlock = "";
         let secBlock = "";

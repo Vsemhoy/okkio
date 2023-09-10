@@ -264,17 +264,38 @@
 
     .th-com-s-nav {
         display: flex;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         padding-left: 0;
         margin: 0px;
         margin-bottom: 12px;
         list-style: none;
+        overflow-y: auto;
+    overflow-x: hidden;
     }
+
+    ::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #00000024;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #88888854; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
 
     .th-sn-item-icon {}
 
     .th-sn-item-text {
-        overfow: hidden;
+        overflow: hidden;
         display: none;
         text-align: left;
     }
@@ -341,6 +362,12 @@
     }
     .th-sidebar-opened .th-com-s-nav-item:hover .th-sn-round {
         margin-left: 246px;
+    }
+    /* .uk-sticky:not(.uk-active) {
+        z-index: 0 !important;
+    } */
+    .uk-sticky:not(.uk-active) {
+    z-index: 1 !important;
     }
     </style>
 </head>

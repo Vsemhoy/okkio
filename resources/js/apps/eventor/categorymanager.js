@@ -136,41 +136,21 @@ class CategoryManager
     rendercategoryBody() {
         let result = "";
         result += `<div class='evt-modal-container-wrapper'>
-
         <div class="uk-container uk-container-small uk-position-relative evt-modal-container uk-padding-remove">
-
-        <div class='uk-card-header flex-space uk-padding-small'>
-        <span class='uk-text-lead'>categorys: </span>
-        <button class="uk-button uk-button-small uk-button-primary" type="button" id='evt_createcategoryBtn'>
-        <span class='uk-text-large' uk-icon='icon: plus-circle' ></span> add</button>
+        <div class='uk-card-header flex-space uk-padding-remove uk-margin-left'>
+        <span class='uk-text-lead'>Categories: </span>
         </div>
-
         <div class='uk-card-body' style='overflow: auto; padding: 12px;'>
         <div id='evt_categoryList'>
         List of categorys
         </div>
         </div>
-<div class='uk-card-footer uk-text-right' style='border-top: 1px solid #d9d9d9;'>
-            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-            <button class="uk-button uk-button-primary" type="button">Save</button>
-</div>
+        <div class='uk-card-footer uk-text-right' style='border-top: 1px solid #d9d9d9;'>
+        <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+        <button class="uk-button uk-button-small uk-button-primary" type="button" id='evt_createcategoryBtn'>Create</button>
+            </div>
         </div>
     </div>
-    
-    <div class='evt-cat-group-modal uk-hidden'>
-    <select multiple size="1">
-    <option>Чебурашка</option>
-    <option>Крокодил Гена</option>
-    <option>Шапокляк</option>
-    <option>Крыса Лариса</option>
-    <option>Чебурашка</option>
-    <option>Крокодил Гена</option>
-    <option>Шапокляк</option>
-    <option>Крыса Лариса</option>
-    </select>
-    <button>Insert</button>
-    </div>
-    
     `;
     document.querySelector('#evt_categorymanager_body').innerHTML = result;
     return result;

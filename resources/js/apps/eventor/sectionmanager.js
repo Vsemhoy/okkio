@@ -121,7 +121,6 @@ class SectionManager
             for (let i = 0; i < items.length; i++) {
                 const element = items[i];
                 let id = element.getAttribute('data-id');
-                console.log(id, i + 1);
                 let item = {};
                 item.id = id;
                 item.ordered = i + 1;
@@ -133,23 +132,146 @@ class SectionManager
         
 
         document.body.addEventListener('click', (e)=> {
-            if (e.target.closest('.evt-section-group-trigger')){
-                let trig = e.target.closest('.evt-section-group-trigger');
-                let modal = document.querySelector('.evt-cat-group-modal'); // Element to set position to
-                modal.classList.remove('uk-hidden');
-                // Get the bounding rectangle of the trig element
-                let trigRect = trig.getBoundingClientRect();
+            if ((e.target.closest('.evt-section-group-trigger') || e.target.closest('.evt-sec-cat-selector')) && !e.target.closest('.evt-cs-open')){
+                if (document.querySelector('.evt-cs-open')){
+                    // document.querySelector('.evt-cs-open').setAttribute('rows', 1);
+                    document.querySelector('.evt-cs-open').classList.remove('evt-cs-open');
+                    document.querySelector('.evt-s-selected').classList.remove('evt-s-selected');
+                }
                 
-                // Set the left and top positions of the modal element
-                modal.style.left = (trigRect.left - 200) + 'px';
-                modal.style.top = trigRect.top + 'px';
-                this.updateCategoryList();
-            }
-            if (!e.target.closest('.evt-section-group-trigger') && !e.target.closest('.evt-cat-group-modal')){
-                let modal = document.querySelector('.evt-cat-group-modal'); // Element to set position to
-                modal.classList.add('uk-hidden');
+                let trig = e.target.closest('.evt-section-group-trigger');
+                let input = trig.querySelector('.evt-sec-cat-selector');
+                input.classList.add('evt-cs-open');
+                // input.setAttribute('rows', 10);
+
+                // let modal = document.querySelector('.evt-cat-group-modal'); // Element to set position to
+                // modal.classList.remove('uk-hidden');
+                // // Get the bounding rectangle of the trig element
+                // let trigRect = trig.getBoundingClientRect();
+                
+                // // Set the left and top positions of the modal element
+                // modal.style.left = (trigRect.left - 200) + 'px';
+                // modal.style.top = trigRect.top + 'px';
+                
+                let card = e.target.closest('.evt-section-card');
+                let id = card.parentElement.id;
+                card.classList.add('evt-s-selected');
+
+                let strcats = '';
+                for (let i = 0; i < section_container.length; i++) {
+                    const element = section_container[i];
+                    if (element.id == id){
+                        strcats = element.categories;
+                        break;
+                    }
+                }
+                let catar = strcats.split(',');
+
+                this.updateCategoryList(catar);
+            } else
+            if (!e.target.closest('.evt-section-group-trigger') && !e.target.closest('.evt-sec-cat-selector') 
+            && !e.target.closest('.evt-cs-open')){
+                // let modal = document.querySelector('.evt-cat-group-modal'); // Element to set position to
+                // modal.classList.add('uk-hidden');
+                if (document.querySelector('.evt-cs-open')){
+                    // document.querySelector('.evt-cs-open').setAttribute('rows', 1);
+                    document.querySelector('.evt-cs-open').classList.remove('evt-cs-open');
+                    document.querySelector('.evt-s-selected').classList.remove('evt-s-selected');
+                }
             }
         });
+
+        document.body.addEventListener('change', (e) => {
+            if (e.target.closest('.evt-cs-open')){
+                let card = e.target.closest('.evt-section-card');
+                let id = card.id;
+
+                let civer = card.querySelector('.evt-cat-group-list');
+                civer.innerHTML = '';
+
+                const selectedOptions = Array.from(e.target.closest('.evt-cs-open').selectedOptions);
+                // Iterate through selected options
+
+                selectedOptions.forEach(function (option) {
+                    // Push the value and text (name) of each selected option into the respective arrays
+                    civer.appendChild(SectionManager.getBadge(option.value, option.textContent, option.getAttribute('data-color')));
+                });
+
+                // Now you have the selected values and names for each multi-select
+            }
+        });
+
+        document.body.addEventListener('focusout', (e) => {
+            if (e.target.closest('.evt-cs-open')){
+                let card = e.target.closest('.evt-section-card').parentElement;
+                let id = card.id;
+                const selectedOptions = Array.from(e.target.closest('.evt-cs-open').selectedOptions);
+                // Iterate through selected options
+                let values = [];
+                selectedOptions.forEach(function (option) {
+                    // Push the value and text (name) of each selected option into the respective arrays
+                    //civer.appendChild(SectionManager.getBadge(option.value, option.textContent, option.getAttribute('data-color')));
+                    if (option.selected){
+
+                        values.push(option.value);
+                    }
+                });
+                let string = values.join(',');
+
+                for (let i = 0; i < section_container.length; i++) {
+                    const element = section_container[i];
+                    if (element.id == id){
+                        element.categories = string;
+                        this.saveSection(element, id);
+                        break;
+                    }
+                }
+            };
+        });
+    }
+
+
+    static getBadge(bid, name, color){
+        // Create a container div element with class "evt-catgroup-s-item"
+        const containerDiv = document.createElement('div');
+        containerDiv.classList.add('evt-catgroup-s-item');
+        containerDiv.setAttribute('data-target', bid);
+        containerDiv.style.border = '1px solid #' + color;
+
+        // Create the first span element with class "catGroupName" and set its text content
+        const span1 = document.createElement('span');
+        span1.classList.add('catGroupName');
+        span1.textContent = name + ' ';
+
+        // Create the second span element with class "catGroupUnlink" and set its text content
+        const span2 = document.createElement('span');
+        span2.classList.add('catGroupUnlink');
+        span2.textContent = '';
+        // span2.style.backgroundColor = '#' + color;
+
+        // Append the span elements to the container div
+        containerDiv.appendChild(span1);
+        containerDiv.appendChild(span2);
+        return containerDiv;
+    }
+
+    updateCategoryList(selectedArray = []){
+        let select = document.querySelector('.evt-cs-open');
+        select.innerHTML="";
+        for (let i = 0; i < category_container.length; i++) {
+            const element = category_container[i];
+            if (element.status == 1){
+                let option = document.createElement("option");
+                option.value = element.id;
+                option.innerHTML = element.title;
+               // option.style.backgroundColor = "#" + element.color;
+               option.setAttribute('data-color', element.color);
+                if (selectedArray.includes(element.id)){
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            }
+        }
     }
 
 
@@ -159,10 +281,8 @@ class SectionManager
 
         <div class="uk-container uk-container-small uk-position-relative evt-modal-container uk-padding-remove">
 
-        <div class='uk-card-header flex-space uk-padding-small'>
-        <span class='uk-text-lead'>Sections: </span>
-        <button class="uk-button uk-button-small uk-button-primary" type="button" id='evt_createSectionBtn'>
-        <span class='uk-text-large' uk-icon='icon: plus-circle' ></span> add</button>
+        <div class='uk-card-header flex-space uk-padding-remove uk-margin-left'>
+            <span class='uk-text-lead'>Sections: </span>
         </div>
 
         <div class='uk-card-body' style='overflow: auto; padding: 12px;'>
@@ -170,23 +290,15 @@ class SectionManager
         List of sections
         </div>
         </div>
-<div class='uk-card-footer uk-text-right' style='border-top: 1px solid #d9d9d9;'>
-            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-            <button class="uk-button uk-button-primary" type="button">Save</button>
+    <div class='uk-card-footer uk-text-right' style='border-top: 1px solid #d9d9d9;'>
+    <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+    <button class="uk-button uk-button-primary" type="button" id='evt_createSectionBtn'>Create</button>
 </div>
         </div>
     </div>
     
     <div class='evt-cat-group-modal uk-hidden'>
     <select multiple id='evt_catGroupSelector' size="1">
-    <option>Чебурашка</option>
-    <option>Крокодил Гена</option>
-    <option>Шапокляк</option>
-    <option>Крыса Лариса</option>
-    <option>Чебурашка</option>
-    <option>Крокодил Гена</option>
-    <option>Шапокляк</option>
-    <option>Крыса Лариса</option>
     </select>
     <button>Insert</button>
     </div>
@@ -197,47 +309,160 @@ class SectionManager
     }
 
 
-    updateCategoryList(selectedArray = []){
-        let select = document.querySelector('#evt_catGroupSelector');
-        select.innerHTML="";
-        for (let i = 0; i < category_container.length; i++) {
-            const element = category_container[i];
-            if (element.status == 1){
-                let option = document.createElement("option");
-                option.value = element.id;
-                option.innerHTML = element.title;
-                option.style.backgroundColor = "#" + element.color;
-                if (selectedArray.includes(element.id)){
-                    option.selected = true;
+
+
+    // renderSectionList(){
+    //     let result = "";
+    //     result += `
+    //     <div uk-sortable="group: sortable-group; handle: .uk-sortable-hand" class="uk-sortable" id='evt_sections'>`;
+    //     for (let index = 0; index < section_container.length; index++) {
+    //         const item = section_container[index];
+    //         // console.log(item);
+    //         let cats = ['Super', 'New category', 'alpha bond', 'hero'];
+    //         result += SectionManager.getSectionCard(item, index);
+    //     };
+
+    //     result += `</div>`;
+
+    //     document.querySelector('#evt_sectionList').innerHTML = result;
+    //     return result;
+    // }
+
+
+    renderSectionList() {
+        const sectionListContainer = document.querySelector('#evt_sectionList');
+        const sortableDiv = document.createElement('div');
+        sortableDiv.setAttribute('uk-sortable', 'group: sortable-group; handle: .uk-sortable-hand');
+        // uk-sortable="group: sortable-group; handle: .uk-sortable-hand"
+        sortableDiv.classList.add('uk-sortable');
+        sortableDiv.id = 'evt_sections';
+      
+        for (let index = 0; index < section_container.length; index++) {
+          const item = section_container[index];
+          const sectionCard = SectionManager.getSectionCard(item, index);
+          sortableDiv.appendChild(sectionCard);
+        }
+      
+        sectionListContainer.innerHTML = ''; // Clear the existing content
+        sectionListContainer.appendChild(sortableDiv);
+    }
+
+
+    static getSectionCard(item, index) {
+        const content = item.content == null ? '' : item.content;
+        const color = item.color == null ? '' : item.color;
+      
+        const cardBox = document.createElement('div');
+        cardBox.classList.add('uk-margin-sm', 'card-box');
+        cardBox.dataset.id = item.id;
+        cardBox.id = item.id;
+        cardBox.dataset.order = index;
+      
+        const ukCard = document.createElement('div');
+        ukCard.classList.add(
+          'uk-card',
+          'uk-card-sm',
+          'uk-padding-small',
+          'uk-box-shadow-small',
+          'uk-box-shadow-hover-medium',
+          'uk-card-small',
+          'evt-section-card'
+        );
+        ukCard.style.borderColor = `#${color}`;
+      
+        const evtGridHeader = document.createElement('div');
+        evtGridHeader.classList.add('evt-grid-header');
+      
+        const moveIcon = document.createElement('span');
+        moveIcon.classList.add('uk-icon-link', 'uk-sortable-hand', 'uk-icon');
+        moveIcon.setAttribute('uk-icon', 'move');
+        moveIcon.style.userSelect = 'none';
+      
+        const sectionNameInput = document.createElement('input');
+        sectionNameInput.placeholder = 'Event name';
+        sectionNameInput.classList.add('evt-section-name-in');
+        sectionNameInput.maxLength = 60;
+        sectionNameInput.type = 'text';
+        sectionNameInput.value = item.title;
+
+      
+        const sectionGroupTrigger = document.createElement('span');
+        sectionGroupTrigger.classList.add('evt-section-group-trigger');
+        sectionGroupTrigger.setAttribute('uk-icon', 'icon: list; ratio: 1.2;');
+      
+        const catSelector = document.createElement('select');
+        catSelector.classList.add('evt-sec-cat-selector');
+        catSelector.multiple = true;
+        catSelector.size = 1;
+      sectionGroupTrigger.appendChild(catSelector);
+        // You can add options to catSelector here
+      
+        const colorPickerInput = document.createElement('input');
+        colorPickerInput.classList.add('evt-section-colorpicker');
+        colorPickerInput.type = 'color';
+        colorPickerInput.value = `#${color}`;
+      
+        // Continue creating the rest of your elements
+      
+        // Append elements to their respective parents
+        
+        let div1 = document.createElement('div');
+        div1.appendChild(moveIcon);
+        div1.appendChild(sectionNameInput);
+        
+        evtGridHeader.appendChild(div1);
+
+        let div2 = document.createElement('div');
+        div2.appendChild(sectionGroupTrigger);
+        div2.appendChild(colorPickerInput);
+        
+        evtGridHeader.appendChild(div2);
+        // Continue appending elements as needed
+
+        ukCard.appendChild(evtGridHeader);
+
+
+
+        let divcontent = document.createElement('div');
+        divcontent.classList.add('evt-sect-card-content');
+        let inputcontent = document.createElement('textarea');
+        inputcontent.id = '';
+        inputcontent.classList.add('evt-section-content-in');
+        inputcontent.setAttribute('placeholder', 'description');
+        divcontent.append(inputcontent);
+        ukCard.appendChild(divcontent);
+
+        let divcat = document.createElement('div');
+        divcat.classList.add('evt-cat-group-list');
+
+        let categories = item.categories.split(',');
+        if (categories.length > 0)
+        {
+            for (let i = 0; i < categories.length; i++) {
+                const catid = categories[i].trim();
+                for (let y = 0; y < category_container.length; y++) {
+                    if (category_container[y].id == catid){
+                        let itemci = this.getBadge(category_container[y].id, category_container[y].title, category_container[y].color);
+                        divcat.appendChild(itemci);
+                        break;
+                    };
                 }
-                select.appendChild(option);
             }
         }
-    }
 
-    renderSectionList(){
-        let result = "";
-        result += `
-        <div uk-sortable="group: sortable-group; handle: .uk-sortable-hand" class="uk-sortable" id='evt_sections'>`;
-        for (let index = 0; index < section_container.length; index++) {
-            const item = section_container[index];
-            // console.log(item);
-            let cats = ['Super', 'New category', 'alpha bond', 'hero'];
-            result += SectionManager.getSectionCard(item, index, cats);
-        };
-
-        result += `</div>`;
-
-        document.querySelector('#evt_sectionList').innerHTML = result;
-        return result;
-    }
-
-
-    static getSectionCard(item, index, catgroups = []){
+        ukCard.appendChild(divcat);
+        cardBox.appendChild(ukCard);
+        return cardBox;
+      }    
+    
+    
+    
+    /*
+    static getSectionCard(item, index){
         let content = item.content == null ? '' : item.content;
         let color = item.color == null ? '' : item.color;
         let result =`  
-            <div class="uk-margin-sm card-box" data-id='${item.id}' id="sec_${item.id}" data-order="${index}">
+            <div class="uk-margin-sm card-box" data-id='${item.id}' id="${item.id}" data-order="${index}">
         <div class="uk-card uk-card-sm uk-padding-small uk-box-shadow-small uk-box-shadow-hover-medium uk-card-small
         evt-section-card" style='border-color: #${color}'>
         <div class='evt-grid-header'>
@@ -247,7 +472,11 @@ class SectionManager
         <input placeholder='Event name' class='evt-section-name-in' maxlength='60' type='text' value='${item.title}'/>
         </div>
         <div>
-        <span uk-icon='icon: social' class='evt-section-group-trigger'></span>
+        <span class='evt-section-group-trigger' uk-icon='icon: list; ratio: 1.2;'>
+        <select multiple size="1" class='evt-sec-cat-selector'>
+
+    </select></span>
+        
         <input class='evt-section-colorpicker' type='color' value='#${item.color}' />
         </div>
         </div>
@@ -258,9 +487,20 @@ class SectionManager
             </div>
 
         <div class='evt-cat-group-list'>`;
-        for (let i = 0; i < catgroups.length; i++) {
-            const cgr = catgroups[i];
-            result += SectionManager.getCatItem(cgr);
+        let categories = item.categories.split(',');
+        if (categories.length)
+        {
+            
+            for (let i = 0; i < categories.length; i++) {
+                const catid = categories[i];
+                for (let y = 0; y < section_container.length; y++) {
+                    if (section_container[y].id == catid){
+                        let item =  this.getBadge(section_container[y].id, section_container[y].name, section_container[y].color);
+                        // append item to `evt-cat-group-list`
+                    };
+                    
+                }
+            }
         }
         result += `</div>
         
@@ -268,6 +508,139 @@ class SectionManager
         </div>`;
         return result;
     }
+    updateCategoryList(selectedArray = []){
+        let select = document.querySelector('.evt-cs-open');
+        select.innerHTML="";
+        for (let i = 0; i < category_container.length; i++) {
+            const element = category_container[i];
+            if (element.status == 1){
+                let option = document.createElement("option");
+                option.value = element.id;
+                option.innerHTML = element.title;
+               // option.style.backgroundColor = "#" + element.color;
+               option.setAttribute('data-color', element.color);
+                if (selectedArray.includes(element.id)){
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            }
+        }
+    }
+
+    renderSectionList() {
+        const sectionListContainer = document.querySelector('#evt_sectionList');
+        const sortableDiv = document.createElement('div');
+        sortableDiv.setAttribute('uk-sortable', 'group: sortable-group; handle: .uk-sortable-hand');
+        sortableDiv.classList.add('uk-sortable', 'uk-sortable-hand');
+        sortableDiv.id = 'evt_sections';
+      
+        for (let index = 0; index < section_container.length; index++) {
+          const item = section_container[index];
+          const sectionCard = SectionManager.getSectionCard(item, index);
+          sortableDiv.appendChild(sectionCard);
+        }
+      
+        sectionListContainer.innerHTML = ''; // Clear the existing content
+        sectionListContainer.appendChild(sortableDiv);
+      }
+      
+      static getSectionCard(item, index) {
+        const content = item.content == null ? '' : item.content;
+        const color = item.color == null ? '' : item.color;
+      
+        const cardBox = document.createElement('div');
+        cardBox.classList.add('uk-margin-sm', 'card-box');
+        cardBox.dataset.id = item.id;
+        cardBox.id = item.id;
+        cardBox.dataset.order = index;
+      
+        const ukCard = document.createElement('div');
+        ukCard.classList.add(
+          'uk-card',
+          'uk-card-sm',
+          'uk-padding-small',
+          'uk-box-shadow-small',
+          'uk-box-shadow-hover-medium',
+          'uk-card-small',
+          'evt-section-card'
+        );
+        ukCard.style.borderColor = `#${color}`;
+      
+        const evtGridHeader = document.createElement('div');
+        evtGridHeader.classList.add('evt-grid-header');
+      
+        const moveIcon = document.createElement('span');
+        moveIcon.classList.add('uk-icon-link', 'uk-sortable-hand', 'uk-icon');
+        moveIcon.setAttribute('uk-icon', 'move');
+        moveIcon.style.userSelect = 'none';
+      
+        const sectionNameInput = document.createElement('input');
+        sectionNameInput.placeholder = 'Event name';
+        sectionNameInput.classList.add('evt-section-name-in');
+        sectionNameInput.maxLength = 60;
+        sectionNameInput.type = 'text';
+        sectionNameInput.value = item.title;
+      
+        const sectionGroupTrigger = document.createElement('span');
+        sectionGroupTrigger.classList.add('evt-section-group-trigger');
+        sectionGroupTrigger.setAttribute('uk-icon', 'icon: list; ratio: 1.2;');
+      
+        const catSelector = document.createElement('select');
+        catSelector.classList.add('evt-sec-cat-selector');
+        catSelector.multiple = true;
+        catSelector.size = 1;
+      
+        // You can add options to catSelector here
+      
+        const colorPickerInput = document.createElement('input');
+        colorPickerInput.classList.add('evt-section-colorpicker');
+        colorPickerInput.type = 'color';
+        colorPickerInput.value = `#${color}`;
+      
+        // Continue creating the rest of your elements
+      
+        // Append elements to their respective parents
+        evtGridHeader.appendChild(moveIcon);
+        evtGridHeader.appendChild(sectionNameInput);
+      
+        // Continue appending elements as needed
+
+        cardBox.appendChild(evtGridHeader);
+
+
+
+        let divcontent = document.createElement('div');
+        divcontent.classList.add('evt-sect-card-content');
+        let inputcontent = document.createElement('textarea');
+        inputcontent.id = '';
+        inputcontent.classList.add('evt-section-content-in');
+        inputcontent.setAttribute('placeholder', 'description');
+        divcontent.append(inputcontent);
+        cardBox.appendChild(divcontent);
+
+        let divcat = document.createElement('div');
+        divcat.classList.add('evt-cat-group-list');
+
+        let categories = item.categories.split(',');
+        if (categories.length)
+        {
+            for (let i = 0; i < categories.length; i++) {
+                const catid = categories[i];
+                for (let y = 0; y < section_container.length; y++) {
+                    if (section_container[y].id == catid){
+                        let item =  this.getBadge(section_container[y].id, section_container[y].name, section_container[y].color);
+                        divcat.appendChild(item);
+                    };
+                }
+            }
+        }
+
+        cardBox.appendChild(divcat);
+        return cardBox;
+      }    
+
+*/
+
 
     static getCatItem(name){
         let result = `
@@ -311,12 +684,12 @@ class SectionManager
                             if (section_id == ""){
                                 section_container.push(item2);
                                 let card = SectionManager.getSectionCard(item2, section_container.length);
-                                document.querySelector('#evt_sections').insertAdjacentHTML('beforeend', card);
+                                document.querySelector('#evt_sections').appendChild(card);
                             } else {
                                 let card = document.querySelector('#' + section_id.replace('.', `\\.`));
                                 //console.log(card);
                                 if (card != null){
-                                    card.remove();
+                                    //card.remove();
                                 }
 
                                 for (let i = 0; i < section_container.length; i++){
