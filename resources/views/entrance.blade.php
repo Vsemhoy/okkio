@@ -10,6 +10,9 @@
     <!-- Add your CSS files here -->
 
     <link rel="stylesheet" href="{{ asset('resources/css/uikit.min.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('resources/css/apps/eventor/template.css') }}">
+
     <!-- Add more CSS files if needed -->
     @yield('page-styles')
     <style>
@@ -342,6 +345,40 @@
     .th-sidebar-opened .th-com-s-nav-item:hover .th-sn-round {
         margin-left: 246px;
     }
+
+    .th-user-container {
+    border: 1px solid #fff;
+    }
+    .th-user-container-header, .th-user-container-footer, .th-user-evt-card {
+    padding: 1.2rem !important;
+    border-radius: 9px;
+    word-break: break-all;
+    }
+    .th-user-evt-card-footer , .th-user-evt-card-footer > div {
+    display: flex;
+        grid-gap: 1rem;
+        justify-content: space-between;
+    }
+
+    .th-user-evt-card-badge {
+    border: 1px solid pink;
+    padding: 0px 6px;
+    border-radius: 0.5rem;
+    color: gray;
+    }
+    .uk-user-readmore {
+    font-weight: 400;
+    cursor: pointer;
+    }
+    .uk-user-readmore:hover {
+    color: #1E88E5;
+    }
+    .th-user-container {
+        padding-bottom: 3rem;
+    }
+    .col-main {
+        margin-bottom: 5rem;
+    }
     </style>
 </head>
 
@@ -446,7 +483,7 @@
             class="app-item login-btn">
 
         </a>
-        <nav id="sidebarMenu" class="th-col-sidenav uk-background-muted"><a
+        <nav id="sidebarMenu" class="th-col-sidenav uk-background-muted uk-hidden"><a
                 href="http://new.teftele.com/logout?token=qgH8Z217juVMgHxL5uo84paIhBOBtHSzIayDwmYy"
                 class="app-item login-btn">
             </a>
@@ -512,12 +549,8 @@
 
 
 
-        <main class="col-main ms-sm-auto p-0" id="mainWrapper">
-            <!-- Your page content goes here -->
-            <div class="uk-expand">
-                @yield('content')
-            </div>
-
+        <main class="col-main ms-sm-auto p-0" id="officialEventWrapper">
+        
         </main>
     </div>
 
@@ -887,7 +920,7 @@ console.log(remember);
 
     <!-- Add more JavaScript files if needed -->
     <script>
-    var sideMenu = new SidebarMenu(SidebarMenu.getDemoMenuItems());
+    var sideMenu = new SidebarMenu();
     </script>
     <script>
     class SearchBar {
@@ -968,12 +1001,26 @@ console.log(remember);
 
     $sb = new SearchBar();
 	
-    $sn = new SideNav();
+    //$sn = new SideNav();
 
     let me = '{{ Auth::user() != null ? Auth::user()->id : ""}}';
     </script>
 
-@yield('page-script')
+    <script src="{{ asset('resources/js/apps/eventor/page.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/sidemenu.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/templates.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/types.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/utils.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/nav.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/modals.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/flowofficial.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/sectionmanager.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/categorymanager.js') }}"></script>
+
+    <script>
+
+        let FO = new FlowOfficial();
+    </script>
 </body>
 
 </html>

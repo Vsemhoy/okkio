@@ -146,4 +146,88 @@ class EventorTemplate
         </div>`;
         return result;
       }
+
+
+      static createOfficialEventCard(object)
+      {
+        let content = document.createElement('div');
+        let divs = EventorTemplate.wrapTextToHtmlView(object.content);
+        for (let i = 0; i < divs.length; i++) {
+          content.appendChild(divs[i]);
+        }
+        let template = `
+        <div>
+        <div class="uk-card uk-card-default uk-card-hover uk-card-body th-user-evt-card">
+            <h3 class="uk-card-title">${object.title}</h3>
+            <div class='evt-off-reader-body'>
+            ${ content.innerHTML}
+            </div>
+          <div class="th-user-evt-card-footer uk-hidden">
+            <div>
+            <div><span uk-icon="eye"></span></div>
+            <div><span uk-icon="heart"></span></div>
+            <div><span uk-icon="comments"></span></div>
+            <div><span uk-icon="commenting"></span></div>
+            <div><span uk-icon="comments"></span></div>
+            </div>
+            <div><span class='th-user-evt-card-badge'>Category badge</span></div>
+            
+     
+            
+          </div>
+        </div>
+    </div>`;
+    return template;
+  }
+
+  static createOfficiaUserEventsWrapper(user, objects = []){
+     let template = `
+     <div class="uk-container uk-container-small uk-margin-top" id='usr_${user.id}'>
+           
+     <div class='th-user-container'>
+       <div class="th-user-container-header">
+         <span class='uk-text-lead'><span uk-icon="star"></span> ${user.name}</span>
+         
+       </div>
+       <div class="th-user-container-body">
+         <div class="uk-child-width-1-1@s uk-grid-match" uk-grid>`;
+    for (let i = 0; i < objects.length; i++) {
+      const element = objects[i];
+      template += EventorTemplate.createOfficialEventCard(element);
+    };
+    template += `
+    </div></div></div>`;
+    return template;
+  }
+
+  static wrapTextToHtmlView(text) {
+    let lines = text.split('\n');
+    let result = [];
+  
+    // Regular expression to find URLs starting with "http://"
+    const urlPattern = /http:\/\/\S+/g;
+  
+    // Loop through the lines and create a div for each line
+    lines.forEach(line => {
+      const div = document.createElement('div'); // Create a new div element
+  
+      // Use regular expression to find and replace URLs with <a> tags
+      const lineWithLinks = line.replace(urlPattern, (match) => {
+        return `<a href="${match}" class='uk-link-text' target="_blank">${match}</a>`;
+      });
+  
+      // Set the div's innerHTML to the line with links
+      div.innerHTML = lineWithLinks;
+  
+      if (line.startsWith('- ')) {
+        div.classList.add('evt-list-item');
+        div.innerHTML = lineWithLinks.replace(/^-\s*/, '');
+      }
+  
+      result.push(div);
+    });
+  
+    return result;
+  }
+
 }

@@ -21,6 +21,7 @@
   .event-card {
     border-left: 6px solid transparent;
     border-radius: 9px;
+    word-wrap: break-word;
   }
   .flex-space {
         display: flex;
@@ -117,7 +118,9 @@
 .evt-tooltop .uk-button {
   padding: 0 12px;
 }
-
+.evt-card-wrapper {
+  word-break: break-all;
+}
 .evt-card-wrapper.evt-starred > div {
   background: #fffad1;
 }
@@ -225,7 +228,7 @@ font-family: system-ui;
   box-shadow: inset 0px 0px 63px #00000024;
 }
  
-.evt-reader-body > div {
+.evt-reader-body > div , .evt-off-reader-body > div {
   margin-bottom: 8px;
 }
 .evt-list-item {
@@ -362,4 +365,9 @@ font-family: system-ui;
 .evt-s-selected {
   border: 2px solid #03A9F4;
   box-shadow: 1px 3px 7px #8f8f8f;
+}
+
+
+.uk-grid-stack > div {
+  margin-top: 9px !important;
 }

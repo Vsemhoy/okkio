@@ -151,6 +151,15 @@ class RegisterController extends Controller
     }
 
 
+    public function getUserOnlyName(Request $request, $uid)
+    {
+        $user = User::find($uid);
+        if ($user){
+            return $user->name;
+        } else {
+            return "Incognito";
+        };
+    }
 
 
     public function generateApiToken()

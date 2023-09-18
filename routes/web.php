@@ -18,7 +18,7 @@ use App\Http\Middleware\UserAuthCheck;
 Route::post('/login', [RegisterController::class, 'post_login']);
 Route::post('/register', [RegisterController::class, 'post_registration']);
 Route::post('/logout', [RegisterController::class, 'post_logout']);
-
+Route::post('/getusername/{uid}', [RegisterController::class, 'getUserOnlyName']);
 
 Route::get('/logins', [RegisterController::class, 'get_login']);
 

@@ -24,6 +24,7 @@ class EventModal {
       { value: '0', label: 'Private' },
       { value: '1', label: 'Restricted' },
       { value: '2', label: 'Public' },
+      { value: '3', label: 'Official' },
     ];
 
     const status = [
@@ -101,28 +102,19 @@ class EventModal {
         let elem = e.target.closest('.evt-card-wrapper');
         if (elem != null && elem.id != null)
         {
+          document.querySelector('.evt-reader-body').innerHTML = '';
           for (let i = 0; i < event_container.length; i++) {
             if (elem.id == event_container[i].id){
 
               let el = event_container[i];
-              let lines = el.content.split('\n');
-  
-              // Get a reference to the parent container where you want to append the divs
-              document.querySelector('.evt-reader-body').innerHTML = '';
-              let parentContainer = document.querySelector('.evt-reader-body'); // Replace 'parentContainer' with the actual ID or selector of your parent container
-              
-              // Loop through the lines and create a div for each line
-              lines.forEach(line => {
-                  const div = document.createElement('div'); // Create a new div element
-                  div.innerHTML = line; // Set the div's text content to the current line
-                  if (line.startsWith('- ')) {
-                    div.classList.add('evt-list-item');
-                    div.innerHTML = line.replace(/^-\s*/, '');
-                  };
-                  parentContainer.appendChild(div); // Append the div to the parent container
-              });
-  
-              document.querySelector('.evt-reader-title').innerHTML = el.title;
+              let divs = EventorTemplate.wrapTextToHtmlView(el.content);
+                let parentContainer = document.querySelector('.evt-reader-body'); // Replace 'parentContainer' with the actual ID or selector of your parent container
+                for (let i = 0; i < divs.length; i++) {
+                  const element = divs[i];
+                  parentContainer.appendChild(element);
+                }
+                document.querySelector('.evt-reader-title').innerHTML = el.title;
+
   
               break;
             }
