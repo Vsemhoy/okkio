@@ -41,6 +41,10 @@ Route::group(['middleware' => ['App\Http\Middleware\UserAuthCheck']], function (
         return view('public.apps.budget.index');
     })->name('budget');
 
+    Route::get('/booker', function () {
+        return view('public.apps.booker.index');
+    })->name('booker');
+
     // Route::get('/calendar', function () {
     //     return view('public.apps.calendar_api.index');
     // })->name('calendar');

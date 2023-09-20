@@ -386,6 +386,8 @@
                         href="{{ route('budget') }}">Budget</a></li>
                 <li class="{{ Request::routeIs('eventor') ? 'uk-active' : '' }}"><a
                         href="{{ route('eventor') }}">Eventor</a></li>
+                        <li class="{{ Request::routeIs('booker') ? 'uk-active' : '' }}"><a
+                        href="{{ route('booker') }}">Booker</a></li>
 
 
                 <!-- Add more menu items if needed -->

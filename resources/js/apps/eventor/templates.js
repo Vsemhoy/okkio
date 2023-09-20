@@ -204,8 +204,8 @@ class EventorTemplate
     let lines = text.split('\n');
     let result = [];
   
-    // Regular expression to find URLs starting with "http://"
-    const urlPattern = /http:\/\/\S+/g;
+    // Regular expression to find URLs starting with "http://" or "https://"
+    const urlPattern = /https?:\/\/\S+/g;
   
     // Loop through the lines and create a div for each line
     lines.forEach(line => {
