@@ -277,7 +277,7 @@
     .th-sn-item-icon {}
 
     .th-sn-item-text {
-        overfow: hidden;
+        overflow: hidden;
         display: none;
         text-align: left;
     }

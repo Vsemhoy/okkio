@@ -117,7 +117,7 @@
         }
     </style>
 
-<main class="col-main ms-sm-auto p-0" id="mainWrapper">
+<main class=" ms-sm-auto p-0" id="mainWrapper">
          
          <div class='boo-container'>
            
@@ -389,7 +389,13 @@ class BookerNavigator
             bohs[i].classList.remove('boo-await');
         }
   // Remove the dragged item (if it's a valid item)
-
+  setTimeout(() => {
+      let bohs = document.querySelectorAll('.boo-outlined');
+        for (let i = 0; i < bohs.length; i++){
+            bohs[i].classList.remove('boo-await');
+            bohs[i].classList.remove('boo-outlined');
+        }
+  }, 150);
 }
 
 
@@ -548,6 +554,15 @@ clearhovers(){
         for (let i = 0; i < bohs.length; i++){
             bohs[i].classList.remove('boo-hov');
             bohs[i].classList.remove('boo-await');
+        }
+  }, 150);
+}
+clearAwaiters(){
+    setTimeout(() => {
+      let bohs = document.querySelectorAll('.boo-outlined');
+        for (let i = 0; i < bohs.length; i++){
+            bohs[i].classList.remove('boo-await');
+            bohs[i].classList.remove('boo-outlined');
         }
   }, 150);
 }
