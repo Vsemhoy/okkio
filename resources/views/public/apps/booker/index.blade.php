@@ -42,7 +42,7 @@
         padding: 12px;
         }
         .boo-nav-title > span {
-        padding: 6px;
+        padding: 3px;
         }
         .boo-nav-item-subs {
             padding-left: 1rem;
@@ -83,8 +83,8 @@
             display: grid;
             grid-template-columns: 60px auto;
             padding: 6px;
-    border-radius: 3px;
-    background: #80808024;
+            border-radius: 3px;
+            background: #80808024;
         }
         .boo-nav-control-group > div {
             display: flex;
@@ -114,6 +114,15 @@
         }
         .boo-nav-section .boo-active {
             display: flex;
+        }
+        .boo-hov > .boo-nav-item-subs {
+            padding-top: 22px;
+        }
+        .boo-list-closed > .boo-nav-item-subs {
+            display:  none;
+        }
+        .boo-nav-name {
+            min-width: 100px;
         }
     </style>
 
@@ -189,7 +198,7 @@ class BookerTemplates
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
   
-  static getBookerNavItem(iden ,name, type, subitems = []) {
+  static getBookerNavItem(iden ,name, type, subitems = [], opened = true) {
     let icon = "folder";
     switch (type) {
       case BookerDef.TYPE_ITEM_SHEET:
@@ -213,12 +222,25 @@ class BookerTemplates
     } else {
         mainDiv.id = iden;
     }
-
+    if (!opened){
+        mainDiv.classList.add('boo-list-closed');
+    }
 
     // Create the <div class="boo-nav-title">
     const titleDiv = document.createElement("div");
     titleDiv.classList.add("boo-nav-title");
 
+    let puller = document.createElement('span');
+    puller.id = '';
+    puller.classList.add('boo-puller');
+    if (subitems.length > 0){
+        if (opened){
+            puller.setAttribute('uk-icon', 'chevron-up');
+        } else {
+            puller.setAttribute('uk-icon', 'chevron-down');
+        }
+    }
+    
     // Create the icon element
     const iconSpan = document.createElement("span");
     iconSpan.setAttribute("uk-icon", icon);
@@ -229,6 +251,7 @@ class BookerTemplates
     nameSpan.textContent = name;
 
     // Append the icon and name elements to the titleDiv
+    titleDiv.appendChild(puller);
     titleDiv.appendChild(iconSpan);
     titleDiv.appendChild(nameSpan);
 
@@ -266,7 +289,7 @@ class BookerNavigator
       }
     
     
-     const booNavContent = this.container;
+    const booNavContent = this.container;
     booNavContent.addEventListener("dragstart", this.handleDragStart.bind(this));
     booNavContent.addEventListener("dragover", this.handleDragOver.bind(this));
     booNavContent.addEventListener("dragenter", this.handleDragEnter.bind(this));
@@ -305,10 +328,103 @@ class BookerNavigator
         BookerNavigator.makeHanlerSat = true;
     }
 
-  }
+    this.container.addEventListener('click', (e)=> {
+        if (e.target.closest('.boo-puller')){
+            let childcontainer = e.target.closest('.boo-nav-item').querySelector('.boo-nav-item-subs');
+            let boches = childcontainer.querySelectorAll('.boo-nav-item');
+            if (boches.length > 0){
+                if (e.target.closest('.boo-nav-item').classList.contains('boo-list-closed'))
+                {
+                        console.log('CLODDDD :>> ', 5234523);
+                        e.target.closest('.boo-nav-item').classList.remove('boo-list-closed');
+                        // e.target.closest('.boo-nav-item').querySelector('.boo-puller').innerText = '';
+                        e.target.closest('.boo-nav-item').querySelector('.boo-puller').setAttribute('uk-icon', 'chevron-up');
+                    } else {
+                        console.log('CLO :>> ', 5234523);
+                        e.target.closest('.boo-nav-item').classList.add('boo-list-closed');
+                        //e.target.closest('.boo-nav-item').querySelector('.boo-puller').innerText = '';
+                        e.target.closest('.boo-nav-item').querySelector('.boo-puller').setAttribute('uk-icon', 'chevron-down');
+                    }
+                } else {
+                    e.target.closest('.boo-nav-item').querySelector('.boo-puller').innerText = '';
+                    e.target.closest('.boo-nav-item').querySelector('.boo-puller').setAttribute('uk-icon', '');
+                    e.target.closest('.boo-nav-item').classList.remove('boo-list-closed');
+                }
+            }
+        });
+
+        this.container.addEventListener('dblclick', (e)=> {
+        if (e.target.closest('.boo-nav-title')){
+
+
+            e.target.closest('.boo-nav-title').classList.add('boo-title-edit');
+            let block = e.target.closest('.boo-nav-name');
+            let name = block.innerText;
+            block.setAttribute('contenteditable', true);
+        };
+        });
+
+        document.addEventListener('click', (e)=>{
+            if (!e.target.classList.contains('boo-nav-name')){
+                if (document.querySelector('.boo-title-edit') != null){
+                    e.preventDefault();
+                    let id = document.querySelector('.boo-title-edit').closest('.boo-nav-item').id;
+                    let name = document.querySelector('.boo-title-edit').querySelector('.boo-nav-name').innerText;
+                    if (name == ''){
+                        name = 'Item';
+                        document.querySelector('.boo-title-edit').querySelector('.boo-nav-name').innerText = name;
+                    }
+                    document.querySelector('.boo-title-edit').querySelector('.boo-nav-name').removeAttribute("contenteditable");
+                    document.querySelector('.boo-title-edit').classList.remove('boo-title-edit');
+                    this.triggerNameChanged(id, name);
+                };
+            };
+        });
+    }
+
+
+
+    triggerNameChanged(id, name) {
+        if (typeof this.nameChanged === 'function') {
+            this.nameChanged(id, name);
+        }
+    }
+    onChangedName(callback) {
+        this.nameChanged = callback;
+    }
+
+
+    triggerItemCreated(id, name, type, order) {
+        if (typeof this.nameChanged === 'function') {
+            this.itemCreated(id, name, type, order);
+        }
+    }
+    onCreatedItem(callback) {
+        this.itemCreated = callback;
+    }
+
+    triggerItemRemoved(id, name, type) {
+        if (typeof this.nameRemoved === 'function') {
+            this.itemRemoved(id, name, type);
+        }
+    }
+    onRemovedItem(callback) {
+        this.itemRemoved = callback;
+    }
+
+    triggerOrderChanged(id, name, type) {
+        if (typeof this.orderChanged === 'function') {
+            this.orderChanged(id, name, type);
+        }
+    }
+    onChangedOrder(callback) {
+        this.orderChanged = callback;
+    }
+
 
   // Event handler for when an item is dragged
   handleDragStart(event) {
+    console.log('Dragstart :>> ');
     event.dataTransfer.setData("text/plain", event.target.id);
     if (!event.target.closest(".boo-maker")){
 
@@ -318,34 +434,39 @@ class BookerNavigator
     if (event.target.dataset.makeType < 10){
         event.dataTransfer.setData("text/plain",  event.target.dataset.makeType);
     }
-
-
   }
 
   // Event handler for when an item is dragged over a drop zone
   handleDragOver(event) {
     event.preventDefault();
+    console.log('dragovere :>> ', 1);
   }
 
  // Event handler for when an item enters a drop zone
-  handleDragEnter(event) {
-    
+handleDragEnter(event) {
+    console.log('DragEnter :>> ');
     let bohs = document.querySelectorAll('.boo-hov');
     let id = '';
     if (event.target.closest('.boo-nav-item')){
     //console.log(event.target);
       event.target.closest('.boo-nav-item').classList.add("boo-hov");
       event.target.closest('.boo-nav-item').classList.add("boo-await");
+      
       id = event.target.closest('.boo-nav-item').id;
+      if (!event.target.parentElement.classList.contains('.boo-nav-item-subs')){
+        console.log('HandleDragEnter navsubs :>> ', 100);
+        //return;
+        //id = '';
+      }
     }
     let botle = this.container.querySelectorAll('.boo-nav-item');
     
-      for (let i = 0; i < bohs.length; i++){
-        if (bohs[i].id !== id && id != ''){
-        bohs[i].classList.remove('boo-hov');
+      for (let i = 0; i < botle.length; i++){
+        if (botle[i].id !== id && id != ''){
+            botle[i].classList.remove('boo-hov');
         console.log('I removed ' + id);
         } 
-        bohs[i].classList.add('boo-outlined');
+        botle[i].classList.add('boo-outlined');
       }
       
     
@@ -353,29 +474,35 @@ class BookerNavigator
         botle[i].classList.add('boo-outlined');
       }
     
-    if (event.target.dataset.dropzone === "true") {
-      event.target.classList.add("boo-hov"); // Add the "boo-hov" class
-    }
+    // if (event.target.dataset.dropzone === "true") {
+    //   event.target.classList.add("boo-hov"); // Add the "boo-hov" class
+    // }
   }
+
 
   // Event handler for when an item leaves a drop zone
   handleDragLeave(event) {
+    console.log('dragleave :>> ', 1);
         if (event.target.closest('.boo-nav-item-subs')){
           // not worked
-    console.log(event.target.id);
+          if (event.target.contains(".boo-nav-item")){
+            event.target.classList.add("boo-hov");
+              console.log(event.target);
+          }
   
      // event.target.closest('.boo-nav-item').classList.remove("boo-hov");
   
     }
-    if (event.target.dataset.dropzone === "true") {
-      event.target.classList.remove("boo-hov"); // Remove the "boo-hov" class
-    }
+    // if (event.target.dataset.dropzone === "true") {
+    //   event.target.classList.remove("boo-hov"); // Remove the "boo-hov" class
+    // }
   }
 
 
 
 
   handleRemoveContainerDrop(event) {
+    console.log('RmoveContainerDropH :>> ');
   event.preventDefault();
   const makeType = event.dataTransfer.getData("text/plain");
     console.log(makeType);
@@ -402,7 +529,7 @@ class BookerNavigator
   // Event handler for when an item is dropped
   handleDrop(event) {
     event.preventDefault();
-
+    console.log('HanleDrop :>> ');
     let bohs = document.querySelectorAll('.boo-hov');
     let botles = document.querySelectorAll('.boo-outlined')
     for (let i = 0; i < botles.length; i++){
@@ -447,7 +574,8 @@ class BookerNavigator
   }
 
   // Event handler for when an item is finished dragging
-  handleDragEnd(event) {
+handleDragEnd(event) {
+    console.log('HandleDragEnd :>> ');
     this.resort(event);
     this.clearhovers();
     event.target.classList.remove("dragging");
@@ -458,9 +586,9 @@ class BookerNavigator
     }
   }
     
- resort(event) {
+resort(event) {
   const aim = event.target;
-
+  console.log('Resort :>> ');
   let aimRect = aim.getBoundingClientRect();
    //alert(aim.id);
    // if (aim.closest('.boo-nav-item-subs')){
@@ -506,6 +634,7 @@ class BookerNavigator
                 
                 //botles[indexToMove].classList.remove("boo-hov");
                 this.clearhovers();
+                this.refreshPullers();
                 return;
               }
             }
@@ -524,9 +653,7 @@ class BookerNavigator
   if (indexToMove !== -1) {
     // Create a clone of the aim element
     const newElement = aim.cloneNode(true);
-
     // Remove the original aim element
-    
 
     // Check if the element should be inserted before the found index
     if (aim !== botles[indexToMove]) {
@@ -546,9 +673,11 @@ class BookerNavigator
     botles[indexToMove].classList.remove("boo-hov");
   }
   this.clearhovers();
+  this.refreshPullers();
 }
 
 clearhovers(){
+    console.log('Clearhovers :>> ');
     setTimeout(() => {
       let bohs = document.querySelectorAll('.boo-hov');
         for (let i = 0; i < bohs.length; i++){
@@ -558,6 +687,7 @@ clearhovers(){
   }, 150);
 }
 clearAwaiters(){
+    console.log('clearAwaiters :>> ');
     setTimeout(() => {
       let bohs = document.querySelectorAll('.boo-outlined');
         for (let i = 0; i < bohs.length; i++){
@@ -567,10 +697,37 @@ clearAwaiters(){
   }, 150);
 }
   
+refreshPullers(){
+    let bohs = document.querySelectorAll(".boo-nav-item");
+    console.log('bohs.length :>> ', bohs.length);
+    for (let i = 0; i < bohs.length; i++){
+        console.log('setIcons :>> ');
+        let childcontainer = bohs[i].querySelector('.boo-nav-item-subs');
+        let boches = childcontainer.querySelectorAll('.boo-nav-item');
+        if (boches.length > 0){
+            //bohs[i].querySelector('.boo-puller').innerText = '';
+            if (bohs[i].classList.contains('boo-list-closed')){
+                bohs[i].querySelector('.boo-puller').setAttribute('uk-icon', 'chevron-down');
+                console.log("CASE CLOSED");
+            } else {
+                bohs[i].querySelector('.boo-puller').setAttribute('uk-icon', 'chevron-up');
+                console.log("CASE OPENED");
+            }
+        } else {
+            bohs[i].querySelector('.boo-puller').setAttribute('uk-icon', '');
+        }
+    }
 }
 
-let a = new BookerNavigator('sortableList');
+}
 
+
+function cb(id, name){
+    alert( name);
+};
+
+let a = new BookerNavigator('sortableList');
+a.onChangedName(cb);
 /*
   let subs = this.container.querySelectorAll('.boo-nav-item-subs');
         console.log(subs.length);
