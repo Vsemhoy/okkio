@@ -20,38 +20,60 @@
       
   </div>
 
-  <div id='eventor_search_body' class='uk-hidden'>
+
+  <div id="modal_searchManager" class="uk-modal-full" uk-modal>
+    <div class="uk-modal-dialog" uk-height-viewport style='display: flex;    flex-direction: column;
+    justify-content: space-between;
+    background-image: linear-gradient(to right bottom, #b4d7f6, #abe0f8, #a7e8f6, #a9efef, #b2f5e6, #baf7dd, #c4f8d4, #d1f8cb, #d8f5c2, #e0f2b9, #e9eeb1, #f2eaab);'>
+
+    <div class="uk-modal-header" style='display: grid;     grid-template-columns: auto 40px;
+    justify-items: center;
+    align-items: center;
+    justify-content: center;'>
+      <div style='display: grid; grid-template-columns: auto auto auto; justify-content: center;'>
+            <input id='evt_search_text' class="uk-input" type="text" placeholder="100" aria-label="100" style='max-width:600px;'>
+            <button class="uk-button uk-button-primary" id='evt_search_go' type="button">Search</button>
+            <button class="uk-button uk-button-primary" type="button">More</button>
+      </div>
+            <button class="uk-modal-close-full" type="button" uk-close></button>
+        </div>
+<div class='uk-container uk-container-small uk-modal-body' style='min-height: calc(100vh - 200px);'>
+  <div id='eventor_search_more' >
     <div class="uk-padding-small">
 
       <form class="uk-grid-small" uk-grid>
-        <div class="uk-width-1-1">
+        <!-- <div class="uk-width-1-1">
             <input class="uk-input" type="text" placeholder="100" aria-label="100">
-        </div>
+        </div> -->
         <div class="uk-width-1-4@s">
-        <select class="uk-select" id="form-horizontal-select">
+        <label for="evt_search_share">Section</label>
+        <select class="uk-select" id="evt_search_section">
                     <option>Option 01</option>
                     <option>Option 02</option>
                 </select>
         </div>
         <div class="uk-width-1-4@s">
-        <select class="uk-select" id="form-horizontal-select">
+        <label for="evt_search_share">Group</label>
+        <select class="uk-select" id="evt_search_group">
                     <option>Option 01</option>
                     <option>Option 02</option>
                 </select>
         </div>
         <div class="uk-width-1-4@s">
-        <select class="uk-select" id="form-horizontal-select">
+        <label for="evt_search_share">Status</label>
+        <select class="uk-select" id="evt_search_status">
                     <option>Option 01</option>
                     <option>Option 02</option>
                 </select>
         </div>
         <div class="uk-width-1-4@s">
-        <select class="uk-select" id="form-horizontal-select">
+          <label for="evt_search_share">Access</label>
+        <select class="uk-select" id="evt_search_access">
                     <option>Option 01</option>
                     <option>Option 02</option>
                 </select>
         </div>
-        <div class="uk-width-1-2@s">
+        <!-- <div class="uk-width-1-2@s">
             <input class="uk-input" type="text" placeholder="50" aria-label="50">
         </div>
         <div class="uk-width-1-4@s">
@@ -62,11 +84,25 @@
         </div>
         <div class="uk-width-1-2@s">
             <input class="uk-input" type="text" placeholder="50" aria-label="50">
-        </div>
+        </div> -->
     </form>
     </div>
   </div>
+  <div id='eventor_search_content'>
+    <p>Search...</p>
+  </div>
+
+  </div>
+
+  <div class="uk-modal-footer">
+    <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+    <button class="uk-button uk-button-primary" type="button">Save</button>
+  </div>
+
 </div>
+</div>
+</div>
+
 
 <div id="modal_sectionManager" class="uk-modal-full" uk-modal>
     <div class="uk-modal-dialog" uk-height-viewport style='background-image: linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);'>
@@ -262,7 +298,7 @@ let menuHandler = new EventorNav();
 
 let sectionManager = new SectionManager();
 let categoryManager = new CategoryManager();
-
+let searchMan = new EventorSearch('modal_searchManager');
 // console.log('object :>> ', 'GEOLOCATION');
 // if ("geolocation" in navigator) {
 //     navigator.geolocation.getCurrentPosition(function(position) {
@@ -296,4 +332,5 @@ let categoryManager = new CategoryManager();
 <script src="{{ asset('resources/js/apps/eventor/flow.js') }}"></script>
 <script src="{{ asset('resources/js/apps/eventor/sectionmanager.js') }}"></script>
 <script src="{{ asset('resources/js/apps/eventor/categorymanager.js') }}"></script>
+<script src="{{ asset('resources/js/apps/eventor/searchmanager.js') }}"></script>
 @endsection

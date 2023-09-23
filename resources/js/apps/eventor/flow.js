@@ -17,6 +17,12 @@ class EventorFlow {
         EventorFlow.dayFlow = new DayFlow(selector);
         
 
+        let menuitem = document.createElement('div');
+        menuitem.classList.add('th-navbar-item');
+        menuitem.innerHTML = "ΞVΞNŦOR";
+        
+        document.querySelector('.th-central-menu').prepend(menuitem);
+
 
         document.addEventListener("dblclick", function (e) {
             if (e.target.closest(".event-section") && !e.target.closest(".event-card")) {

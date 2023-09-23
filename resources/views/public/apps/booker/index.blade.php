@@ -124,6 +124,18 @@
         .boo-nav-name {
             min-width: 100px;
         }
+        .boo-puller {
+            min-width: 20px;
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+        .boo-sheet .boo-nav-item-subs {
+            display:  none !important;
+        }
+        .boo-title-edit .boo-nav-name {
+            color: #1976D2;
+    outline: 1px solid;
+        }
     </style>
 
 <main class=" ms-sm-auto p-0" id="mainWrapper">
@@ -139,13 +151,13 @@
                 <div class="boo-nav-control-group">
                     <div><span uk-icon="plus"></span></div>
                     <div>
-                        <div class="boo-nav-control boo-maker" title='Create sheet' data-make-type='1' draggable='true'>
+                        <div class="boo-nav-control boo-maker" title='Create sheet' data-make-type='3' draggable='true'>
                             <span uk-icon="file-text"></span>
                         </div>
-                        <div class="boo-nav-control boo-maker" title='Create folder' data-make-type='2' draggable='true'>
+                        <div class="boo-nav-control boo-maker" title='Create folder' data-make-type='1' draggable='true'>
                         <span uk-icon="folder"></span>
                         </div>
-                        <div class="boo-nav-control boo-maker" title='Create group' data-make-type='3' draggable='true'>
+                        <div class="boo-nav-control boo-maker" title='Create group' data-make-type='2' draggable='true'>
                         <span uk-icon="album"></span>
                         </div>
                     </div>
@@ -177,17 +189,17 @@
 
 class BookerDef
  {
-  static get TYPE_ITEM_SHEET() {
-    return 1;
-  }
-
-  static get TYPE_FOLDER() {
-    return 2;
-  }
-
-  static get TYPE_GROUP() {
-    return 3;
-  }
+     
+    static get TYPE_FOLDER() {
+        return 1;
+    }
+    
+    static get TYPE_GROUP() {
+        return 2;
+    }
+    static get TYPE_ITEM_SHEET() {
+        return 3;
+    }
  }
 
 class BookerTemplates
@@ -379,6 +391,15 @@ class BookerNavigator
                     this.triggerNameChanged(id, name);
                 };
             };
+
+            if (e.target.closest('.boo-nav-item'))
+            {
+                let itm = e.target.closest('.boo-nav-item');
+                if (itm.getAttribute('data-type') != BookerDef.TYPE_FOLDER){
+                    
+                    this.triggerItemClicked(itm.id, itm.querySelector('.boo-nav-name').innerText, itm.getAttribute('data-type'));
+                }
+            }
         });
     }
 
@@ -421,11 +442,21 @@ class BookerNavigator
         this.orderChanged = callback;
     }
 
+    triggerItemClicked(id, name, type) {
+        if (typeof this.itemClicked === 'function') {
+            this.itemClicked(id, name, type);
+        }
+    }
+    onClickItem(callback) {
+        this.itemClicked = callback;
+    }
+
 
   // Event handler for when an item is dragged
   handleDragStart(event) {
-    console.log('Dragstart :>> ');
+    console.log('Dragstart :>> ', event.target.id);
     event.dataTransfer.setData("text/plain", event.target.id);
+    this.draggedType = event.target.getAttribute('data-type');
     if (!event.target.closest(".boo-maker")){
 
         event.target.classList.add("dragging");
@@ -447,24 +478,32 @@ handleDragEnter(event) {
     console.log('DragEnter :>> ');
     let bohs = document.querySelectorAll('.boo-hov');
     let id = '';
+    
+    console.log('MAKETYPE IS ' + this.draggedType);
     if (event.target.closest('.boo-nav-item')){
-    //console.log(event.target);
-      event.target.closest('.boo-nav-item').classList.add("boo-hov");
-      event.target.closest('.boo-nav-item').classList.add("boo-await");
+        let dt = event.target.closest('.boo-nav-item').getAttribute('data-type');
+        if (dt == BookerDef.TYPE_ITEM_SHEET){
+            console.log('dt :>> ', dt);
+            event.target.closest('.boo-nav-item').classList.add("boo-sheet");
+        } else {
+
+        }
+        event.target.closest('.boo-nav-item').classList.add("boo-hov");
+        event.target.closest('.boo-nav-item').classList.add("boo-await");
       
       id = event.target.closest('.boo-nav-item').id;
-      if (!event.target.parentElement.classList.contains('.boo-nav-item-subs')){
-        console.log('HandleDragEnter navsubs :>> ', 100);
-        //return;
-        //id = '';
-      }
+    //   if (!event.target.parentElement.classList.contains('.boo-nav-item-subs')){
+    //     console.log('HandleDragEnter navsubs :>> ', 100);
+    //     //return;
+    //     //id = '';
+    //   }
     }
     let botle = this.container.querySelectorAll('.boo-nav-item');
     
       for (let i = 0; i < botle.length; i++){
         if (botle[i].id !== id && id != ''){
             botle[i].classList.remove('boo-hov');
-        console.log('I removed ' + id);
+        //console.log('I removed ' + id);
         } 
         botle[i].classList.add('boo-outlined');
       }
@@ -485,7 +524,7 @@ handleDragEnter(event) {
     console.log('dragleave :>> ', 1);
         if (event.target.closest('.boo-nav-item-subs')){
           // not worked
-          if (event.target.contains(".boo-nav-item")){
+          if (event.target != null && event.target.classList.contains(".boo-nav-item")){
             event.target.classList.add("boo-hov");
               console.log(event.target);
           }
@@ -560,12 +599,22 @@ handleDragEnter(event) {
                 !(event.target.closest('.boo-nav-item').getAttribute('data-type') == BookerDef.TYPE_GROUP
                 && makeType == BookerDef.TYPE_FOLDER)
                 ){
-                    event.target.closest('.boo-nav-item').querySelector('.dropzzone').appendChild(newItemToSend);
+                    let etc = event.target.closest('.boo-nav-item').querySelector('.boo-nav-item-subs');
+                    if (etc != null && newItemToSend != null){
+                        console.log('newItemToSend :>> ', newItemToSend);
+                        console.log('etc :>> ', etc);
+                        etc.appendChild(newItemToSend);
+
+                    }
                 } else {
                    console.log("you cannot insert an item into the page and you cannot insert folder into group"); 
                 }
             } else {
-                event.target.closest('.dropzzone').appendChild(newItemToSend);
+                let etc =  event.target.closest('.dropzzone');
+                if (etc != null){
+
+                    etc.appendChild(newItemToSend);
+                }
             }
     }
     // Reset the styles
@@ -628,13 +677,39 @@ resort(event) {
               let subcontainer = subs[i];
               if (subcontainer.closest('.boo-hov')){
                 
-                const newSubElement = aim.cloneNode(true);
-                subcontainer.appendChild(newSubElement);
-                aim.remove();
+                let makeType = aim.getAttribute('data-type');
+                if (subcontainer.closest('.boo-nav-item')){
+                    let dt = subcontainer.closest('.boo-nav-item').getAttribute('data-type');
+                    console.log('dt :>> ', dt, makeType);
+
+                if ( 
+                (dt == BookerDef.TYPE_ITEM_SHEET &&
+                (makeType == BookerDef.TYPE_GROUP
+                 || makeType == BookerDef.TYPE_FOLDER))
+                 || (dt == BookerDef.TYPE_ITEM_SHEET && makeType == BookerDef.TYPE_ITEM_SHEET)
+                 || (dt == BookerDef.TYPE_GROUP && makeType == BookerDef.TYPE_FOLDER)
+                ){
+                    //event.target.closest('.boo-nav-item').querySelector('.dropzzone').appendChild(newItemToSend);
+                    console.log("you cannot insert an item into the page and you cannot insert folder into group"); 
+
+                } else {
+                    console.log('YOU CAN :>> ');
+                    const newSubElement = aim.cloneNode(true);
+                    subcontainer.appendChild(newSubElement);
+                    aim.remove();
+                }
+
+                } else {
+                    const newSubElement = aim.cloneNode(true);
+                    subcontainer.appendChild(newSubElement);
+                    aim.remove();
+                }
+
                 
                 //botles[indexToMove].classList.remove("boo-hov");
                 this.clearhovers();
                 this.refreshPullers();
+                this.harvestStructure();
                 return;
               }
             }
@@ -674,7 +749,44 @@ resort(event) {
   }
   this.clearhovers();
   this.refreshPullers();
+  this.harvestStructure();
 }
+
+
+harvestStructure()
+{
+    //alert('halfjadskljf');
+    let items = this.container.querySelectorAll('.boo-nav-item');
+    console.log(items.length);
+    let result = [];
+    for (let i = 0; i < items.length; i++) {
+        const element = items[i];
+        let obj = {
+            id : items[i].id,
+            name : items[i].querySelector('.boo-nav-name').innerText,
+            closed : items[i].classList.contains('boo-list-closed'),
+            subitems : [],
+            level : 1,
+            parent : ''
+        };
+        let checker = items[i].parentElement.closest('.boo-nav-item');
+        if (checker != null){
+            obj.parent = checker.id;
+        }
+        while (checker != null){
+            obj.level++;
+            checker = checker.parentElement.closest('.boo-nav-item');
+            if (obj.level == 100){
+                break;
+            }
+        }
+        result.push(obj);
+    }
+    console.log(result);
+    return result;
+}
+
+
 
 clearhovers(){
     console.log('Clearhovers :>> ');

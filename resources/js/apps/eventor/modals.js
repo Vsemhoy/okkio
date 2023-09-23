@@ -20,19 +20,10 @@ class EventModal {
       { value: 'gshopping', label: 'Shopping' },
     ];
 
-    const access = [
-      { value: '0', label: 'Private' },
-      { value: '1', label: 'Restricted' },
-      { value: '2', label: 'Public' },
-      { value: '3', label: 'Official' },
-    ];
+    // SET USER ACCESS LIMIT
+    const access = EventorTypes.getAccess(3);
 
-    const status = [
-      { value: '0', label: 'Inactive' },
-      { value: '1', label: 'Active' },
-      { value: '2', label: 'Archieved' },
-    ];
-
+    const status = EventorTypes.getStatus();
     const format = [
       { value: '0', label: 'Text' },
       { value: '1', label: 'HTML' },
@@ -204,19 +195,7 @@ class EventModal {
     const editButtonGroup = document.createElement('div');
     editButtonGroup.id = 'eventor_act_editgroup';
 
-    const lockButton = document.createElement('button');
-    
-    lockButton.classList.add('uk-button', 'uk-button-danger');
-    lockButton.id = 'eventor_act_lockEvent';
-    lockButton.setAttribute('type', 'button');
-    lockButton.textContent = 'Lock';
 
-    const deleteButton = document.createElement('button');
-    
-    deleteButton.classList.add('uk-button', 'uk-button-secondary');
-    deleteButton.id = 'eventor_act_deleteEvent';
-    deleteButton.setAttribute('type', 'button');
-    deleteButton.textContent = 'Delete';
     
     const updateButton = document.createElement('button');
     updateButton.classList.add('uk-button', 'uk-button-primary');
@@ -224,8 +203,41 @@ class EventModal {
     updateButton.setAttribute('type', 'button');
     updateButton.textContent = 'Update';
 
-    editButtonGroup.appendChild(lockButton);
-    editButtonGroup.appendChild(deleteButton);
+    let dropdownMenu = document.createElement('div');
+    dropdownMenu.setAttribute('uk-dropdown', '');
+
+    let ukdrop = document.createElement('ul');
+    ukdrop.classList.add('uk-nav');
+    ukdrop.classList.add('uk-dropdown-nav');
+
+    const lockButton = document.createElement('li');
+    // lockButton.classList.add('uk-button', 'uk-button-danger');
+    lockButton.id = 'eventor_act_lockEvent';
+    // lockButton.setAttribute('type', 'button');
+    lockButton.innerHTML = '<a>Lock</a>';
+
+    const deleteButton = document.createElement('li');
+    // deleteButton.classList.add('uk-button', 'uk-button-secondary');
+    deleteButton.id = 'eventor_act_deleteEvent';
+    // deleteButton.setAttribute('type', 'button');
+    deleteButton.innerHTML = '<a>Delete</a>';
+
+    ukdrop.appendChild(lockButton);
+    ukdrop.appendChild(deleteButton);
+    dropdownMenu.appendChild(ukdrop);
+
+    let morebutton = document.createElement('button');
+    morebutton.classList.add('uk-button');
+    morebutton.classList.add('uk-button-default');
+    morebutton.setAttribute('type', 'button');
+    morebutton.innerHTML = "More...";
+    
+
+    // editButtonGroup.appendChild(lockButton);
+    // editButtonGroup.appendChild(deleteButton);
+    
+    editButtonGroup.appendChild(morebutton);
+    editButtonGroup.appendChild(dropdownMenu);
     editButtonGroup.appendChild(updateButton);
   
     // Append all elements together to create the modal structure

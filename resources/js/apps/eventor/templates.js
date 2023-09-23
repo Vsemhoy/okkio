@@ -99,6 +99,88 @@ class EventorTemplate
       }
 
 
+      static makeEventSearchCard(event) {
+        let cutlength = 800;
+        let category = null;
+        let section = null;
+        let time  = new Date( event.created_at).toLocaleTimeString();
+        if (event.category != null && event.category != "")
+        {
+          for (let i = 0; i < category_container.length; i++){
+            let elem = category_container[i];
+            if (elem.id == event.category){
+              category = elem;
+              break;
+            }
+          }
+        };
+        //console.log(event.section);
+        if (event.section != null && event.section != "")
+        {
+          for (let i = 0; i < section_container.length; i++){
+            let elem = section_container[i];
+            if (elem.id == event.section){
+              section = elem;
+              break;
+            }
+          }
+        };
+        let starredMark = "";
+        if (event.starred == 1){
+          starredMark = " evt-starred";
+        }
+        if (event.status == 0){
+          starredMark += " evt-disabled";
+          cutlength = 300;
+        } else if (event.status == 2){
+          starredMark += " evt-archieved";
+          cutlength = 500;
+        }
+        let catBlock = "";
+        let secBlock = "";
+        let rootcolor = "";
+        if (category != null){
+          catBlock = `<span class='uk-badge evt-badge' style='background-color: #${category.color == null ? 'a9a9a9' : category.color };' data-cat='${category.id}'>${category.title}</span>`;
+        };
+        if (section != null){
+          secBlock = `<small data-sec='${section.id}'>${section.title}</small>`;
+          rootcolor = section.color == null ? "a9a9a9" : section.color;
+        };
+        let content = "";
+        if (event.format == 0){
+          content = event.content.substring(0, cutlength);
+          if (event.content.length > cutlength){
+            content = content.trim() + "...";
+          }
+          content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
+        }
+        let body = '';
+        if (event.content != ''){
+          body = `              <div class="uk-card-body evt-card-body">
+            <p>${content}</p>
+          </div>`;
+        };
+        return `
+          <div id='sr_${event.id}' class='evt-card-wrapper${starredMark}'>
+            <div class="uk-card uk-box-shadow-small uk-box-shadow-hover-large 
+            uk-card-small uk-card-default uk-text-left left-corrector event-card"
+             style='border-color: #${rootcolor};'>
+              <div class="uk-card-header">
+                <div class="uk-width-expand">
+                  <h3 class="evt-card-title uk-margin-remove-bottom">${event.title}</h3>
+                  <div class="uk-text-meta uk-margin-remove-top flex-space"><time datetime="${time}">${time}</time> ${secBlock}</div>
+                </div>
+              </div>
+              ${body}
+              <div class="flex-space">
+                <a href="#" class="uk-button uk-button-text">View in Flow</a>
+                ${catBlock}
+              </div>
+            </div>
+          </div>`;
+      }
+
+
       static createDayRow(date, cards = []){
         let content = "";
         for (let i = 0; i < cards.length; i++)

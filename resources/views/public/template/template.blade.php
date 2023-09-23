@@ -22,6 +22,14 @@
         min-height: 100vh;
     }
 
+    .uk-navbar-container:not(.uk-navbar-transparent) {
+        background: #f8f8f8;
+        background-image: url(/storage/site/background.jpg);
+        background-size: cover;
+        background-position: bottom;
+        background-attachment: scroll;
+    }
+
     .th-navbar {
         /* display: grid;
             grid-template-columns: 120px auto 120px; */
@@ -33,7 +41,7 @@
     .th-navbar>div {
 
         display: flex;
-        justify-content: space-around;
+        
     }
 
     .th-navbar>div>* {}
