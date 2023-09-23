@@ -691,17 +691,18 @@ class DateUtils {
     }
   
     static getParam(param, clearHash = true) {
-      const params = new URLSearchParams(window.location.search);
-    //   console.log(params);
-      if (params.has(param)) {
-        let paramValue = params.get(param);
-        // Decode the URL parameter value
-        if (clearHash){
-          paramValue = paramValue.replace('#', '');
+        const params = new URLSearchParams(window.location.href);
+        console.log(params);
+        if (params.has(param)) {
+            let paramValue = params.get(param);
+            // Check if the 'clearHash' flag is set to true and there is a '#' character in the parameter value
+            if (clearHash && paramValue.includes('#')) {
+                // Remove the '#' character and everything that follows it
+                paramValue = paramValue.slice(0, paramValue.indexOf('#'));
+            }
+            console.log('param: ' + paramValue);
+            return decodeURIComponent(paramValue);
         }
-        console.log('param: ' + paramValue);
-        return decodeURIComponent(paramValue);
-      }
-      return null;
+        return null;
     }
 }
