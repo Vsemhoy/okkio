@@ -929,11 +929,12 @@ console.log(remember);
             this.searchbar = document.querySelector(".th-central-search");
             this.menubar = document.querySelector(".th-central-menu");
             this.closearch = document.querySelector("#th_searchClose");
-
+            let area = document.querySelector('#th_searchArea');
 
             this.cst.addEventListener('click', (e) => {
                 e.preventDefault;
                 this.trigSearchBar();
+                area.focus();
             });
             this.closearch.addEventListener('click', (e) => {
                 e.preventDefault;

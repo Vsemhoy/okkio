@@ -99,11 +99,13 @@ class EventorTemplate
       }
 
 
-      static makeEventSearchCard(event) {
+      static makeEventSearchCard(event, searchWord) {
         let cutlength = 800;
         let category = null;
         let section = null;
         let time  = new Date( event.created_at).toLocaleTimeString();
+        let date = event.setdate;
+        const regex = new RegExp(searchWord, 'gi');
         if (event.category != null && event.category != "")
         {
           for (let i = 0; i < category_container.length; i++){
@@ -154,6 +156,8 @@ class EventorTemplate
           }
           content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
         }
+        content = content.replace(regex, `<span class='evt-found'>$&</span>`);
+        event.title = event.title.replace(regex, `<span class='evt-found'>$&</span>`);
         let body = '';
         if (event.content != ''){
           body = `              <div class="uk-card-body evt-card-body">
@@ -163,12 +167,12 @@ class EventorTemplate
         return `
           <div id='sr_${event.id}' class='evt-card-wrapper${starredMark}'>
             <div class="uk-card uk-box-shadow-small uk-box-shadow-hover-large 
-            uk-card-small uk-card-default uk-text-left left-corrector event-card"
+            uk-card-small uk-card-default uk-text-left left-corrector event-card evt-search-card"
              style='border-color: #${rootcolor};'>
               <div class="uk-card-header">
                 <div class="uk-width-expand">
                   <h3 class="evt-card-title uk-margin-remove-bottom">${event.title}</h3>
-                  <div class="uk-text-meta uk-margin-remove-top flex-space"><time datetime="${time}">${time}</time> ${secBlock}</div>
+                  <div class="uk-text-meta uk-margin-remove-top flex-space"><time datetime="${time}">${date}</time> ${secBlock}</div>
                 </div>
               </div>
               ${body}
@@ -178,6 +182,23 @@ class EventorTemplate
               </div>
             </div>
           </div>`;
+      }
+
+
+      static makeEventSearchSeparator(setdate){
+        console.log('setdate :>> ', setdate);
+        let date = new Date(setdate);
+        console.log('date :>> ', date);
+        let day = EventorTemplate.getDayOfWeek(date);
+        let monthname = EventorTemplate.getMonthName(date);
+        let dnum = date.getUTCDate();
+        let year = date.getFullYear();
+        let result = `
+        <div class='evt-search-separator'>
+        <h4 class="uk-heading-line uk-text-right"><span>${dnum} ${monthname} ${year}</span></h4>
+        </div>
+        `;
+        return result;
       }
 
 
@@ -311,5 +332,7 @@ class EventorTemplate
   
     return result;
   }
+
+
 
 }

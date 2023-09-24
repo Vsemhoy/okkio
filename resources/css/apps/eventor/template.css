@@ -366,8 +366,21 @@ font-family: system-ui;
   border: 2px solid #03A9F4;
   box-shadow: 1px 3px 7px #8f8f8f;
 }
-
+.evt-found {
+  background-color: yellow;
+}
 
 .uk-grid-stack > div {
   margin-top: 9px !important;
+}
+
+#eventor_search_content .evt-card-wrapper {
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+#eventor_search_content.evt-lazy-load .evt-card-wrapper:last-child {
+  opacity: 0;
+}
+.evt-reader-title {
+  font-size: 1.25rem;
 }

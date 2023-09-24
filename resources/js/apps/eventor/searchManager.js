@@ -1,6 +1,7 @@
 class EventorSearch
 {
     static loadedEvents = [];
+    static searchWord = '';
     constructor(selector)
     {
         this.window = document.querySelector('#' + selector);
@@ -9,52 +10,102 @@ class EventorSearch
             this.maintrigger.addEventListener('click', (e)=>{
                 this.text = document.querySelector('#th_searchArea').value;
                 UIkit.modal(this.window).show();
-                if (this.text.length > 2){
-                    this.search(this.text);
+                if (this.text.trim().length > 2){
+                    this.search(this.text.trim());
+                    EventorSearch.fillSearchBody(this.getAllParams());
                 }
                 document.querySelector('#evt_search_text').value = this.text;
-                this.fillSelectors();
+                EventorSearch.fillSelectors(this.getAllParams());
+                EventorSearch.searchWord = this.text.trim();
             });
         }
-
+        
         this.searchTrig = document.querySelector('#evt_search_go');
         this.searchTrig.addEventListener('click', (e)=>{
             this.text = document.querySelector('#evt_search_text').value;
-            if (this.text.length > 2){
-                this.search(this.text);
+            if (this.text.trim().length > 2){
+                this.search(this.text.trim());
+                EventorSearch.fillSearchBody(this.getAllParams());
             }
-            document.querySelector('#th_searchArea').value = this.text;
+            document.querySelector('#th_searchArea').value = this.text.trim();
+            EventorSearch.fillSelectors(this.getAllParams());
+            EventorSearch.searchWord = this.text.trim();
         });
-
+        
         document.querySelector('#th_searchArea').addEventListener('keydown', (event) => {
             // Check if the pressed key is the "Enter" key (key code 13)
             if (event.keyCode === 13) {
                 this.text = document.querySelector('#th_searchArea').value;
                 UIkit.modal(this.window).show();
-                if (this.text.length > 2){
-                    this.search(this.text);
+                if (this.text.trim().length > 2){
+                    this.search(this.text.trim());
+                    EventorSearch.fillSearchBody(this.getAllParams());
                 }
             }
-            document.querySelector('#evt_search_text').value = this.text;
-            this.fillSelectors();
+            document.querySelector('#evt_search_text').value = 
+            this.text == null ? "" : this.text.trim();
+            EventorSearch.fillSelectors(this.getAllParams());
+            EventorSearch.searchWord =
+            this.text == null ? "" : this.text.trim();
         });
-
+        
         document.querySelector('#evt_search_text').addEventListener('keydown', (event) => {
             // Check if the pressed key is the "Enter" key (key code 13)
             if (event.keyCode === 13) {
                 this.text = document.querySelector('#evt_search_text').value;
-                if (this.text.length > 2){
-                    this.search(this.text);
+                if (this.text.trim().length > 2){
+                    this.search(this.text.trim());
+                    EventorSearch.fillSearchBody(this.getAllParams());
                 }
-                document.querySelector('#th_searchArea').value = this.text;
+                document.querySelector('#th_searchArea').value = this.text.trim();
+                EventorSearch.fillSelectors(this.getAllParams());
+                EventorSearch.searchWord = this.text.trim();
             }
         });
 
-        this.fillSelectors();
+        document.querySelector('#evt_search_section').addEventListener('change', (e)=> {
+            EventorSearch.fillSearchBody(this.getAllParams());
+        });
+        document.querySelector('#evt_search_group').addEventListener('change', (e)=> {
+            EventorSearch.fillSearchBody(this.getAllParams());
+        });
+        document.querySelector('#evt_search_status').addEventListener('change', (e)=> {
+            EventorSearch.fillSearchBody(this.getAllParams());
+        });
+        document.querySelector('#evt_search_access').addEventListener('change', (e)=> {
+            EventorSearch.fillSearchBody(this.getAllParams());
+        });
+
+        EventorSearch.fillSelectors();
     }
 
 
-    fillSelectors(){
+    getAllParams() {
+        let params = [];
+    
+        let section = document.querySelector('#evt_search_section').value;
+        if (section.trim() !== '') {
+            params.push({ param: 'section', value: section });
+        }
+    
+        let category = document.querySelector('#evt_search_group').value;
+        if (category.trim() !== '') {
+            params.push({ param: 'category', value: category });
+        }
+    
+        let status = document.querySelector('#evt_search_status').value;
+        if (status.trim() !== '') {
+            params.push({ param: 'status', value: status });
+        }
+    
+        let access = document.querySelector('#evt_search_access').value;
+        if (access.trim() !== '') {
+            params.push({ param: 'access', value: access });
+        }
+        return params;
+    }
+
+    static fillSelectors(params = []){
         let sect = document.querySelector('#evt_search_section');
         let grop = document.querySelector('#evt_search_group');
         let stat = document.querySelector('#evt_search_status');
@@ -78,6 +129,14 @@ class EventorSearch
             let option2 = document.createElement('option');
             option2.setAttribute('value', element.id);
             option2.textContent = element.title;
+            option2.style.backgroundColor = "#ddd";
+            for (let i = 0; i < EventorSearch.loadedEvents.length; i++) {
+                const element2 = EventorSearch.loadedEvents[i];
+                if (element2.section == element.id){
+                    option2.style.backgroundColor = "#fff";
+                    break;
+                }
+            }
             sect.appendChild(option2);
         }
 
@@ -86,6 +145,14 @@ class EventorSearch
             let option2 = document.createElement('option');
             option2.setAttribute('value', element.id);
             option2.textContent = element.title;
+            option2.style.backgroundColor = "#ddd";
+            for (let i = 0; i < EventorSearch.loadedEvents.length; i++) {
+                const element2 = EventorSearch.loadedEvents[i];
+                if (element2.category == element.id){
+                    option2.style.backgroundColor = "#fff";
+                    break;
+                }
+            }
             grop.appendChild(option2);
         }
 
@@ -95,6 +162,14 @@ class EventorSearch
             let option2 = document.createElement('option');
             option2.setAttribute('value', element.value);
             option2.textContent = element.label;
+            option2.style.backgroundColor = "#ddd";
+            for (let i = 0; i < EventorSearch.loadedEvents.length; i++) {
+                const element2 = EventorSearch.loadedEvents[i];
+                if (element2.access == element.value){
+                    option2.style.backgroundColor = "#fff";
+                    break;
+                }
+            }
             access.appendChild(option2);
         }
 
@@ -104,15 +179,62 @@ class EventorSearch
             let option2 = document.createElement('option');
             option2.setAttribute('value', element.value);
             option2.textContent = element.label;
+            option2.style.backgroundColor = "#ddd";
+            for (let i = 0; i < EventorSearch.loadedEvents.length; i++) {
+                const element2 = EventorSearch.loadedEvents[i];
+                if (element2.status == element.value){
+                    option2.style.backgroundColor = "#fff";
+                    break;
+                }
+            }
             stat.appendChild(option2);
         }
+
+        params.forEach(element => {
+            if (element.param == 'section'){
+                sect.value = element.value;
+            };
+            if (element.param == 'category'){
+                grop.value = element.value;
+            };
+            if (element.param == 'status'){
+                stat.value = element.value;
+            };
+            if (element.param == 'access'){
+                access.value = element.value;
+            };
+        });
     }
 
-    static async fillSearchBody(){
+    static async fillSearchBody(params = []){
+        console.log('params :>> ', params);
         let container = document.querySelector('#eventor_search_content');
+        container.classList.add('evt-lazy-load');
         container.innerHTML = "";
         let delay = 0;
-        if (EventorSearch.loadedEvents.length == 0){
+        let array = [];
+        for (let i = 0; i < EventorSearch.loadedEvents.length; i++) {
+            const element = EventorSearch.loadedEvents[i];
+    
+            let matchesAllParams = true;
+    
+            for (let j = 0; j < params.length; j++) {
+                const { param, value } = params[j];
+    
+                if (param !== '' && element[param] !== null && element[param] != value) {
+                    // If any parameter doesn't match, set matchesAllParams to false
+                    matchesAllParams = false;
+                    break;
+                }
+            }
+    
+            if (matchesAllParams) {
+                array.push(element);
+            }
+        }
+        let setdate = '';
+
+        if (array.length == 0){
             let param = document.createElement('p');
             param.classList.add('uk-label-warning');
             param.classList.add('uk-padding-small');
@@ -122,18 +244,29 @@ class EventorSearch
             let param = document.createElement('p');
             param.classList.add('uk-label-success');
             param.classList.add('uk-padding-small');
-            param.innerHTML = "Found " + EventorSearch.loadedEvents.length + " items:";
+            param.innerHTML = "Found " + array.length + " items:";
             container.appendChild(param);
         }
-    
-        EventorSearch.loadedEvents.forEach((event) => {
+        
+        array.forEach((event) => {
             setTimeout(() => {
-                let card = EventorTemplate.makeEventSearchCard(event);
+                if (event.setdate != setdate)
+                {
+                    let sepiq = EventorTemplate.makeEventSearchSeparator(event.setdate);
+                    container.insertAdjacentHTML('beforeend', sepiq);
+                }
+                if (setdate == ''){ setdate = event.setdate;};
+                let card = EventorTemplate.makeEventSearchCard(event, EventorSearch.searchWord);
                 container.insertAdjacentHTML('beforeend', card);
+                setdate = event.setdate;
             }, delay);
             
-            delay += 250;
+            delay += 150;
         });
+        setTimeout(() => {
+            
+            container.classList.remove('evt-lazy-load');
+        }, delay);
     }
 
 
@@ -166,7 +299,7 @@ class EventorSearch
                         };
                     });
                     // EventorFlow.refreshEvents();
-                    EventorSearch.fillSearchBody();
+                    
                 }
                 else if (this.status > 200) {
                     if (counter < 1) {
@@ -196,6 +329,7 @@ class EventorSearch
                 task.user = me;
                 task.action = 1;
                 task.type = "event";
+                task.order = "setdate ASC";
                 const where = {
                     column: "user",
                     value: me,
@@ -203,7 +337,7 @@ class EventorSearch
                 task.where.push(where);
 
                 const where2 = {
-                    column: "content",
+                    column: ["content", "title"],
                     operator: "LIKE",
                     value: text
                 } 

@@ -89,30 +89,64 @@ class EventModal {
 
     document.body.addEventListener('dblclick', (e) => {
       if (e.target.closest('.evt-card-body')){
-
         let elem = e.target.closest('.evt-card-wrapper');
-        if (elem != null && elem.id != null)
-        {
-          document.querySelector('.evt-reader-body').innerHTML = '';
-          for (let i = 0; i < event_container.length; i++) {
-            if (elem.id == event_container[i].id){
-
-              let el = event_container[i];
-              let divs = EventorTemplate.wrapTextToHtmlView(el.content);
-                let parentContainer = document.querySelector('.evt-reader-body'); // Replace 'parentContainer' with the actual ID or selector of your parent container
-                for (let i = 0; i < divs.length; i++) {
-                  const element = divs[i];
-                  parentContainer.appendChild(element);
+        let searchPrefix = "sr_";
+          if (elem != null && elem.id != null)
+          {
+            if (!elem.id.startsWith(searchPrefix)){
+              // ordinary card
+              let modal = document.querySelector('#modal_eventReader');
+              modal.querySelector('.evt-reader-body').innerHTML = '';
+              for (let i = 0; i < event_container.length; i++) {
+                if (elem.id == event_container[i].id){
+    
+                  let el = event_container[i];
+                  let divs = EventorTemplate.wrapTextToHtmlView(el.content);
+                    let parentContainer = modal.querySelector('.evt-reader-body'); // Replace 'parentContainer' with the actual ID or selector of your parent container
+                    for (let i = 0; i < divs.length; i++) {
+                      const element = divs[i];
+                      parentContainer.appendChild(element);
+                    }
+                    modal.querySelector('.evt-reader-title').innerHTML = el.title;
+                  break;
                 }
-                document.querySelector('.evt-reader-title').innerHTML = el.title;
+              }
+              UIkit.modal("#modal_eventReader").show();
+            } else {
+              // search card
+              let modal = document.querySelector('#modal_searchReader');
+              modal.querySelector('.evt-reader-body').innerHTML = '';
+              let natId = (elem.id).substring(searchPrefix.length);
+              console.log('natId :>> ', natId);
+              UIkit.modal("#modal_searchReader").show();
+              for (let i = 0; i < EventorSearch.loadedEvents.length; i++) {
+                if (natId == EventorSearch.loadedEvents[i].id){
+                  let el = EventorSearch.loadedEvents[i];
+                  
+                  const regex = new RegExp(EventorSearch.searchWord, 'gi');
+                  el.content = el.content.replace(regex, `<span class='evt-found'>$&</span>`);
 
-  
-              break;
+                  let divs = EventorTemplate.wrapTextToHtmlView(el.content);
+
+                    let parentContainer = modal.querySelector('.evt-reader-body'); // Replace 'parentContainer' with the actual ID or selector of your parent container
+                    for (let i = 0; i < divs.length; i++) {
+                      const element = divs[i];
+                      parentContainer.appendChild(element);
+                    }
+                    modal.querySelector('.evt-reader-title').innerHTML = el.title;
+                  break;
+                }
+              }
             }
-          }
-        }
 
-        UIkit.modal("#modal_eventReader").show();
+
+
+          }
+
+
+
+
+        
       }
     })
 

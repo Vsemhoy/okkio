@@ -46,28 +46,28 @@
             <input class="uk-input" type="text" placeholder="100" aria-label="100">
         </div> -->
         <div class="uk-width-1-4@s">
-        <label for="evt_search_share">Section</label>
+        <label for="evt_search_section">Section</label>
         <select class="uk-select" id="evt_search_section">
                     <option>Option 01</option>
                     <option>Option 02</option>
                 </select>
         </div>
         <div class="uk-width-1-4@s">
-        <label for="evt_search_share">Group</label>
+        <label for="evt_search_group">Group</label>
         <select class="uk-select" id="evt_search_group">
                     <option>Option 01</option>
                     <option>Option 02</option>
                 </select>
         </div>
         <div class="uk-width-1-4@s">
-        <label for="evt_search_share">Status</label>
+        <label for="evt_search_status">Status</label>
         <select class="uk-select" id="evt_search_status">
                     <option>Option 01</option>
                     <option>Option 02</option>
                 </select>
         </div>
         <div class="uk-width-1-4@s">
-          <label for="evt_search_share">Access</label>
+          <label for="evt_search_access">Access</label>
         <select class="uk-select" id="evt_search_access">
                     <option>Option 01</option>
                     <option>Option 02</option>
@@ -101,6 +101,25 @@
 
 </div>
 </div>
+</div>
+
+
+
+<div id="modal_searchReader" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title evt-reader-title">Headline</h2>
+        </div>
+
+        <div class="uk-modal-body evt-reader-body" uk-overflow-auto>
+          
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+            <a href="#modal_searchManager" class="uk-button uk-button-primary" uk-toggle>Return back</a>
+        </div>
+    </div>
 </div>
 
 
