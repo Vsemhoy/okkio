@@ -239,6 +239,7 @@ font-family: system-ui;
 .evt-input-fullscreen {
   padding: 1rem;
   font-size: 1.1rem;
+  max-height: 100vh;
 }
 
 .evt-full-trigger {
@@ -383,4 +384,19 @@ font-family: system-ui;
 }
 .evt-reader-title {
   font-size: 1.25rem;
+}
+.evt-founded > div {
+  outline: 2px solid #03A9F4;
+  box-shadow: 3px 4px 0 4px #03a7f1;
+}
+.evt-sec-founded {
+  border: 2px solid #03a9f4;
+  background: repeating-linear-gradient( -45deg, #dddddd, #dddddd 10px, #e7f7ff 10px, #e7f7ff 20px );
+}
+.evt-sec-founded:hover {
+  background: repeating-linear-gradient( -45deg, #d3d3d3, #d3d3d3 10px, #e1f3fc 10px, #e1f3fc 20px );
+}
+.evt-sec-founded .uk-first-column {
+  background: #ffffff69;
+  backdrop-filter: blur(4px);
 }

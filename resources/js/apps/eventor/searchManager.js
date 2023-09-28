@@ -11,12 +11,12 @@ class EventorSearch
                 this.text = document.querySelector('#th_searchArea').value;
                 UIkit.modal(this.window).show();
                 if (this.text.trim().length > 2){
-                    this.search(this.text.trim());
+                    this.search(this.text);
                     EventorSearch.fillSearchBody(this.getAllParams());
                 }
                 document.querySelector('#evt_search_text').value = this.text;
                 EventorSearch.fillSelectors(this.getAllParams());
-                EventorSearch.searchWord = this.text.trim();
+                EventorSearch.searchWord = this.text;
             });
         }
         
@@ -24,12 +24,12 @@ class EventorSearch
         this.searchTrig.addEventListener('click', (e)=>{
             this.text = document.querySelector('#evt_search_text').value;
             if (this.text.trim().length > 2){
-                this.search(this.text.trim());
+                this.search(this.text);
                 EventorSearch.fillSearchBody(this.getAllParams());
             }
-            document.querySelector('#th_searchArea').value = this.text.trim();
+            document.querySelector('#th_searchArea').value = this.text;
             EventorSearch.fillSelectors(this.getAllParams());
-            EventorSearch.searchWord = this.text.trim();
+            EventorSearch.searchWord = this.text;
         });
         
         document.querySelector('#th_searchArea').addEventListener('keydown', (event) => {
@@ -38,7 +38,7 @@ class EventorSearch
                 this.text = document.querySelector('#th_searchArea').value;
                 UIkit.modal(this.window).show();
                 if (this.text.trim().length > 2){
-                    this.search(this.text.trim());
+                    this.search(this.text);
                     EventorSearch.fillSearchBody(this.getAllParams());
                 }
             }
@@ -54,12 +54,12 @@ class EventorSearch
             if (event.keyCode === 13) {
                 this.text = document.querySelector('#evt_search_text').value;
                 if (this.text.trim().length > 2){
-                    this.search(this.text.trim());
+                    this.search(this.text);
                     EventorSearch.fillSearchBody(this.getAllParams());
                 }
-                document.querySelector('#th_searchArea').value = this.text.trim();
+                document.querySelector('#th_searchArea').value = this.text;
                 EventorSearch.fillSelectors(this.getAllParams());
-                EventorSearch.searchWord = this.text.trim();
+                EventorSearch.searchWord = this.text;
             }
         });
 
@@ -329,7 +329,7 @@ class EventorSearch
                 task.user = me;
                 task.action = 1;
                 task.type = "event";
-                task.order = "setdate ASC";
+                task.order = "setdate DESC";
                 const where = {
                     column: "user",
                     value: me,

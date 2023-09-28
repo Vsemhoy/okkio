@@ -691,10 +691,10 @@ class DateUtils {
     }
   
     static getParam(param, clearHash = true) {
-        const params = new URLSearchParams(window.location.href);
-        console.log(params);
-        if (params.has(param)) {
-            let paramValue = params.get(param);
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const paramValue = urlSearchParams.get(param);
+    
+        if (paramValue !== null) {
             // Check if the 'clearHash' flag is set to true and there is a '#' character in the parameter value
             if (clearHash && paramValue.includes('#')) {
                 // Remove the '#' character and everything that follows it
@@ -705,4 +705,17 @@ class DateUtils {
         }
         return null;
     }
+
+    static deleteAddressParam(param) {
+        // Get the current URL and its search params
+        const url = new URL(window.location.href);
+        const searchParams = new URLSearchParams(url.search);
+    
+        // Set a new value for a specific parameter
+        searchParams.delete(param);
+    
+        // Update the URL with the modified search params
+        url.search = searchParams.toString();
+        window.history.pushState({}, '', url);
+      }
 }

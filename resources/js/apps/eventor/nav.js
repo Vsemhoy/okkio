@@ -12,7 +12,7 @@ class EventorNav {
       if (e.target.closest('.th-com-s-nav-item')){
         e.preventDefault();
         let section  = e.target.closest('.th-com-s-nav-item').getAttribute('data-section');
-        if (activeSection == section){ return;};
+        if (EventorFlow.activeSection == section){ return;};
         let text  = e.target.closest('.th-com-s-nav-item').querySelector('.th-sn-item-text').innerHTML;
         this.sectionNameBlock.innerHTML = text;
         
@@ -24,7 +24,7 @@ class EventorNav {
         EventorNav.recheckMenuItems(section);
         EventorUtils.changeAddressBar('sect', section);
         EventorFlow.clearAllCardBodyFromChart();
-        activeSection = section;
+        EventorFlow.activeSection = section;
         console.log('section to load :>> ', section);
         eventor.reloadSectionEvents(section);
         if (prevExpended == false){
@@ -47,7 +47,7 @@ class EventorNav {
 
     for (let i = 0; i < section_container.length; i++) {
       const element = section_container[i];
-      if (element.id == activeSection){
+      if (element.id == EventorFlow.activeSection){
         document.querySelector('#evt_tool_sectionName').innerHTML = element.title;
         break;
       }

@@ -147,7 +147,7 @@
         padding: 0px;
         opacity: 0;
         cursor: pointer;
-        background: rgb(3 169 244 / 56%);
+        /* background: rgb(3 169 244 / 56%); */
         height: 100vh;
         left: 0px;
         width: 6px;
@@ -238,7 +238,14 @@
         }
 
     }
+    .th-com-s-nav-item {
+        display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: inherit;
 
+    align-items: center;
+    }
     .th-com-s-nav-item.th-active {
         background-color: #212121;
     }
@@ -248,11 +255,13 @@
     }
 
     .nav-link {
-        display: block;
-        padding: 6px 12px 6px 12px;
-        text-decoration: none;
-        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
-        color: rgb(221, 221, 221);
+        padding: 7px 3px 7px 7px;
+    text-decoration: none;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    color: rgb(221, 221, 221);
+    }
+    .nav-link:first-child {
+        text-align: center;
     }
 
     .menu-minimized .icon-square {
@@ -271,7 +280,7 @@
     }
 
     .th-com-s-nav {
-        display: flex;
+        display: flex !important;
         flex-wrap: nowrap;
         padding-left: 0;
         margin: 0px;
@@ -310,12 +319,12 @@
 
     .th-sidebar-opened .th-sn-item-text {
         display: block;
+        padding-left: 6px;
     }
 
     .th-com-s-nav-item>a {
         display: grid;
-        display: grid;
-        grid-template-columns: 42px auto min-content;
+        grid-template-columns: 30px auto min-content;
     }
 
     .th-sn-column {
@@ -335,9 +344,7 @@
     }
     .th-com-s-nav-item:hover .th-sn-round {
         opacity: 1;
-        padding: 5px;
-        margin-left: 35px;
-        margin-top: -12px;
+        padding: 4px;
     }
     .th-user-go {
         vertical-align: middle;
@@ -357,23 +364,17 @@
     }
     .th-sn-round {
         display: block;
-        padding: 3px;
-        position: absolute;
-        margin-left: 37px;
-        margin-top: -10px;
+        padding: 2px;
         opacity: 0.6;
         transition: all ease 0.3s;
         border-radius: 2px;
+        margin-right: 5px;
+        height: 20px;
     }
     .th-sidebar-opened .th-sn-round {
-        margin-left: 248px;
+
     }
-    .th-sidebar-opened .th-com-s-nav-item:hover .th-sn-round {
-        margin-left: 246px;
-    }
-    /* .uk-sticky:not(.uk-active) {
-        z-index: 0 !important;
-    } */
+
     .uk-sticky:not(.uk-active) {
     z-index: 1 !important;
     }

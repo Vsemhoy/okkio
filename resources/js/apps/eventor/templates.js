@@ -176,8 +176,8 @@ class EventorTemplate
                 </div>
               </div>
               ${body}
-              <div class="flex-space">
-                <a href="#" class="uk-button uk-button-text">View in Flow</a>
+              <div class="flex-space evt-goto" data-id='${event.id}'>
+                <a href="#" class="uk-button uk-button-text uk-modal-close">View in Flow</a>
                 ${catBlock}
               </div>
             </div>

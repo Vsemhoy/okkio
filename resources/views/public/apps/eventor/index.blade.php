@@ -113,7 +113,7 @@
         </div>
 
         <div class="uk-modal-body evt-reader-body" uk-overflow-auto>
-          
+
         </div>
         <div class="uk-modal-footer uk-text-right">
             <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
@@ -187,7 +187,7 @@
     var event_container = [];
     var section_container = [];
     var category_container = [];
-    var activeSection = 'all';
+
     // EventorUtils.changeAddressBar('page', 'bro');
 
 

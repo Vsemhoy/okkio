@@ -89,6 +89,7 @@ class EventModal {
 
     document.body.addEventListener('dblclick', (e) => {
       if (e.target.closest('.evt-card-body')){
+        e.preventDefault();
         let elem = e.target.closest('.evt-card-wrapper');
         let searchPrefix = "sr_";
           if (elem != null && elem.id != null)
@@ -112,6 +113,7 @@ class EventModal {
                 }
               }
               UIkit.modal("#modal_eventReader").show();
+              EventorFlow.clearFounders();
             } else {
               // search card
               let modal = document.querySelector('#modal_searchReader');

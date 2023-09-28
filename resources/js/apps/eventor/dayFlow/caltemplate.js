@@ -122,6 +122,7 @@ class CalTemplate
         dateIn.setAttribute('type', 'month');
         dateIn.setAttribute('name', 'flashdate');
         dateIn.setAttribute('value', curdate);
+        dateIn.style.width = '22px';
         calbutton.appendChild(dateIn);
 
         let nextbutton = document.createElement('div');

@@ -34,7 +34,7 @@ class DayFlow {
             let transdate = this.startMonth;
             this.startMonth = this.endMonth;
             this.endMonth = transdate;
-            console.log("Date's flipped.");
+            // console.log("Date's flipped.");
             DateUtils.changeAddressBar(DayFlow.startParam,
                 this.startMonth.getShortDate());
             DateUtils.changeAddressBar(DayFlow.endParam,
@@ -185,6 +185,13 @@ class DayFlow {
             }
             this.pool.prepend( mhdr);
         }
+    }
+
+    reset(date){
+        this.pool.innerHTML = '';
+        this.startMonth = date; this.endMonth = date;
+        this.renderMonth(date);
+        DayFlow.dateArray = ShortDate.getDateRange(this.startMonth, this.endMonth);
     }
 
 };
