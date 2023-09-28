@@ -36,6 +36,7 @@ class EventorNav {
             tod.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
           };
       };
+      EventorFlow.clearFounders();
       }
     });
 
@@ -68,6 +69,7 @@ class EventorNav {
         EventorNav.expendAllRows();
         EventorNav.expendedRows = true;
       }
+      EventorFlow.clearFounders();
     });
 
 

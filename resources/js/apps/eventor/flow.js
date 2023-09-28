@@ -257,8 +257,10 @@ class EventorFlow {
     static clearFounders() {
         let a = document.querySelector('.evt-sec-founded');
         let b = document.querySelector('.evt-founded');
-        if (a != null && b != null) {
+        if (a != null) {
             a.classList.remove('evt-sec-founded');
+        }
+        if (b != null) {
             b.classList.remove('evt-founded');
         }
         DateUtils.deleteAddressParam('targ');
