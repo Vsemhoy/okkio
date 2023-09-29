@@ -499,15 +499,21 @@ class EventorFlow {
         let counter = 0;
         let selected = false;
         Array.from(section_container).forEach((option) => {
-            const optionElement = document.createElement('option');
-            optionElement.value = option.id;
-            optionElement.textContent = option.title;
-            if (section == option.id) {
-                optionElement.setAttribute('selected', 'selected');
-                selected = true;
+            if (option.status != 0){
+                const optionElement = document.createElement('option');
+                optionElement.value = option.id;
+                optionElement.textContent = option.title;
+                if (section == option.id) {
+                    optionElement.setAttribute('selected', 'selected');
+                    selected = true;
+                }
+                if (option.status == 2){
+                    optionElement.setAttribute('disabled', 'disabled');
+                }
+                sects.appendChild(optionElement);
+                counter++;
+
             }
-            sects.appendChild(optionElement);
-            counter++;
         });
         const optionElement2 = document.createElement('option');
         optionElement2.value = "";

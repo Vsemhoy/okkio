@@ -345,38 +345,70 @@ class EventorTemplate
     <div class="uk-form-horizontal">
 
     <div class="uk-margin">
-        <label class="uk-form-label" for="form-horizontal-text">Text</label>
+        <label class="uk-form-label" for="form-horizontal-text">Description of the section</label>
         <div class="uk-form-controls">
-            <input class="uk-input" id="form-horizontal-text" type="text" placeholder="Some text...">
+            <textarea class='evt-section-content-in uk-textarea' placeholder='Description...'>${object.content}</textarea>
         </div>
     </div>
 
     <div class="uk-margin">
-        <label class="uk-form-label" for="form-horizontal-select">Select</label>
+        <label class="uk-form-label" for="form-horizontal-select">Default access type when create event</label>
         <div class="uk-form-controls">
-            <select class="uk-select" id="form-horizontal-select">
-                <option>Option 01</option>
-                <option>Option 02</option>
+            <select class="uk-select evt-sec-access-selector" id="form-horizontal-select">`;
+            (EventorTypes.getAccess()).forEach(element => {
+              let active = "";
+              if (object.access == element.value){
+                active = "selected";
+              }
+              let option = "<option value='" + element.value + "' " + active + ">" + element.label + "</option>";
+              html += option;
+          });
+
+            html +=`</select>
+        </div>
+    </div>
+
+
+
+    <div class="uk-margin">
+    <label class="uk-form-label" 
+      for="form-horizontal4-select">Assigned categories</label>
+        <div class="uk-form-controls">
+            <select id='form-horizontal4-select' class='uk-select evt-sec-cat-selector evt-cs-open' multiple size='10'>
+
             </select>
         </div>
     </div>
 
     <div class="uk-margin">
-        <div class="uk-form-label">Radio</div>
-        <div class="uk-form-controls uk-form-controls-text">
-            <label><input class="uk-radio" type="radio" name="radio1"> Option 01</label><br>
-            <label><input class="uk-radio" type="radio" name="radio1"> Option 02</label>
+      <label class="uk-form-label" 
+      for="form-horizontal3-select">Status of the section (disabled and archieved not shown in menu)</label>
+        <div class="uk-form-controls">
+            <select class="uk-select evt-sec-status-selector" id="form-horizontal3-select">`;
+            (EventorTypes.getStatus()).forEach(element => {
+              let active = "";
+              if (object.status == element.value){
+                active = "selected";
+              }
+              let option = "<option value='" + element.value + "' " + active + ">" + element.label + "</option>";
+              html += option;
+          });
+
+            html +=`</select>
+            
         </div>
     </div>
+    <br>
+
+
     <div class='uk-modal-footer uk-text-right'>
     <button class="uk-button uk-button-default" id='evt_closeSectionEditor'>CLOSE</button>
     <div>
     <button class="uk-button uk-button-danger" style='margin-right: 6px;' id='evt_act_deleteSection'>Delete</button>
-    <button class="uk-button uk-button-primary">Update</button>
+    <button class="uk-button uk-button-primary evt-act-update-section">Update</button>
     </div>
     </div>
-    
-</div>
+  </div>
     `;
 
     subform.innerHTML = html;

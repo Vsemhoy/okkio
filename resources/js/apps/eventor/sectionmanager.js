@@ -1,6 +1,7 @@
 class SectionManager
 {
     static bindedTaskCount = 0;
+    
     constructor()
     {
         this.renderSectionBody();
@@ -79,26 +80,26 @@ class SectionManager
             }
         });
 
-        document.body.addEventListener('change', (e) => {
-            const targetClass = 'evt-section-content-in';
+        // document.body.addEventListener('change', (e) => {
+        //     const targetClass = 'evt-section-content-in';
         
-            if (e.target.classList.contains(targetClass)) {
-                const card = e.target.closest('.card-box'); // Replace with the actual class name of your card
-                if (card) {
-                    let id = card.getAttribute('data-id');
-                    let value = card.querySelector('.evt-section-content-in').value;
-                    for (let i = 0; i < section_container.length; i++) {
-                        let element = section_container[i];
-                        if (element.id == id){
-                            element.content = value.replace(/[^\p{L}\p{N}\s]/gu, '');
-                            this.saveSection(element, element.id);
-                            console.log("call to update content");
-                            break;
-                        }
-                    }
-                }
-            }
-        });
+        //     if (e.target.classList.contains(targetClass)) {
+        //         const card = e.target.closest('.card-box'); // Replace with the actual class name of your card
+        //         if (card) {
+        //             let id = card.getAttribute('data-id');
+        //             let value = card.querySelector('.evt-section-content-in').value;
+        //             for (let i = 0; i < section_container.length; i++) {
+        //                 let element = section_container[i];
+        //                 if (element.id == id){
+        //                     element.content = value.replace(/[^\p{L}\p{N}\s]/gu, '');
+        //                     this.saveSection(element, element.id);
+        //                     console.log("call to update content");
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // });
 
         // document.body.addEventListener('click', (e) => {
         //     const targetClass = 'evt-section-group-trigger';
@@ -143,17 +144,6 @@ class SectionManager
                 let trig = e.target.closest('.evt-section-group-trigger');
                 let input = trig.querySelector('.evt-sec-cat-selector');
                 input.classList.add('evt-cs-open');
-                // input.setAttribute('rows', 10);
-
-                // let modal = document.querySelector('.evt-cat-group-modal'); // Element to set position to
-                // modal.classList.remove('uk-hidden');
-                // // Get the bounding rectangle of the trig element
-                // let trigRect = trig.getBoundingClientRect();
-                
-                // // Set the left and top positions of the modal element
-                // modal.style.left = (trigRect.left - 200) + 'px';
-                // modal.style.top = trigRect.top + 'px';
-                
                 let card = e.target.closest('.evt-section-card');
                 let id = card.parentElement.id;
                 card.classList.add('evt-s-selected');
@@ -169,19 +159,21 @@ class SectionManager
                 let catar = strcats.split(',');
 
                 this.updateCategoryList(catar);
-            } else
-            if (!e.target.closest('.evt-section-group-trigger') && !e.target.closest('.evt-sec-cat-selector') 
-            && !e.target.closest('.evt-cs-open')){
-                // let modal = document.querySelector('.evt-cat-group-modal'); // Element to set position to
-                // modal.classList.add('uk-hidden');
-                if (document.querySelector('.evt-cs-open')){
-                    // document.querySelector('.evt-cs-open').setAttribute('rows', 1);
-                    document.querySelector('.evt-cs-open').classList.remove('evt-cs-open');
-                    document.querySelector('.evt-s-selected').classList.remove('evt-s-selected');
-                }
-            }
+            } 
+            // else
+            // if (!e.target.closest('.evt-section-group-trigger') && !e.target.closest('.evt-sec-cat-selector') 
+            // && !e.target.closest('.evt-cs-open')){
+            //     // let modal = document.querySelector('.evt-cat-group-modal'); // Element to set position to
+            //     // modal.classList.add('uk-hidden');
+            //     if (document.querySelector('.evt-cs-open')){
+            //         // document.querySelector('.evt-cs-open').setAttribute('rows', 1);
+            //         document.querySelector('.evt-cs-open').classList.remove('evt-cs-open');
+            //         document.querySelector('.evt-s-selected').classList.remove('evt-s-selected');
+            //     }
+            // }
 
             if (e.target.closest('.evt-section-editor-trigger')){
+                this.changedItem = null;
                 let box = e.target.closest('.card-box');
                 let id = box.id;
                 let obj = null;
@@ -189,6 +181,7 @@ class SectionManager
                     const element = section_container[i];
                     if (element.id == id){
                         obj = element;
+                        this.changedItem = obj;
                         break;
                     }
                 }
@@ -199,11 +192,42 @@ class SectionManager
                     let subbox = EventorTemplate.sectionSubEditorForm(obj);
                     box.appendChild(subbox);
                 
-
+                    let input = box.querySelector('.evt-sec-cat-selector');
+                    let strcats = '';
+                    for (let i = 0; i < section_container.length; i++) {
+                        const element = section_container[i];
+                        if (element.id == id){
+                            strcats = element.categories;
+                            break;
+                        }
+                    }
+                    let catar = strcats.split(',');
+                    this.updateCategoryList(catar);
                 }
             }
 
+            if (e.target.closest('.evt-act-update-section')){
+                let card = e.target.closest('.card-box');
+                let id = card.id;
+                card.classList.remove('evt-disabled');
+                card.classList.remove('evt-archieved');
+                // Iterate through selected options
+                for (let i = 0; i < section_container.length; i++) {
+                    const element = section_container[i];
+                    if (element.id == id){
+                        this.saveSection(element, id);
+                        if (element.status == 0){
+                            card.classList.add('evt-disabled');
+                        }
+                        if (element.status == 2){
+                            card.classList.add('evt-archieved');
+                        }
+                        break;
+                    }
+                }
 
+
+            }
 
             if (e.target.closest('#evt_act_deleteSection')){
 
@@ -212,34 +236,108 @@ class SectionManager
             }
 
             if (e.target.closest('#evt_closeSectionEditor')){
+                let card = e.target.closest('.card-box');
+                let id = card.id;
+                for (let i = 0; i < section_container.length; i++) {
+                    const element = section_container[i];
+                    if (element.id == id){
+                        section_container[i] = this.changedItem;
+                        break;
+                    }
+                }
                 document.querySelector('#evt_section_subeditor').remove();
-                
             }
-
         });
 
         document.body.addEventListener('change', (e) => {
-            if (e.target.closest('.evt-cs-open')){
-                let card = e.target.closest('.evt-section-card');
+            if (e.target.closest('.evt-sec-cat-selector')){
+                let card = e.target.closest('.card-box');
                 let id = card.id;
 
                 let civer = card.querySelector('.evt-cat-group-list');
                 civer.innerHTML = '';
 
-                const selectedOptions = Array.from(e.target.closest('.evt-cs-open').selectedOptions);
+                const selectedOptions = Array.from(card.querySelector('.evt-sec-cat-selector').selectedOptions);
                 // Iterate through selected options
 
                 selectedOptions.forEach(function (option) {
                     // Push the value and text (name) of each selected option into the respective arrays
-                    civer.appendChild(SectionManager.getBadge(option.value, option.textContent, option.getAttribute('data-color')));
+                    civer.appendChild(SectionManager.getBadge(option.value, option.textContent,
+                         option.getAttribute('data-color')));
                 });
-
                 // Now you have the selected values and names for each multi-select
+                
+                let values = [];
+                selectedOptions.forEach(function (option) {
+                    // Push the value and text (name) of each selected option into the respective arrays
+                    //civer.appendChild(SectionManager.getBadge(option.value, option.textContent, option.getAttribute('data-color')));
+                    if (option.selected){
+
+                        values.push(option.value);
+                    }
+                });
+                let string = values.join(',');
+
+                for (let i = 0; i < section_container.length; i++) {
+                    const element = section_container[i];
+                    if (element.id == id){
+                        element.categories = string;
+                        break;
+                    }
+                }
+            }
+
+            if (e.target.closest('.evt-sec-access-selector')){
+                let card = e.target.closest('.card-box');
+                let id = card.id;
+                // Iterate through selected options
+                let cv = card.querySelector('.evt-sec-access-selector').value;
+
+                for (let i = 0; i < section_container.length; i++) {
+                    const element = section_container[i];
+                    if (element.id == id){
+                        element.access = cv;
+                        break;
+                    }
+                }
+            }
+            
+
+            if (e.target.closest('.evt-section-content-in')){
+                let card = e.target.closest('.card-box');
+                let id = card.id;
+                // Iterate through selected options
+                let cv = card.querySelector('.evt-section-content-in').value;
+
+                for (let i = 0; i < section_container.length; i++) {
+                    const element = section_container[i];
+                    if (element.id == id){
+                        element.content = cv.replace(/[^\p{L}\p{N}\s]/gu, '');;
+                        break;
+                    }
+                }
+            }
+
+            if (e.target.closest('.evt-sec-status-selector')){
+                let card = e.target.closest('.card-box');
+                let id = card.id;
+                // Iterate through selected options
+                let cv = card.querySelector('.evt-sec-status-selector').value;
+
+                for (let i = 0; i < section_container.length; i++) {
+                    const element = section_container[i];
+                    if (element.id == id){
+                        element.status = cv;
+                        break;
+                    }
+                }
             }
         });
 
+
+        // REMOVER IT!!!!
         document.body.addEventListener('focusout', (e) => {
-            if (e.target.closest('.evt-cs-open')){
+            if (e.target.closest('.evt-cs-opend')){
                 let card = e.target.closest('.evt-section-card').parentElement;
                 let id = card.id;
                 const selectedOptions = Array.from(e.target.closest('.evt-cs-open').selectedOptions);
@@ -293,7 +391,7 @@ class SectionManager
     }
 
     updateCategoryList(selectedArray = []){
-        let select = document.querySelector('.evt-cs-open');
+        let select = document.querySelector('.evt-sec-cat-selector');
         select.innerHTML="";
         for (let i = 0; i < category_container.length; i++) {
             const element = category_container[i];
@@ -376,7 +474,12 @@ class SectionManager
         cardBox.dataset.id = item.id;
         cardBox.id = item.id;
         cardBox.dataset.order = index;
-      
+        if (item.status == 0){
+            cardBox.classList.add('evt-disabled');
+        }
+        if (item.status == 2){
+            cardBox.classList.add('evt-archieved');
+        }
         const ukCard = document.createElement('div');
         ukCard.classList.add(
           'uk-card',
@@ -408,15 +511,15 @@ class SectionManager
         sectionEditorTrigger.classList.add('evt-section-editor-trigger');
         sectionEditorTrigger.setAttribute('uk-icon', 'icon: cog; ratio: 1.2;');
 
-        const sectionGroupTrigger = document.createElement('span');
-        sectionGroupTrigger.classList.add('evt-section-group-trigger');
-        sectionGroupTrigger.setAttribute('uk-icon', 'icon: list; ratio: 1.2;');
+    //     const sectionGroupTrigger = document.createElement('span');
+    //     sectionGroupTrigger.classList.add('evt-section-group-trigger');
+    //     sectionGroupTrigger.setAttribute('uk-icon', 'icon: list; ratio: 1.2;');
       
-        const catSelector = document.createElement('select');
-        catSelector.classList.add('evt-sec-cat-selector');
-        catSelector.multiple = true;
-        catSelector.size = 1;
-      sectionGroupTrigger.appendChild(catSelector);
+    //     const catSelector = document.createElement('select');
+    //     catSelector.classList.add('evt-sec-cat-selector');
+    //     catSelector.multiple = true;
+    //     catSelector.size = 1;
+    //   sectionGroupTrigger.appendChild(catSelector);
         // You can add options to catSelector here
       
         const colorPickerInput = document.createElement('input');
@@ -437,7 +540,7 @@ class SectionManager
         let div2 = document.createElement('div');
         div2.classList.add('evt-grid-icons');
         div2.appendChild(sectionEditorTrigger);
-        div2.appendChild(sectionGroupTrigger);
+       // div2.appendChild(sectionGroupTrigger);
         div2.appendChild(colorPickerInput);
         
         evtGridHeader.appendChild(div2);
@@ -449,11 +552,6 @@ class SectionManager
 
         let divcontent = document.createElement('div');
         divcontent.classList.add('evt-sect-card-content');
-        let inputcontent = document.createElement('textarea');
-        inputcontent.id = '';
-        inputcontent.classList.add('evt-section-content-in');
-        inputcontent.setAttribute('placeholder', 'description');
-        divcontent.append(inputcontent);
         ukCard.appendChild(divcontent);
 
         let divcat = document.createElement('div');

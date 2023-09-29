@@ -255,6 +255,7 @@ class EventorNav {
 
       for (let i = 0 ; i < section_container.length; i++){
         let sectim = section_container[i];
+        if (sectim.status != 1){ continue; }
         let item = SidebarMenu.getNewItem();
         item.name = sectim.title;
         item.active = false;

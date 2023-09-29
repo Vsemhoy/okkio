@@ -183,7 +183,7 @@
   border: 0px;
   font-size: 1.1rem;
 }
-.evt-section-content-in, .evt-category-content-in {
+.evt-category-content-in {
 width: 100%;
 color: gray;
 border: none;
@@ -212,7 +212,8 @@ font-family: system-ui;
 .evt-grid-icons {
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  width: 84px;
+  justify-content: space-between;
 }
 
 .evt-badge {
@@ -224,13 +225,14 @@ font-family: system-ui;
 
 .evt-disabled > div {
   background-color: #ebebeb;
-    border-bottom: 1px solid;
-    border-top: 1px solid;
-    border-right: 1px solid;
+    outline: 1px solid #8080805c;
 }
 .evt-archieved > div {
-  background-color: #c4f1ff;
-  box-shadow: inset 0px 0px 63px #00000024;
+  background: repeating-linear-gradient( -45deg, #efefef, #efefef 10px, #fff8e7 10px, #fff8e7 20px );
+  outline: 1px solid #8080805c;
+}
+.evt-disabled input, .evt-archieved input {
+  background: transparent;
 }
  
 .evt-reader-body > div , .evt-off-reader-body > div {
@@ -351,12 +353,12 @@ font-family: system-ui;
 }
 .evt-sec-cat-selector {
   display: block;
-  width: 0px;
+  /* width: 0px;
   opacity: 0;
-  height: 0px;
+  height: 0px; */
 }
 .evt-cs-open {
-  opacity: 1;
+  /* opacity: 1;
   position: fixed;
   width: 200px;
   height: 60vh;
@@ -367,7 +369,7 @@ font-family: system-ui;
   border: 0px;
   padding: 6px;
   font-size: 1.05rem;
-  border-radius: 6px;
+  border-radius: 6px; */
 }
 .evt-s-selected {
   border: 2px solid #03A9F4;
