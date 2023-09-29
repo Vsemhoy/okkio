@@ -12,7 +12,7 @@ class SidebarMenu
 
     fill(obj) {
 
-        if (obj.count == 0) {
+        if (obj.items.length == 0 && obj.setItems.length == 0) {
             return;
         }
         if (obj.items != null && Array.isArray(obj.items)) {

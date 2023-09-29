@@ -903,7 +903,7 @@ class EventorFlow {
                                 for (let i = 0; i < event_container.length; i++) {
                                     let el = event_container[i];
                                     if (el.id == event_id) {
-                                        event_container.splice(i);
+                                        event_container.splice(i, 1);
                                         break;
                                     }
                                 }
@@ -912,10 +912,6 @@ class EventorFlow {
 
                     };
                 });
-                //EventorFlow.refreshEvents();
-
-                // let result = JSON.parse(this.responseText);
-                // console.log('рудзукы updated ' + this.responseText);
             }
             else if (this.status > 200) {
                 if (counter < 1) {
@@ -941,7 +937,7 @@ class EventorFlow {
         let task = EventorTypes.GetNewTask();
         task.objects.push(formdata);
         task.user = me;
-        task.action = 7;
+        task.action = 10;
         task.type = "event";
         task.where.push(where);
         taskArray.push(task);

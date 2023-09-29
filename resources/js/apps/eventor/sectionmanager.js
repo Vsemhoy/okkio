@@ -1,5 +1,6 @@
 class SectionManager
 {
+    static bindedTaskCount = 0;
     constructor()
     {
         this.renderSectionBody();
@@ -179,6 +180,42 @@ class SectionManager
                     document.querySelector('.evt-s-selected').classList.remove('evt-s-selected');
                 }
             }
+
+            if (e.target.closest('.evt-section-editor-trigger')){
+                let box = e.target.closest('.card-box');
+                let id = box.id;
+                let obj = null;
+                for (let i = 0; i < section_container.length; i++) {
+                    const element = section_container[i];
+                    if (element.id == id){
+                        obj = element;
+                        break;
+                    }
+                }
+                if (obj != null){
+                    if (document.querySelector('#evt_section_subeditor') != null){
+                        document.querySelector('#evt_section_subeditor').remove();
+                    }
+                    let subbox = EventorTemplate.sectionSubEditorForm(obj);
+                    box.appendChild(subbox);
+                
+
+                }
+            }
+
+
+
+            if (e.target.closest('#evt_act_deleteSection')){
+
+                let id = document.querySelector('#evt_section_subeditor').getAttribute('data-id');
+                this.tryToDeleteSection(id);
+            }
+
+            if (e.target.closest('#evt_closeSectionEditor')){
+                document.querySelector('#evt_section_subeditor').remove();
+                
+            }
+
         });
 
         document.body.addEventListener('change', (e) => {
@@ -311,24 +348,6 @@ class SectionManager
 
 
 
-    // renderSectionList(){
-    //     let result = "";
-    //     result += `
-    //     <div uk-sortable="group: sortable-group; handle: .uk-sortable-hand" class="uk-sortable" id='evt_sections'>`;
-    //     for (let index = 0; index < section_container.length; index++) {
-    //         const item = section_container[index];
-    //         // console.log(item);
-    //         let cats = ['Super', 'New category', 'alpha bond', 'hero'];
-    //         result += SectionManager.getSectionCard(item, index);
-    //     };
-
-    //     result += `</div>`;
-
-    //     document.querySelector('#evt_sectionList').innerHTML = result;
-    //     return result;
-    // }
-
-
     renderSectionList() {
         const sectionListContainer = document.querySelector('#evt_sectionList');
         const sortableDiv = document.createElement('div');
@@ -385,7 +404,10 @@ class SectionManager
         sectionNameInput.type = 'text';
         sectionNameInput.value = item.title;
 
-      
+        const sectionEditorTrigger = document.createElement('span');
+        sectionEditorTrigger.classList.add('evt-section-editor-trigger');
+        sectionEditorTrigger.setAttribute('uk-icon', 'icon: cog; ratio: 1.2;');
+
         const sectionGroupTrigger = document.createElement('span');
         sectionGroupTrigger.classList.add('evt-section-group-trigger');
         sectionGroupTrigger.setAttribute('uk-icon', 'icon: list; ratio: 1.2;');
@@ -413,6 +435,8 @@ class SectionManager
         evtGridHeader.appendChild(div1);
 
         let div2 = document.createElement('div');
+        div2.classList.add('evt-grid-icons');
+        div2.appendChild(sectionEditorTrigger);
         div2.appendChild(sectionGroupTrigger);
         div2.appendChild(colorPickerInput);
         
@@ -456,190 +480,6 @@ class SectionManager
       }    
     
     
-    
-    /*
-    static getSectionCard(item, index){
-        let content = item.content == null ? '' : item.content;
-        let color = item.color == null ? '' : item.color;
-        let result =`  
-            <div class="uk-margin-sm card-box" data-id='${item.id}' id="${item.id}" data-order="${index}">
-        <div class="uk-card uk-card-sm uk-padding-small uk-box-shadow-small uk-box-shadow-hover-medium uk-card-small
-        evt-section-card" style='border-color: #${color}'>
-        <div class='evt-grid-header'>
-        <div>
-        <span class="uk-icon-link uk-sortable-hand uk-icon" uk-icon="move" style="user-select: none;">
-        </span>  
-        <input placeholder='Event name' class='evt-section-name-in' maxlength='60' type='text' value='${item.title}'/>
-        </div>
-        <div>
-        <span class='evt-section-group-trigger' uk-icon='icon: list; ratio: 1.2;'>
-        <select multiple size="1" class='evt-sec-cat-selector'>
-
-    </select></span>
-        
-        <input class='evt-section-colorpicker' type='color' value='#${item.color}' />
-        </div>
-        </div>
-
-
-            <div class='evt-sect-card-content'>
-            <textarea class='evt-section-content-in' placeholder='Event description'>${content}</textarea>
-            </div>
-
-        <div class='evt-cat-group-list'>`;
-        let categories = item.categories.split(',');
-        if (categories.length)
-        {
-            
-            for (let i = 0; i < categories.length; i++) {
-                const catid = categories[i];
-                for (let y = 0; y < section_container.length; y++) {
-                    if (section_container[y].id == catid){
-                        let item =  this.getBadge(section_container[y].id, section_container[y].name, section_container[y].color);
-                        // append item to `evt-cat-group-list`
-                    };
-                    
-                }
-            }
-        }
-        result += `</div>
-        
-        </div>
-        </div>`;
-        return result;
-    }
-    updateCategoryList(selectedArray = []){
-        let select = document.querySelector('.evt-cs-open');
-        select.innerHTML="";
-        for (let i = 0; i < category_container.length; i++) {
-            const element = category_container[i];
-            if (element.status == 1){
-                let option = document.createElement("option");
-                option.value = element.id;
-                option.innerHTML = element.title;
-               // option.style.backgroundColor = "#" + element.color;
-               option.setAttribute('data-color', element.color);
-                if (selectedArray.includes(element.id)){
-                    option.selected = true;
-                }
-                select.appendChild(option);
-            }
-        }
-    }
-
-    renderSectionList() {
-        const sectionListContainer = document.querySelector('#evt_sectionList');
-        const sortableDiv = document.createElement('div');
-        sortableDiv.setAttribute('uk-sortable', 'group: sortable-group; handle: .uk-sortable-hand');
-        sortableDiv.classList.add('uk-sortable', 'uk-sortable-hand');
-        sortableDiv.id = 'evt_sections';
-      
-        for (let index = 0; index < section_container.length; index++) {
-          const item = section_container[index];
-          const sectionCard = SectionManager.getSectionCard(item, index);
-          sortableDiv.appendChild(sectionCard);
-        }
-      
-        sectionListContainer.innerHTML = ''; // Clear the existing content
-        sectionListContainer.appendChild(sortableDiv);
-      }
-      
-      static getSectionCard(item, index) {
-        const content = item.content == null ? '' : item.content;
-        const color = item.color == null ? '' : item.color;
-      
-        const cardBox = document.createElement('div');
-        cardBox.classList.add('uk-margin-sm', 'card-box');
-        cardBox.dataset.id = item.id;
-        cardBox.id = item.id;
-        cardBox.dataset.order = index;
-      
-        const ukCard = document.createElement('div');
-        ukCard.classList.add(
-          'uk-card',
-          'uk-card-sm',
-          'uk-padding-small',
-          'uk-box-shadow-small',
-          'uk-box-shadow-hover-medium',
-          'uk-card-small',
-          'evt-section-card'
-        );
-        ukCard.style.borderColor = `#${color}`;
-      
-        const evtGridHeader = document.createElement('div');
-        evtGridHeader.classList.add('evt-grid-header');
-      
-        const moveIcon = document.createElement('span');
-        moveIcon.classList.add('uk-icon-link', 'uk-sortable-hand', 'uk-icon');
-        moveIcon.setAttribute('uk-icon', 'move');
-        moveIcon.style.userSelect = 'none';
-      
-        const sectionNameInput = document.createElement('input');
-        sectionNameInput.placeholder = 'Event name';
-        sectionNameInput.classList.add('evt-section-name-in');
-        sectionNameInput.maxLength = 60;
-        sectionNameInput.type = 'text';
-        sectionNameInput.value = item.title;
-      
-        const sectionGroupTrigger = document.createElement('span');
-        sectionGroupTrigger.classList.add('evt-section-group-trigger');
-        sectionGroupTrigger.setAttribute('uk-icon', 'icon: list; ratio: 1.2;');
-      
-        const catSelector = document.createElement('select');
-        catSelector.classList.add('evt-sec-cat-selector');
-        catSelector.multiple = true;
-        catSelector.size = 1;
-      
-        // You can add options to catSelector here
-      
-        const colorPickerInput = document.createElement('input');
-        colorPickerInput.classList.add('evt-section-colorpicker');
-        colorPickerInput.type = 'color';
-        colorPickerInput.value = `#${color}`;
-      
-        // Continue creating the rest of your elements
-      
-        // Append elements to their respective parents
-        evtGridHeader.appendChild(moveIcon);
-        evtGridHeader.appendChild(sectionNameInput);
-      
-        // Continue appending elements as needed
-
-        cardBox.appendChild(evtGridHeader);
-
-
-
-        let divcontent = document.createElement('div');
-        divcontent.classList.add('evt-sect-card-content');
-        let inputcontent = document.createElement('textarea');
-        inputcontent.id = '';
-        inputcontent.classList.add('evt-section-content-in');
-        inputcontent.setAttribute('placeholder', 'description');
-        divcontent.append(inputcontent);
-        cardBox.appendChild(divcontent);
-
-        let divcat = document.createElement('div');
-        divcat.classList.add('evt-cat-group-list');
-
-        let categories = item.categories.split(',');
-        if (categories.length)
-        {
-            for (let i = 0; i < categories.length; i++) {
-                const catid = categories[i];
-                for (let y = 0; y < section_container.length; y++) {
-                    if (section_container[y].id == catid){
-                        let item =  this.getBadge(section_container[y].id, section_container[y].name, section_container[y].color);
-                        divcat.appendChild(item);
-                    };
-                }
-            }
-        }
-
-        cardBox.appendChild(divcat);
-        return cardBox;
-      }    
-
-*/
 
 
     static getCatItem(name){
@@ -704,6 +544,9 @@ class SectionManager
 
                     };
                 });
+                let smenu2 = EventorNav.buildMenu();
+                // GLOBAL SIDEMENU
+                sideMenu = new SidebarMenu(smenu2);
             }
             else if (this.status > 200) {
                 if (counter < 1) {
@@ -738,11 +581,18 @@ class SectionManager
         taskArray.push(task);
         console.log(taskArray);
         xhttp.send(JSON.stringify(taskArray));
+
+        if (document.querySelector('#evt_section_subeditor') != null){
+            document.querySelector('#evt_section_subeditor').remove();
+        }
     }
 
 
 
     static updateEventOrder(sections) {
+        if (document.querySelector('#evt_section_subeditor') != null){
+            document.querySelector('#evt_section_subeditor').remove();
+        }
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
@@ -770,6 +620,9 @@ class SectionManager
                           });
                     };
                 });
+                let smenu2 = EventorNav.buildMenu();
+                // GLOBAL SIDEMENU
+                sideMenu = new SidebarMenu(smenu2);
             }
             else if (this.status > 200) {
                 if (counter < 1) {
@@ -800,6 +653,249 @@ class SectionManager
             task.where.push(where);
             taskArray.push(task);
         }
+        xhttp.send(JSON.stringify(taskArray));
+    }
+
+
+    tryToDeleteSection(section_id)
+    {
+        SectionManager.bindedTaskCount = 0;
+            console.log('command :>> ', 'countEvents');
+
+            let counter = 0;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    if (this.responseText == -1) {
+                        console.log("You are not registered!");
+                        return 0;
+                    };
+                    console.log(this.responseText);
+                    //console.log(JSON.parse(this.responseText));
+                    let result = JSON.parse(this.responseText);
+                    Array.from(result.results).forEach((item) => {
+                        if (item.type == "Event") {
+                            if (item.results.length > 0){
+                                SectionManager.bindedTaskCount = item.results[0];
+                            }
+                        };
+                    });
+    
+                }
+                else if (this.status > 200) {
+                    if (counter < 1) {
+                        if (me == "") {
+                            return;
+                        };
+                        console.log("Oops! There is some problems with the server connection.");
+                        //console.log(this.responseText);
+                        counter++;
+                    }
+                }
+            };
+            xhttp.open("POST", "/eventor/postcall", false);
+            xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
+    
+            let taskArray = [];
+    
+                let task = EventorTypes.GetNewTask();
+                task.user = me;
+                task.action = 20;
+                task.type = "event";
+                const where = {
+                    column: "user",
+                    value: me,
+                };
+                task.where.push(where);
+                const where2 = {
+                    column: "section",
+                    value: section_id
+                };
+                task.where.push(where2);
+                
+                console.log(task);
+                taskArray.push(task);
+            
+            xhttp.send(JSON.stringify(taskArray));
+            //console.log(JSON.stringify(taskArray));
+            let removed = false;
+        if (SectionManager.bindedTaskCount > 0){
+            // TO MOVE
+            console.log('SectionManager.bindedTaskCount :>> ', SectionManager.bindedTaskCount);
+            // ('This section contains ' + SectionManager.bindedTaskCount + ' events, move events to other section before delete.');
+            let result = confirm('This section contains ' + SectionManager.bindedTaskCount + ' events, Delete all events from section before?');
+            if (result){
+                this.deleteEvents(section_id);
+                this.deleteSection(section_id);
+                removed = true;
+            } else {
+                document.querySelector('#evt_act_deleteSection').setAttribute('disabled', 'disabled');
+            }
+        } else {
+            console.log('NO :>> ');
+            this.deleteSection(section_id);
+            removed = true;
+        }
+        if (removed == true){
+            let smenu2 = EventorNav.buildMenu();
+            // GLOBAL SIDEMENU
+            sideMenu = new SidebarMenu(smenu2);
+        }
+    }
+
+
+    deleteEvents(section_id = "") {
+        let counter = 0;
+        if (section_id == "") {
+            alert("OOPS! There is no event selected!");
+            return;
+        }
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                if (this.responseText == -1) {
+                    alert("You are not registered!");
+                    return 0;
+                };
+                console.log(this.responseText);
+                //console.log(JSON.parse(this.responseText));
+                let result = JSON.parse(this.responseText);
+                console.log('result :>> ', result);
+                Array.from(result.results).forEach((item) => {
+                    if (item.type == "Event") {
+                        //console.log(item.results);
+                        Array.from(item.results).forEach((item2) => {
+                            console.log('item2 :>> ', item2);
+                            if (item2.length == 0){
+                                let newContainer = [];
+                                event_container.forEach(evt => {
+                                    if (evt.section == section_id){
+                                        let div = document.querySelector('#' + evt.id.replace('.', `\\.`));
+                                        if (div != null){
+                                            div.remove();
+                                        }
+                                    } else {
+                                        newContainer.push[evt];
+                                    }
+
+                                });
+                                event_container = newContainer;
+                            }
+                            
+                        });
+
+                    };
+                });
+            }
+            else if (this.status > 200) {
+                if (counter < 1) {
+                    alert("Oops! There is some problems with the server connection.");
+                    counter++;
+                }
+            }
+        };
+        xhttp.open("POST", "/eventor/postcall", false);
+        // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
+
+        //alert(JSON.stringify(data));
+
+        const where = {
+            column: "user",
+            value: me,
+        };
+        const where2 = {
+            column: "section",
+            value: section_id,
+        };
+
+        let taskArray = [];
+        let task = EventorTypes.GetNewTask();
+        
+        task.user = me;
+        task.action = 11;
+        task.type = "event";
+        task.where.push(where);
+        task.where.push(where2);
+        taskArray.push(task);
+        xhttp.send(JSON.stringify(taskArray));
+    }
+
+    deleteSection(section_id) {
+        let counter = 0;
+        let formdata = null;
+        section_container.forEach(sect => {
+              if (sect.id == section_id)
+              {
+                formdata = sect;
+              };
+        });
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                if (this.responseText == -1) {
+                    alert("You are not registered!");
+                    return 0;
+                };
+                //console.log(this.responseText);
+                console.log(JSON.parse(this.responseText));
+                let result = JSON.parse(this.responseText);
+                Array.from(result.results).forEach((item) => {
+                    if (item.type == "Section") {
+                        Array.from(item.results).forEach((item2) => {
+                            console.log(item2);
+                            let card = document.querySelector('#' + item2.id);
+                            if (card != null) {
+                                card.remove();
+                            }
+
+                            for (let i = 0; i < section_container.length; i++) {
+                                let el = section_container[i];
+                                if (el.id == item2.id) {
+                                    section_container.splice(i, 1);
+                                    break;
+                                }
+                            }
+                        });
+
+                    };
+                });
+                //EventorFlow.refreshEvents();
+
+                // let result = JSON.parse(this.responseText);
+                // console.log('рудзукы updated ' + this.responseText);
+            }
+            else if (this.status > 200) {
+                if (counter < 1) {
+                    alert("Oops! There is some problems with the server connection.");
+
+                    counter++;
+                }
+            }
+        };
+        xhttp.open("POST", "/eventor/postcall", false);
+        // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
+
+        //alert(JSON.stringify(data));
+
+        const where = {
+            column: "user",
+            value: me,
+        };
+
+        let taskArray = [];
+        let task = EventorTypes.GetNewTask();
+        task.objects.push(formdata);
+        task.user = me;
+        task.action = 10;
+        task.type = "section";
+        task.where.push(where);
+        taskArray.push(task);
         xhttp.send(JSON.stringify(taskArray));
     }
 }

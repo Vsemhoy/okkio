@@ -231,6 +231,81 @@ class EventorNav {
         return containerDiv;
     }
 
+    static RemoveItemById(sid){
+      let items = document.querySelectorAll('.th-com-s-nav-item');
+      for (let i = 0; i < items.length; i++) {
+        let element = items[i];
+        if (element.getAttribute('data-section') == sid){
+          element.remove();
+        }
+      }
+    }
 
+    static buildMenu(){
+      let getSection = EventorUtils.getParam('sect');
+      let smenu = SidebarMenu.getNewMenu();
+      let fitem = SidebarMenu.getNewItem();
+      fitem.name  = "All sections";
+      fitem.literals = "ALL";
+      fitem.params = ["data-section", 'all'];
+      if (getSection == null || getSection == ""){
+          fitem.active = true;
+        };
+      smenu.items.push(fitem);
+
+      for (let i = 0 ; i < section_container.length; i++){
+        let sectim = section_container[i];
+        let item = SidebarMenu.getNewItem();
+        item.name = sectim.title;
+        item.active = false;
+        let litar = item.name.split(' ');
+        if (litar.length == 2){
+          var ltr = litar[0].slice(0,1).toUpperCase() + litar[1].slice(0,1).toUpperCase();
+          item.literals = ltr;
+        } else if (litar.lenght > 2){
+          var ltr = litar[0].slice(0,1).toUpperCase() + litar[1].slice(0,1).toUpperCase()+ litar[2].slice(0,1).toUpperCase();
+          item.literals = ltr;
+        } else {
+          var ltr = SidebarMenu.removeVowels(item.name);
+          ltr = (ltr).slice(0,2).toUpperCase();
+          item.literals = ltr;
+        }
+        item.params = ["data-section", sectim.id];
+        item.color = sectim == null ? '' : sectim.color;
+
+        if (sectim.id == getSection){
+          item.active = true;
+        };
+
+        smenu.items.push(item);
+        smenu.count++;
+      }
+
+      let setItem1 = SidebarMenu.getNewItem();
+      setItem1.name  = "Sections";
+      setItem1.ukicon = 'thumbnails';
+      setItem1.id = "djsfgaks";
+      setItem1.ref='#modal_sectionManager';
+      setItem1.linkSingleAttribute = "uk-toggle";
+      smenu.setItems.push(setItem1);
+
+      let setItem2 = SidebarMenu.getNewItem();
+      setItem2.name  = "Categories";
+      setItem2.ukicon = 'social';
+      setItem2.id = "djsfakfs";
+      setItem2.ref='#modal_categoryManager';
+      setItem2.linkSingleAttribute = "uk-toggle";
+      smenu.setItems.push(setItem2);
+
+      let setItem3 = SidebarMenu.getNewItem();
+      setItem3.name  = "Settings";
+      setItem3.ukicon = 'settings';
+      setItem3.id = "djsfaks";
+      setItem3.ref='#modal_settingsManager';
+      setItem3.linkSingleAttribute = "uk-toggle";
+      smenu.setItems.push(setItem3);
+
+      return smenu;
+    }
 
 }

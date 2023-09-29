@@ -334,5 +334,54 @@ class EventorTemplate
   }
 
 
+  static sectionSubEditorForm(object)
+  {
+    let subform = document.createElement('div');
+    subform.id = 'evt_section_subeditor';
+    subform.classList.add('evt-sec-subeditor');
+    subform.setAttribute('data-id', object.id);
+    subform.style.borderColor = "#" + object.color;
+    let html = `
+    <div class="uk-form-horizontal">
+
+    <div class="uk-margin">
+        <label class="uk-form-label" for="form-horizontal-text">Text</label>
+        <div class="uk-form-controls">
+            <input class="uk-input" id="form-horizontal-text" type="text" placeholder="Some text...">
+        </div>
+    </div>
+
+    <div class="uk-margin">
+        <label class="uk-form-label" for="form-horizontal-select">Select</label>
+        <div class="uk-form-controls">
+            <select class="uk-select" id="form-horizontal-select">
+                <option>Option 01</option>
+                <option>Option 02</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="uk-margin">
+        <div class="uk-form-label">Radio</div>
+        <div class="uk-form-controls uk-form-controls-text">
+            <label><input class="uk-radio" type="radio" name="radio1"> Option 01</label><br>
+            <label><input class="uk-radio" type="radio" name="radio1"> Option 02</label>
+        </div>
+    </div>
+    <div class='uk-modal-footer uk-text-right'>
+    <button class="uk-button uk-button-default" id='evt_closeSectionEditor'>CLOSE</button>
+    <div>
+    <button class="uk-button uk-button-danger" style='margin-right: 6px;' id='evt_act_deleteSection'>Delete</button>
+    <button class="uk-button uk-button-primary">Update</button>
+    </div>
+    </div>
+    
+</div>
+    `;
+
+    subform.innerHTML = html;
+    return subform;
+    
+  }
 
 }

@@ -23,8 +23,9 @@
 
   <div id="modal_searchManager" class="uk-modal-full" uk-modal>
     <div class="uk-modal-dialog" uk-height-viewport style='display: flex;    flex-direction: column;
-    justify-content: space-between;
-    background-image: linear-gradient(to right bottom, #b4d7f6, #abe0f8, #a7e8f6, #a9efef, #b2f5e6, #baf7dd, #c4f8d4, #d1f8cb, #d8f5c2, #e0f2b9, #e9eeb1, #f2eaab);'>
+    justify-content: space-between; 
+    backdrop-filter: blur(70px);
+    background: #ffffff36;'>
 
     <div class="uk-modal-header" style='display: grid;     grid-template-columns: auto 40px;
     justify-items: center;
