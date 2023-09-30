@@ -274,9 +274,7 @@ let searchMan = new EventorSearch('modal_searchManager');
 @endsection
 
 @section('page-scripts')
-<script src="{{ asset('resources/js/apps/eventor/dayFlow/caltemplate.js') }}"></script>
-<script src="{{ asset('resources/js/apps/eventor/dayFlow/shortdate.js') }}"></script>
-<script src="{{ asset('resources/js/apps/eventor/dayFlow/dayflow.js') }}"></script>
+<script src="{{ asset('resources/vendors/Teftele/DayFlow/dayflow.js') }}"></script>
 
 <script src="{{ asset('resources/js/apps/eventor/page.js') }}"></script>
 <script src="{{ asset('resources/js/apps/eventor/sidemenu.js') }}"></script>

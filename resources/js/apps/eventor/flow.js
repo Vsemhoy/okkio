@@ -776,7 +776,7 @@ class EventorFlow {
                 column: "setdate",
                 value: EventorUtils.getSimpleDate(shortdate.getFirstDate(true), true),
                 operator: "BETWEEN",
-                value2: EventorUtils.getSimpleDate(shortdate.getLastDate(true), true),
+                value2: EventorUtils.getSimpleDate(shortdate.getFirstDateOfNextMonth(true), true),
             };
             task.where.push(where2);
             if (section != undefined && section != 'all' && section != '') {

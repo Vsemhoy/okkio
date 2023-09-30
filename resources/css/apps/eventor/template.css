@@ -334,7 +334,7 @@ font-family: system-ui;
 }
 .cl-row:last-child {
 
-  border-bottom: 0px;
+  /* border-bottom: 0px; */
 }
 @media screen and (max-width: 900px) {
   .cl-row {

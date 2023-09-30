@@ -1,6 +1,243 @@
 
 /*
+████████╗███████╗███████╗████████╗███████╗██╗░░░░░███████╗
+╚══██╔══╝██╔════╝██╔════╝╚══██╔══╝██╔════╝██║░░░░░██╔════╝
+░░░██║░░░█████╗░░█████╗░░░░░██║░░░█████╗░░██║░░░░░█████╗░░
+░░░██║░░░██╔══╝░░██╔══╝░░░░░██║░░░██╔══╝░░██║░░░░░██╔══╝░░
+░░░██║░░░███████╗██║░░░░░░░░██║░░░███████╗███████╗███████╗
+░░░╚═╝░░░╚══════╝╚═╝░░░░░░░░╚═╝░░░╚══════╝╚══════╝╚══════╝
+
+Dayflow Draws a calendar for you
+Define an instance of the class and send em container Id to draw calendar
+
+
+
+
+
+Author: Adaam Janson /Teftele/
+
+░█▀▀▄ ─█▀▀█ ░█──░█ ░█▀▀▀ ░█─── ░█▀▀▀█ ░█──░█ 
+░█─░█ ░█▄▄█ ░█▄▄▄█ ░█▀▀▀ ░█─── ░█──░█ ░█░█░█ 
+░█▄▄▀ ░█─░█ ──░█── ░█─── ░█▄▄█ ░█▄▄▄█ ░█▄▀▄█
+*/
+class DayFlow {
+    static startParam = 'stm';
+    static endParam = 'enm';
+    static dateArray = [];
+    constructor(poolSelector) {
+        this.pool = document.querySelector(poolSelector);
+        if (!this.pool){
+            throw new Error('There is no calendar pool selected by selector: "' + poolSelector + '"');
+        };
+        this.pool.classList.add('cl-body');
+
+        // *** define start and end date range
+        this.startMonth = "";
+        this.endMonth = "";
+
+        // Try to get values from URL, else define AS today
+        if (DateUtils.getParam(DayFlow.startParam) != null){
+            this.startMonth = new ShortDate(DateUtils.getParam(DayFlow.startParam));
+        } else {
+            this.startMonth = new ShortDate();
+            DateUtils.changeAddressBar(DayFlow.startParam,
+                this.startMonth.getShortDate());
+        };
+        
+        if (DateUtils.getParam(DayFlow.endParam) != null){
+            this.endMonth = new ShortDate(DateUtils.getParam(DayFlow.endParam));
+        } else {
+            this.endMonth = new ShortDate();
+            DateUtils.changeAddressBar(DayFlow.endParam,
+                this.endMonth.getShortDate());
+        };
+
+        if (!this.startMonth.isBeforeOrEqual(this.endMonth)){
+            let transdate = this.startMonth;
+            this.startMonth = this.endMonth;
+            this.endMonth = transdate;
+            // console.log("Date's flipped.");
+            DateUtils.changeAddressBar(DayFlow.startParam,
+                this.startMonth.getShortDate());
+            DateUtils.changeAddressBar(DayFlow.endParam,
+                this.endMonth.getShortDate());
+        };
+
+        // this.startMonth.debug = true;
+        // this.endMonth.debug = true;
+        DayFlow.dateArray = ShortDate.getDateRange(this.startMonth, this.endMonth);
+
+        // *** render calendar rows
+        for (let i = 0; i < DayFlow.dateArray.length; i++) {
+            const dateElement = DayFlow.dateArray[i];
+            this.renderMonth(dateElement);
+        };
+
+
+        // *** handle navigation buttons
+        document.addEventListener('mousedown', (e) => {
+            if (e.target.closest(".cl-com-nextexpand")){
+                e.preventDefault();
+                let calledMonth = DayFlow.dateArray[0].clone();
+                calledMonth.moveNextMonth();
+                DayFlow.dateArray.unshift(calledMonth);
+                this.endMonth = calledMonth;
+                DateUtils.changeAddressBar(DayFlow.endParam,
+                    calledMonth);
+                this.renderMonth(calledMonth, true);
+                this.triggerMoveEvent();
+            };
+
+            if (e.target.closest(".cl-com-prevexpand")){
+                e.preventDefault();
+                let calledMonth = DayFlow.dateArray[DayFlow.dateArray.length - 1].clone();
+                calledMonth.movePreviousMonth();
+                DayFlow.dateArray.push(calledMonth);
+                this.startMonth = calledMonth;
+                DateUtils.changeAddressBar(DayFlow.startParam,
+                    calledMonth);
+                this.renderMonth(calledMonth, false);
+                this.triggerMoveEvent();
+            };
+            
+            if (e.target.closest(".cl-com-next")){
+                e.preventDefault();
+                let calledMonth = DayFlow.dateArray[0].moveNextMonth();
+                DayFlow.dateArray = [];
+                this.pool.innerHTML = "";
+                this.startMonth = calledMonth;
+                this.endMonth = calledMonth;
+                DateUtils.changeAddressBar(DayFlow.startParam,
+                    this.startMonth.getShortDate());
+                DateUtils.changeAddressBar(DayFlow.endParam,
+                    this.endMonth.getShortDate());
+                    DayFlow.dateArray.push(calledMonth);
+                this.renderMonth(calledMonth);
+                this.triggerMoveEvent();
+            };
+
+            if (e.target.closest(".cl-com-prev")){
+                e.preventDefault();
+                let calledMonth = DayFlow.dateArray[DayFlow.dateArray.length - 1].movePreviousMonth();
+                DayFlow.dateArray = [];
+                this.pool.innerHTML = "";
+                this.startMonth = calledMonth;
+                this.endMonth = calledMonth;
+                DateUtils.changeAddressBar(DayFlow.startParam,
+                    this.startMonth.getShortDate());
+                DateUtils.changeAddressBar(DayFlow.endParam,
+                    this.endMonth.getShortDate());
+                    DayFlow.dateArray.push(calledMonth);
+                this.renderMonth(calledMonth);
+                this.triggerMoveEvent();
+            };
+
+            if (e.target.closest(".cl-nav")){
+                let el = e.target.closest(".cl-nav");
+                let trig = el.getAttribute('cl-move-down');
+                if (trig != null){
+                    var height = document.body.scrollHeight;
+                    window.scroll(10 , height);
+                }
+            };
+        });
+
+
+        document.addEventListener('change', (e) => {
+            e.preventDefault();
+            if (e.target.closest('.cl-nav-date-flash')){
+                e.preventDefault();
+                let value = e.target.closest('.cl-nav-date-flash').value;
+                console.log('value :>> ', value);
+                let calledMonth = new ShortDate(value);
+                DayFlow.dateArray = [];
+                this.pool.innerHTML = "";
+                this.startMonth = calledMonth;
+                this.endMonth = calledMonth;
+                DateUtils.changeAddressBar(DayFlow.startParam,
+                    this.startMonth.getShortDate());
+                DateUtils.changeAddressBar(DayFlow.endParam,
+                    this.endMonth.getShortDate());
+                    DayFlow.dateArray.push(calledMonth);
+                this.renderMonth(calledMonth);
+                this.triggerMoveEvent();
+            }
+        });
+    }
+
+
+    /**
+    * Trigger the move or expand event.
+    */
+    triggerMoveEvent() {
+        if (typeof this.movedCallback === 'function') {
+            this.movedCallback(this);
+        }
+    }
+
+    /**
+     *
+     * @param {Function} callback - The callback function to be called when the user changed or expand calendar.
+     */
+    onMoved(callback) {
+        this.movedCallback = callback;
+    }
+
+
+
+    renderMonth(date, setOnStart = false) {
+        const month = date.month;
+        const year = date.year;
+        let firstDayOfMonth = 1;
+        let lastDayOfMonth = date.getLastDayOfMonth(true);
+        let realDate = date.getDate();
+        let mhdr = CalTemplate.createMonthHeader(realDate);
+        if (setOnStart == false) {
+            this.pool.appendChild( mhdr);
+            // Loop from the first day to the last day of the month
+            for (let day = lastDayOfMonth; day >= firstDayOfMonth; day--) {
+                let mrow = CalTemplate.calRow(`${year}-${(month).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`);
+                this.pool.appendChild( mrow);
+            }
+        } else {
+            for (let day = firstDayOfMonth; day <= lastDayOfMonth; day++) {
+                const currentDate = day;
+                let mrow = CalTemplate.calRow(`${year}-${(month).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`);
+                this.pool.prepend(mrow);
+            }
+            this.pool.prepend( mhdr);
+        }
+    }
+
+    reset(date){
+        this.pool.innerHTML = '';
+        this.startMonth = date; this.endMonth = date;
+        this.renderMonth(date);
+        DayFlow.dateArray = ShortDate.getDateRange(this.startMonth, this.endMonth);
+    }
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 The ShortDate class is designed to simplify date manipulation in JavaScript, offering flexibility and debugging capabilities for developers working with date-related code.
+version 1.0
+Author: Adaam Janson /Teftele/
+
+░█▀▀▀█ ░█─░█ ░█▀▀▀█ ░█▀▀█ ▀▀█▀▀ ░█▀▀▄ ─█▀▀█ ▀▀█▀▀ ░█▀▀▀ 
+─▀▀▀▄▄ ░█▀▀█ ░█──░█ ░█▄▄▀ ─░█── ░█─░█ ░█▄▄█ ─░█── ░█▀▀▀ 
+░█▄▄▄█ ░█─░█ ░█▄▄▄█ ░█─░█ ─░█── ░█▄▄▀ ░█─░█ ─░█── ░█▄▄▄
 */
 class ShortDate {
     constructor(input = false) {
@@ -529,10 +766,6 @@ class ShortDate {
 
 
 
-
-   
-
-
     /* --------- MAINTAIN PART  (no debugging) -------------- */
 
     /**
@@ -612,19 +845,26 @@ class ShortDate {
 }
 
 
+
+
+/**
+ * 
+░█▀▀▄ ─█▀▀█ ▀▀█▀▀ ░█▀▀▀ 　 ░█─░█ ▀▀█▀▀ ▀█▀ ░█─── ░█▀▀▀█ 
+░█─░█ ░█▄▄█ ─░█── ░█▀▀▀ 　 ░█─░█ ─░█── ░█─ ░█─── ─▀▀▀▄▄ 
+░█▄▄▀ ░█─░█ ─░█── ░█▄▄▄ 　 ─▀▄▄▀ ─░█── ▄█▄ ░█▄▄█ ░█▄▄▄█
+ */
 class DateUtils {
     static isDateToday(date) {
       // Get the current date
       const today = new Date();
       const dateIn = new Date(date);
-  
       // Compare year, month, and day of the input date with today's date
       const isToday = (
         dateIn.getFullYear() === today.getFullYear() &&
         dateIn.getMonth() === today.getMonth() &&
-        dateIn.getUTCDate() === today.getUTCDate()
+        dateIn.getDate() === today.getDate()
         );
-  
+
       return isToday;
     }
   
@@ -718,4 +958,171 @@ class DateUtils {
         url.search = searchParams.toString();
         window.history.pushState({}, '', url);
       }
+}
+
+
+
+
+
+
+
+
+/*
+Custom templates for calendar
+version 1.0
+Author: Adaam Janson /Teftele/
+
+
+▀▀█▀▀ ░█▀▀▀ ░█▀▄▀█ ░█▀▀█ ░█─── ─█▀▀█ ▀▀█▀▀ ░█▀▀▀ ░█▀▀▀█ 
+─░█── ░█▀▀▀ ░█░█░█ ░█▄▄█ ░█─── ░█▄▄█ ─░█── ░█▀▀▀ ─▀▀▀▄▄ 
+─░█── ░█▄▄▄ ░█──░█ ░█─── ░█▄▄█ ░█─░█ ─░█── ░█▄▄▄ ░█▄▄▄█
+*/
+class CalTemplate
+{
+    static getDayOfWeek(date) {
+        const dayOfWeek = new Date(date).getUTCDay();   
+        return isNaN(dayOfWeek) ? null : 
+          ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
+      }
+
+      static getMonthName(date) {
+        let month = new Date(date).getMonth();   
+        //console.log(month, date); 
+        return isNaN(month) ? null : 
+        ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month];
+      }
+
+
+      static createMonthHeader(date) {
+        const month = CalTemplate.getMonthName(date);
+        const monum = new Date(date).getMonth();
+        const year = new Date(date).getFullYear();
+        const color = DateUtils.getMonthColor(monum);
+    
+        // Create the outer div
+        const outerDiv = document.createElement('div');
+        outerDiv.classList.add('evt-restrictor','uk-text-center','uk-background-muted');
+
+        outerDiv.style.backgroundColor = color;
+        outerDiv.style.boxShadow = 'inset 1px 1px 100px #ffffff6b';
+        outerDiv.setAttribute('data-restrictor', `${month}-${year}`);
+
+    
+        // Create the card element
+        const cardDiv = document.createElement('div');
+        cardDiv.classList.add('uk-text-bold');
+        cardDiv.textContent = `${month} ${year}`;
+    
+        outerDiv.appendChild(cardDiv);
+    
+        return outerDiv;
+    }
+
+
+      static calRow(date, items = []){
+        let row = document.createElement('div');
+        row.id = 'row_' + date;
+        row.classList.add('cl-row');
+        row.setAttribute('data-date', date);
+        row.classList.add('uk-text-center','uk-grid-collapse','start-collapse','uk-background-muted','event-section','uk-grid');
+
+        let day = CalTemplate.getDayOfWeek(date);
+        day = day.slice(0, 3);
+        let dnum = new Date(date).getUTCDate();
+
+        let todateId = DateUtils.isDateToday(date) ? "row_today" : "";
+        let headdiv = document.createElement('div');
+        headdiv.id = todateId;
+        headdiv.classList.add('uk-width-auto@m','uk-text-left','th-padding-small','uk-first-column');
+
+        let dnub = document.createElement('div');
+        dnub.id = '';
+        dnub.classList.add('uk-text-lead');
+        dnub.innerHTML = `${day} '${dnum}`;
+        
+        let dnub2 = document.createElement('div');
+        dnub2.id = '';
+        dnub2.classList.add('uk-card','uk-text-small');
+        dnub2.innerHTML = `${date}`;
+
+        headdiv.appendChild(dnub);
+        headdiv.appendChild(dnub2);
+
+        let bodydiv = document.createElement('div');
+        bodydiv.id = '';
+        bodydiv.classList.add('uk-child-width-1-4@xl','uk-child-width-1-3@l','uk-child-width-1-2@m','uk-child-width-1-2@s','uk-grid-small','uk-grid-match','start-collapse','section-padding','uk-grid','uk-grid-stack','eventor-row-content');
+
+        for (let index = 0; index < items.length; index++) {
+          const element = items[index];
+          bodydiv.appendChild(element);
+        }
+        if (items.length == 0){
+          row.classList.add('eventor-hiddenrow');
+        }
+
+        if (todateId != ''){
+          row.classList.add('eventor-today');
+        }
+        row.appendChild(headdiv);
+        row.appendChild(bodydiv);
+        
+        return row;
+      }
+
+
+      static navButtons(curdate = '', moveDown = false)
+      {
+        let div = document.createElement('div');
+        div.id = '';
+        div.classList.add('cl-nav');
+        if (moveDown){
+          div.setAttribute('cl-move-down', moveDown);
+        };
+ 
+        let prevexbutton = document.createElement('div');
+        prevexbutton.id = '';
+        prevexbutton.classList.add('cl-com-prevexpand');
+        prevexbutton.classList.add('cl-nav-button');
+        prevexbutton.innerHTML = "<<";
+        
+        let prevbutton = document.createElement('div');
+        prevbutton.id = '';
+        prevbutton.classList.add('cl-com-prev');
+        prevbutton.classList.add('cl-nav-button');
+        prevbutton.innerHTML = "<";
+
+        let calbutton = document.createElement('div');
+        calbutton.id = '';
+        calbutton.classList.add('cl-nav-button');
+        
+        let dateIn = document.createElement('input');
+        dateIn.id = '';
+        dateIn.classList.add('cl-nav-date-flash');
+        dateIn.setAttribute('type', 'month');
+        dateIn.setAttribute('name', 'flashdate');
+        dateIn.setAttribute('value', curdate);
+        dateIn.style.width = '22px';
+        calbutton.appendChild(dateIn);
+
+        let nextbutton = document.createElement('div');
+        nextbutton.id = '';
+        nextbutton.classList.add('cl-com-next');
+        nextbutton.classList.add('cl-nav-button');
+        nextbutton.innerHTML = ">";
+
+        let nextexbutton = document.createElement('div');
+        nextexbutton.id = '';
+        nextexbutton.classList.add('cl-com-nextexpand');
+        nextexbutton.classList.add('cl-nav-button');
+        nextexbutton.innerHTML = ">>";
+
+        div.appendChild(prevbutton);
+        div.appendChild(prevexbutton);
+        div.appendChild(calbutton);
+        div.appendChild(nextexbutton);
+        div.appendChild(nextbutton);
+
+        return div;
+      }
+
 }
