@@ -289,4 +289,6 @@ let searchMan = new EventorSearch('modal_searchManager');
 <script src="{{ asset('resources/js/apps/eventor/sectionmanager.js') }}"></script>
 <script src="{{ asset('resources/js/apps/eventor/categorymanager.js') }}"></script>
 <script src="{{ asset('resources/js/apps/eventor/searchmanager.js') }}"></script>
+
+<script src="{{ asset('resources/vendors/Teftele/TeleInput/teleinput.js') }}"></script>
 @endsection

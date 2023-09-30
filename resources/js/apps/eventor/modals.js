@@ -337,6 +337,7 @@ class EventModal {
       case 'textarea':
         inputElement = document.createElement('textarea');
         inputElement.classList.add('uk-textarea');
+        inputElement.classList.add('addmathevaluate');
         inputElement.id = id;
         inputElement.name = name;
         inputElement.rows = '6';
