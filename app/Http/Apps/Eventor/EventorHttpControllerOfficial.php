@@ -1,0 +1,99 @@
+<?php
+namespace App\Http\Apps\Eventor;
+
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
+use App\Http\Controllers\Objects\SideMenuItem;
+use App\Http\Controllers\Base\Input;
+use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Components\Budger\BudgerTemplates;
+use App\Http\Controllers\Components\Budger\BudgerData;
+use DateTime;
+use Illuminate\Support\Facades\Auth;
+
+
+class EventorHttpControllerOfficial extends BaseController
+{   
+  const REMOTE_HOST_TOKEN = "kd5sjjkqrjke365jqrkj65kjejJJKD356JDjg89k3fjgf";
+  const REMOTE_SERVICE_NAME = "localhost";
+  
+  public static function makeTask($getArray){
+    $obj = (object) array();
+    $obj->user = '';
+    $obj->tasks = $getArray;
+    return $obj;
+  }
+
+  public function postCall(Request $request)
+  {
+    
+    $code = $request->code;
+    $json =  file_get_contents('php://input');
+    $data = json_decode($json);
+
+    $task = self::makeTask($data);
+
+
+
+    $url = 'http://microservice?remoteservice=' . self::REMOTE_SERVICE_NAME . "&XDEBUG_SESSION_START=vscode";
+
+    // Create a new cURL resource
+    $ch = curl_init($url);
+    
+    $payload = json_encode($task);
+    
+    // Attach encoded JSON string to the POST fields
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+    
+    // Set the content type to application/json
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+      'Content-Type: application/json',
+      'Authorization: TelePost ' . self::REMOTE_HOST_TOKEN // Include the token in the header
+    ));
+    
+
+    // Return response instead of outputting
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+    // Execute the POST request
+    $result = curl_exec($ch);
+    
+    // Check for cURL errors
+    if (curl_errno($ch)) {
+      // Handle error here (e.g., log or return an error message)
+      echo 'cURL error: ' . curl_error($ch);
+    }
+    // Close cURL resource
+    curl_close($ch);
+   return $result;
+    return;
+
+
+  }
+
+
+
+};
+
+/*
+{
+  "user":"7",
+  "tasks": [
+{
+"action": "1",
+"type": "event",
+"objects": [],
+"where": [{"column": "user","value": "7","operator": "="},{"column": "pinned","value": "1","operator": "="}],
+"order": "0",
+"limit": "12",
+"offset": "0",
+"setKey": "id",
+"postactions": []
+}
+]
+}
+*/

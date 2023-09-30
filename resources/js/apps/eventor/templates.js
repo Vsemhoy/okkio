@@ -255,13 +255,22 @@ class EventorTemplate
       {
         let content = document.createElement('div');
         let divs = EventorTemplate.wrapTextToHtmlView(object.content);
+        let time  = new Date( object.created_at).toLocaleTimeString();
+        let date = new Date( object.created_at).toDateString(); 
         for (let i = 0; i < divs.length; i++) {
           content.appendChild(divs[i]);
         }
         let template = `
         <div>
         <div class="uk-card uk-card-default uk-card-hover uk-card-body th-user-evt-card">
-            <h3 class="uk-card-title">${object.title}</h3>
+          <div class="evt-card-header">
+            <div class="uk-width-expand">
+              <h3 class="evt-card-title uk-margin-remove-bottom">${object.title}</h3>
+              <div class="uk-text-meta uk-margin-remove-top flex-space">
+              <time datetime="${time}">${date}</time> 
+              <span class='evt-section-name-badge' data-sat=false data-id='${object.section}'></span></div>
+            </div>
+        </div>
             <div class='evt-off-reader-body'>
             ${ content.innerHTML}
             </div>
@@ -352,7 +361,7 @@ class EventorTemplate
     </div>
 
     <div class="uk-margin">
-        <label class="uk-form-label" for="form-horizontal-select">Default access type when create event</label>
+        <label class="uk-form-label" for="form-horizontal-select">Show this category info for access level</label>
         <div class="uk-form-controls">
             <select class="uk-select evt-sec-access-selector" id="form-horizontal-select">`;
             (EventorTypes.getAccess()).forEach(element => {

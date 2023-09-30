@@ -22,8 +22,9 @@
         min-height: 100vh;
     }
 
+
     .uk-navbar-container:not(.uk-navbar-transparent) {
-        background: #f8f8f8;
+        background: #00BCD4;
         background-image: url(/storage/site/background.jpg);
         background-size: cover;
         background-position: bottom;
@@ -57,10 +58,6 @@
         border-left: 1px solid transparent;
     }
 
-    .th-navbar-item a {
-        color: gray;
-    }
-
     .th-navbar-item:hover {
         cursor: pointer;
         /* background-color: #fff;
@@ -84,6 +81,10 @@
 
     .th-central-search {
         padding: 3px 12px;
+    }
+
+    .th-navbar-item a {
+        color: white;
     }
 
     .th-central-search input {}

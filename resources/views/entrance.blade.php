@@ -352,7 +352,7 @@
     .th-user-container-header, .th-user-container-footer, .th-user-evt-card {
     padding: 1.2rem !important;
     border-radius: 9px;
-    word-break: break-all;
+    word-break: break-word;
     }
     .th-user-evt-card-footer , .th-user-evt-card-footer > div {
     display: flex;

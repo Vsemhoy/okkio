@@ -18,7 +18,7 @@ class EventorTypes
         return task;
     }
 
-    static getAccess(allowLevel = 2){
+    static getAccess(allowLevel = 3){
         const access = [
             { value: '0', label: 'Private' },
             { value: '1', label: 'Restricted' },

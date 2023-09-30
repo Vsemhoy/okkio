@@ -4,6 +4,7 @@ class FlowOfficial{
     static eventArray = [];
     static userEventArray = [];
     static userArray = [];
+    static miniSections = [];
     constructor(){
         let ofw = document.querySelector('#officialEventWrapper');
         ofw.innerHTML = "";
@@ -22,7 +23,7 @@ class FlowOfficial{
 
 
     static loadEvents(callArray = []) {
-        console.log('command :>> ', 'loadEvents');
+        // console.log('command :>> ', 'loadEvents');
 
         let counter = 0;
         var xhttp = new XMLHttpRequest();
@@ -32,7 +33,6 @@ class FlowOfficial{
                     console.log("You are not registered!");
                     return 0;
                 };
-                //console.log(this.responseText);
                 //console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
@@ -59,17 +59,10 @@ class FlowOfficial{
                 }
             }
         };
-        xhttp.open("POST", "/eventor/postcall", false);
+        xhttp.open("POST", "/evt/postcall", false);
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
-
-        // console.log(datePast);
-        // console.log(dateFuture);
-        // console.log(EventorUtils.getSimpleDate(datePast, true));
-        // console.log(EventorUtils.getSimpleDate(dateFuture, true));
         let taskArray = [];
-        
-
 
             let task = EventorTypes.GetNewTask();
             //task.user = me;
@@ -96,21 +89,77 @@ class FlowOfficial{
             task.order = "setdate DESC";
             task.offset = FlowOfficial.offsetted;
             task.limit = FlowOfficial.limit;
-            console.log(task);
+            // console.log(task);
             taskArray.push(task);
-
-
 
         xhttp.send(JSON.stringify(taskArray));
         //console.log(JSON.stringify(taskArray));
     }
 
 
-    static getUserName(uid) {
-        console.log('command :>> ', 'getUserName', uid);
+    static loadSections(callArray = []) {
+        // console.log('command :>> ', 'loadEvents');
+
+        let counter = 0;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
+                if (this.responseText == -1) {
+                    console.log("You are not registered!");
+                    return 0;
+                };
+                //console.log(JSON.parse(this.responseText));
+                let result = JSON.parse(this.responseText);
+                Array.from(result.results).forEach((item) => {
+                    if (item.type == "Section") {
+                        // console.log(item.results);
+                        MiniSection.placeLoadedSections(item.results, FlowOfficial.miniSections);
+                    }
+                });
+            }
+            else if (this.status > 200) {
+                if (counter < 1) {
+                    if (me == ""){
+                        return;
+                    };
+                    console.log("Oops! There is some problems with the server connection.");
+                    //console.log(this.responseText);
+                    counter++;
+                }
+            }
+        };
+        xhttp.open("POST", "/evt/postcall", false);
+        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
+        let taskArray = [];
+        console.log('callArray :>> ', callArray);
+            let task = EventorTypes.GetNewTask();
+            //task.user = me;
+            task.action = 1;
+            task.type = "section";
+            const where1  = {
+                column: "access",
+                operator: "IN",
+                value: callArray.join(", ")
+            };
+            task.where.push(where1);
+            // console.log(task);
+            taskArray.push(task);
+
+        xhttp.send(JSON.stringify(taskArray));
+        console.log(taskArray);
+    }
+
+
+
+
+    static getUserName(uid) {
+        // console.log('command :>> ', 'getUserName', uid);
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+
+
                 for (const key in FlowOfficial.userArray) {
                     if (FlowOfficial.userArray.hasOwnProperty(key)) {
                       const element = FlowOfficial.userArray[key];
@@ -152,7 +201,6 @@ class FlowOfficial{
         }
         FlowOfficial.loadUsers();
         FlowOfficial.setEventsOnDesk();
-
     }
     
     static setEventsOnDesk(){
@@ -163,14 +211,38 @@ class FlowOfficial{
         for (const key in FlowOfficial.userEventArray) {
             if (FlowOfficial.userEventArray.hasOwnProperty(key)) {
                 const objects = FlowOfficial.userEventArray[key];
+                objects.forEach(element => {
+                    FlowOfficial.miniSections = MiniSection.push(FlowOfficial.miniSections, new MiniSection(element.section));
+                });
                 let user = FlowOfficial.userArray[key];
-
-                
                 let block = EventorTemplate.createOfficiaUserEventsWrapper(user, objects);
                 ofw.insertAdjacentHTML('beforeend', block);
-
-
               }
+        }
+        let unloadedArr = MiniSection.getUnloadedSections(FlowOfficial.miniSections);
+        FlowOfficial.loadSections(unloadedArr);
+        FlowOfficial.placeSectionNames();
+    }
+
+
+    static placeSectionNames(){
+
+        let labels = document.querySelectorAll('.evt-section-name-badge');
+        for (let i = 0; i < labels.length; i++) {
+            const element = labels[i];
+            if (element.getAttribute('data-sat') == 'false'){
+                let gid = element.getAttribute('data-id');
+                FlowOfficial.miniSections.forEach(miniq => {
+                    if (miniq.id == gid){
+                        if (miniq.loaded == true){
+                            labels[i].innerHTML = miniq.object.title;
+                            labels[i].setAttribute('data-sat', true);
+                        }
+                    }
+                });
+
+            }
+            
         }
     }
 
@@ -184,5 +256,65 @@ class FlowOfficial{
               }
             }
           }
+    }
+}
+
+class MiniSection
+{
+    constructor(id, object = null){
+        this.id = id,
+        this.object = object;
+        this.loaded = false;
+        if (object != null){
+            this.loaded = true;
+        }
+    }
+
+    static push(array, minisection)
+    {
+        let has = false;
+        for (let i = 0; i < array.length; i++) {
+            const element = array[i];
+            if (element.id == minisection.id){
+                has = true;
+                break;
+            }
+        }
+        if (!has){
+            array.push(minisection);
+        };
+        return array;
+    }
+
+    static getUnloadedSections(array){
+        let nar = [];
+        for (let i = 0; i < array.length; i++) {
+            const element = array[i];
+            if (element.loaded == false){
+                nar.push(element.id);
+            }
+        }
+        return nar;
+    }
+
+    static placeLoadedSections(loadedArray, array)
+    {
+        while (loadedArray[0] != null)
+        {
+            let loaded = false;
+            for (let i = 0; i < array.length; i++) {
+                const element = array[i];
+                if (element.id == loadedArray[0].id){
+                    array[i] = new MiniSection( loadedArray[0].id, loadedArray[0]);
+                    loaded = true;
+                    break;
+                }
+            }
+            if (!loaded){
+                array.push(new MiniSection( loadedArray[0].id, loadedArray[0]));
+            }
+            loadedArray.shift(0);
+        }
+        return array;
     }
 }

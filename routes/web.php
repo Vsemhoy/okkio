@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Apps\Eventor\EventorHttpController;
+use App\Http\Apps\Eventor\EventorHttpControllerOfficial;
 use App\Http\Middleware\UserAuthCheck;
 
 /*
@@ -22,6 +23,7 @@ Route::post('/getusername/{uid}', [RegisterController::class, 'getUserOnlyName']
 
 Route::get('/logins', [RegisterController::class, 'get_login']);
 
+Route::post('/evt/postcall', [EventorHttpControllerOfficial::class, 'postcall']);
 
 Route::get('/', function () {
     return view('entrance');
