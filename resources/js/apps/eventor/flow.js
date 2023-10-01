@@ -28,6 +28,10 @@ class EventorFlow {
         document.addEventListener("dblclick", function (e) {
             if (e.target.closest(".event-section") && !e.target.closest(".event-card")) {
                 e.preventDefault();
+                if (section_container.length == 0){
+                    alert('You should create a section before create event.');
+                    return;
+                }
                 let date = e.target.parentElement.parentElement.getAttribute('data-date');
                 if (date == null) {
                     date = e.target.closest('.event-section').getAttribute('data-date');
@@ -63,14 +67,14 @@ class EventorFlow {
             .querySelector("#eventor_act_saveEvent")
             .addEventListener("click", () => {
 
-                this.saveEvent("");
+                EventorFlow.saveEvent("");
                 UIkit.modal("#modalHtmlEditor").hide();
             });
 
         document
             .querySelector("#eventor_act_updateEvent")
             .addEventListener("click", () => {
-                this.saveEvent(EventorFlow.updatedItem.id);
+                EventorFlow.saveEvent(EventorFlow.updatedItem.id);
                 UIkit.modal("#modalHtmlEditor").hide();
             });
 
@@ -106,6 +110,10 @@ class EventorFlow {
         document.addEventListener("click", function (e) {
             if (e.target.classList.contains("evt-edit-button")) {
                 e.preventDefault();
+                if (section_container.length == 0){
+                    alert('You should create a section before create event.');
+                    return;
+                }
                 document.querySelector('#eventor_act_editgroup').classList.remove('uk-hidden');
                 document.querySelector('#eventor_act_saveEvent').classList.add('uk-hidden');
                 let element = e.target.closest('.evt-card-wrapper');
@@ -122,7 +130,21 @@ class EventorFlow {
                     }
                 } EventorFlow.clearFounders();
             }
+
+            if (e.target.closest('#eventor_act_lockEvent')){
+                for (let i = 0; i < event_container.length; i++) {
+                    let element = event_container[i];
+                    if (element.id == EventorFlow.updatedItem.id){
+                        element.locked = 1;
+                        EventorFlow.saveEvent(element.id, element);
+                        //UIkit.notification("Event locked!", {status: 'primary', position: 'bottom-right'});
+                        UIkit.modal("#modalHtmlEditor").hide();
+                        break;
+                    }
+                }
+            }
         });
+
 
 
         if (me != "") {
@@ -301,10 +323,8 @@ class EventorFlow {
     }
 
 
-    saveEvent(event_id = "") {
+    static saveEvent(event_id = "", object = null) {
         let counter = 0;
-        let outFormat = "number";
-        let data = {};
         let formdata = EventorFlow.harvestModalData();
         if (event_id == "") {
             formdata.trans_id = (Math.random() + 1).toString(36).substring(15);
@@ -317,6 +337,9 @@ class EventorFlow {
             return;
         } else {
             formdata.id = event_id;
+        }
+        if (object != null){
+            formdata = object;
         }
 
         var xhttp = new XMLHttpRequest();
@@ -337,12 +360,6 @@ class EventorFlow {
                                 event_container.push(item2);
                                 EventorUtils.setCookie('eventorEventDraft', '', 1);
                             } else {
-                                // for (let i = 0; i < event_container.length ; i++){
-                                //     if (event_container[i].id == event_id){
-                                //         event_container[i].id = item2;
-                                //         break;
-                                //     }
-                                // }
                                 let card = document.querySelector('#' + event_id.replace('.', `\\.`));
                                 //console.log(card);
                                 if (card != null) {
@@ -364,7 +381,7 @@ class EventorFlow {
                     };
                 });
                 EventorFlow.refreshEvents();
-                console.log('event_container.length :>> ', event_container.length);
+                //console.log('event_container.length :>> ', event_container.length);
                 // let result = JSON.parse(this.responseText);
                 // console.log('рудзукы updated ' + this.responseText);
             }
@@ -515,10 +532,10 @@ class EventorFlow {
 
             }
         });
-        const optionElement2 = document.createElement('option');
-        optionElement2.value = "";
-        optionElement2.textContent = "no section";
-        sects.appendChild(optionElement2);
+        // const optionElement2 = document.createElement('option');
+        // optionElement2.value = "";
+        // optionElement2.textContent = "no section";
+        // sects.appendChild(optionElement2);
         if (selected == false) {
             sects.selectedIndex = counter;
         }
@@ -648,7 +665,6 @@ class EventorFlow {
         for (let ind = arsenal.length - 1; ind >= 0; ind--) {
             const element = arsenal[ind];
             element.remove();
-            console.log('ind :>> ', ind);
         }
 
         Array.from(event_container).forEach((event) => {

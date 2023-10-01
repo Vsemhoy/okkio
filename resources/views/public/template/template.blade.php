@@ -337,7 +337,7 @@
     }
 
     .th-com-s-nav-item:hover {
-        background-color: #03A9F4;
+        background-color: #01bedc;
     }
     .th-com-s-nav-item:hover a {
         color: white;
@@ -375,9 +375,33 @@
     .th-sidebar-opened .th-sn-round {
 
     }
+    .uk-offcanvas-bar {
+        background: repeating-linear-gradient( -45deg, #01abc6, #01abc6 10px, #01abc6de 10px, #01abc6c7 20px );
+        backdrop-filter: blur(16px);
+        box-shadow: inset -10px 330px 800px #000000bf;
+        transition: all ease 0.5s;
+        
+    }
+    .uk-offcanvas-bar::before {
+        content: '■';
+    font-size: 25px;
+    vertical-align: middle;
+    display: inline-block;
+    width: calc(100% + 60px);
+    background: rgb(1,171,198);
+background: linear-gradient(90deg, rgba(1,171,198,1) 12%, rgba(1,171,198,0) 100%);
+    margin-left: -30px;
+    margin-top: -51px;
+    height: 44px;
+    text-align: left;
+    color: transparent;
+    }
 
     .uk-sticky:not(.uk-active) {
     z-index: 1 !important;
+    }
+    .th-app-nav a.th-menu-plash {
+        font-size: 2rem;
     }
     </style>
 </head>
@@ -391,13 +415,13 @@
             <button class="uk-offcanvas-close" type="button" uk-close></button>
             <h5 class='uk-text-title'>Applications:</h5>
             <!-- Add your offcanvas menu content here -->
-            <ul class="uk-nav uk-nav-default">
-                <li class="{{ Request::routeIs('budget') ? 'uk-active' : '' }}"><a
-                        href="{{ route('budget') }}">Budget</a></li>
-                <li class="{{ Request::routeIs('eventor') ? 'uk-active' : '' }}"><a
-                        href="{{ route('eventor') }}">Eventor</a></li>
-                        <li class="{{ Request::routeIs('booker') ? 'uk-active' : '' }}"><a
-                        href="{{ route('booker') }}">Booker</a></li>
+            <ul class="uk-nav uk-nav-default th-app-nav">
+                <li class="{{ Request::routeIs('budget') ? 'uk-active' : '' }}"><a class='th-menu-plash'
+                        href="{{ route('budget') }}"><span uk-icon="icon: credit-card; ratio: 2.0"></span> <span>Budget</span></a></li>
+                <li class="{{ Request::routeIs('eventor') ? 'uk-active' : '' }}"><a class='th-menu-plash'
+                        href="{{ route('eventor') }}"><span uk-icon="icon: calendar; ratio: 2.0"></span> <span>Eventor</span></a></li>
+                        <li class="{{ Request::routeIs('booker') ? 'uk-active' : '' }}"><a class='th-menu-plash'
+                        href="{{ route('booker') }}"><span uk-icon="icon: file-text; ratio: 2.0"></span> <span>Booker</span></a></li>
 
 
                 <!-- Add more menu items if needed -->

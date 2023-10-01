@@ -424,10 +424,12 @@ class SettingsModal
         <div class="uk-modal-dialog">
             <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
             <div class="uk-grid-collapse uk-child-width-1-2@s uk-flex-middle" uk-grid>
-                <div class="uk-background-cover" style="background-image: url('images/photo.jpg');" uk-height-viewport></div>
+                <div class="uk-background-cover" style="" uk-height-viewport></div>
                 <div class="uk-padding-large">
-                    <h1>Headline</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <h1>Eventor Laravel extension</h1>
+                    <p>You can download microservice here: <a href='https://github.com/Vsemhoy/starter_microservice_php'>https://github.com/Vsemhoy/starter_microservice_php</a></p>
+                    <p>And download extension with laravel here: <a href='https://github.com/Vsemhoy/okkio'>https://github.com/Vsemhoy/okkio</a></p>
+                    <h5>Version 0.8 by 01 October 2023</h5>
                 </div>
             </div>
         </div>

@@ -333,37 +333,9 @@ class SectionManager
                 }
             }
         });
-
-
-        // REMOVER IT!!!!
-        document.body.addEventListener('focusout', (e) => {
-            if (e.target.closest('.evt-cs-opend')){
-                let card = e.target.closest('.evt-section-card').parentElement;
-                let id = card.id;
-                const selectedOptions = Array.from(e.target.closest('.evt-cs-open').selectedOptions);
-                // Iterate through selected options
-                let values = [];
-                selectedOptions.forEach(function (option) {
-                    // Push the value and text (name) of each selected option into the respective arrays
-                    //civer.appendChild(SectionManager.getBadge(option.value, option.textContent, option.getAttribute('data-color')));
-                    if (option.selected){
-
-                        values.push(option.value);
-                    }
-                });
-                let string = values.join(',');
-
-                for (let i = 0; i < section_container.length; i++) {
-                    const element = section_container[i];
-                    if (element.id == id){
-                        element.categories = string;
-                        this.saveSection(element, id);
-                        break;
-                    }
-                }
-            };
-        });
     }
+
+
 
 
     static getBadge(bid, name, color){
@@ -768,7 +740,7 @@ class SectionManager
                         console.log("You are not registered!");
                         return 0;
                     };
-                    console.log(this.responseText);
+                    //console.log(this.responseText);
                     //console.log(JSON.parse(this.responseText));
                     let result = JSON.parse(this.responseText);
                     Array.from(result.results).forEach((item) => {
@@ -778,7 +750,18 @@ class SectionManager
                             }
                         };
                     });
-    
+                    let newEvents = [];
+                    for (let i = 0; i < event_container.length; i++) {
+                        let element = event_container[i];
+                        if (element.section != section_id){
+                            newEvents.push(element);
+                        }
+                    }
+                    event_container = newEvents;
+                    if (EventorFlow.activeSection == section_id){
+                        EventorFlow.activeSection = 'all';
+                    }
+                    EventorFlow.refreshEvents();
                 }
                 else if (this.status > 200) {
                     if (counter < 1) {
@@ -812,7 +795,7 @@ class SectionManager
                 };
                 task.where.push(where2);
                 
-                console.log(task);
+                //console.log(task);
                 taskArray.push(task);
             
             xhttp.send(JSON.stringify(taskArray));

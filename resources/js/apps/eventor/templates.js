@@ -78,6 +78,10 @@ class EventorTemplate
             <p>${content}</p>
           </div>`;
         };
+        let editLink = "<a href='#' class='uk-button uk-button-text evt-edit-button'>Edit</a>";
+        if (event.locked == 1){
+          editLink = '<span uk-icon="icon: lock"></span>';
+        }
         return `
           <div id='${event.id}' class='evt-card-wrapper${starredMark}'>
             <div class="uk-card uk-box-shadow-small uk-box-shadow-hover-large 
@@ -91,7 +95,7 @@ class EventorTemplate
               </div>
               ${body}
               <div class="flex-space">
-                <a href="#" class="uk-button uk-button-text evt-edit-button">Edit</a>
+                <span>${editLink}</span>
                 ${catBlock}
               </div>
             </div>
@@ -315,14 +319,14 @@ class EventorTemplate
   static wrapTextToHtmlView(text) {
     let lines = text.split('\n');
     let result = [];
-  
+    
     // Regular expression to find URLs starting with "http://" or "https://"
     const urlPattern = /https?:\/\/\S+/g;
   
     // Loop through the lines and create a div for each line
     lines.forEach(line => {
       const div = document.createElement('div'); // Create a new div element
-  
+      let skip = false;
       // Use regular expression to find and replace URLs with <a> tags
       const lineWithLinks = line.replace(urlPattern, (match) => {
         return `<a href="${match}" class='uk-link-text' target="_blank">${match}</a>`;
@@ -335,8 +339,19 @@ class EventorTemplate
         div.classList.add('evt-list-item');
         div.innerHTML = lineWithLinks.replace(/^-\s*/, '');
       }
+
+      if (line.startsWith('-----')) {
+        let text = lineWithLinks.replace(/^-\s*/, '');
+        result.push(document.createElement('hr'));
+        div.innerHTML = text.replace(/^[-]+/, '');
+        if (div.innerHTML.trim() == ''){
+          skip = true;
+        }
+      }
   
-      result.push(div);
+      if (!skip){
+        result.push(div);
+      }
     });
   
     return result;

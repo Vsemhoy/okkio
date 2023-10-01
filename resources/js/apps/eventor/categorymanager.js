@@ -147,7 +147,7 @@ class CategoryManager
         </div>
         <div class='uk-card-footer uk-text-right' style='border-top: 1px solid #d9d9d9;'>
         <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-        <button class="uk-button uk-button-small uk-button-primary" type="button" id='evt_createcategoryBtn'>Create</button>
+        <button class="uk-button uk-button-primary" type="button" id='evt_createcategoryBtn'>Create</button>
             </div>
         </div>
     </div>
