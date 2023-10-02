@@ -401,7 +401,7 @@ background: linear-gradient(90deg, rgba(1,171,198,1) 12%, rgba(1,171,198,0) 100%
     z-index: 1 !important;
     }
     .th-app-nav a.th-menu-plash {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
     </style>
 </head>

@@ -99,22 +99,8 @@ class CategoryManager
             }
         });
 
-        // document.body.addEventListener('click', (e) => {
-        //     const targetClass = 'evt-category-group-trigger';
-        //     let modal = document.querySelector('.evt-cat-group-modal');
 
-        //     if (e.target.classList.contains(targetClass)) {
-        //         const card = e.target.closest('.evt-category-card'); // Replace with the actual class name of your card
-        //         if (card) {
-        //             // Handle color change within the card
-        //             modal.classList.toggle('uk-hidden');
-
-
-        //         }
-        //     }
-        // });
-
-        UIkit.util.on('#evt_categoryList', 'moved', function(e) {
+        UIkit.util.on('#evt_categorys', 'moved', function(e) {
             // This code will run after an item is moved within the sortable container
             let items = e.target.querySelectorAll('.card-box');
             let array = [];
@@ -251,7 +237,7 @@ class CategoryManager
                                 category_container.push(item2);
                                 // let sortableContainer = UIkit.sortable('#evt_categoryList');
                                 let card = CategoryManager.getCategoryCard(item2, category_container.length);
-                                document.querySelector('#evt_categoryList').insertAdjacentHTML('beforeend', card);
+                                document.querySelector('#evt_categorys').insertAdjacentHTML('beforeend', card);
                                 // Update the sortable container
                                 // sortableContainer.update();
 
