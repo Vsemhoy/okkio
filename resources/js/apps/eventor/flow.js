@@ -12,11 +12,12 @@ class EventorFlow {
         } else {
             EventorFlow.activeSection = cursect.trim();
         }
-
+        this.menuHandler = new EventorNav();
+        this.menuHandler.onTypeToggle(this.toggleItemType);
 
         this.pool = document.querySelector(selector);
         EventorFlow.dayFlow = new DayFlow(selector);
-
+        
 
         let menuitem = document.createElement('div');
         menuitem.classList.add('th-navbar-item');
@@ -85,26 +86,7 @@ class EventorFlow {
                 UIkit.modal("#modalHtmlEditor").hide();
             });
 
-        document.querySelector("#callCreateModal").addEventListener("click", function (e) {
-            const dateInput = document.querySelector("#evt_setdate");
-            EventorUtils.getLocation();
-            let date = e.target.parentElement.parentElement.getAttribute('data-date');
-            let data = EventorFlow.harvestModalData();
-            data.setdate = EventorUtils.getCurrentDateAsString();
-            if (EventorFlow.activeSection != 'all') {
-                data.section = EventorFlow.activeSection;
-            };
-            data.title = "";
-            data.content = "";
-            data.access = 1;
-            data.status = 1;
-            EventorFlow.fillFormWithData(data);
-            document.querySelector('#evt_eventEditorTitle').innerHTML = "Create new event";
-            document.querySelector('#eventor_act_editgroup').classList.add('uk-hidden');
-            document.querySelector('#eventor_act_saveEvent').classList.remove('uk-hidden');
-            document.querySelector('#evt_title').focus();
-            EventorFlow.clearFounders();
-        });
+
 
 
         document.addEventListener("click", function (e) {
@@ -276,6 +258,12 @@ class EventorFlow {
     }
 
 
+    toggleItemType(types)
+    {
+        console.log(types);
+    }
+
+
     static clearFounders() {
         let a = document.querySelector('.evt-sec-founded');
         let b = document.querySelector('.evt-founded');
@@ -301,7 +289,7 @@ class EventorFlow {
             starred: document.querySelector('#evt_starred').checked ? 1 : 0,
             pinned: document.querySelector('#evt_pinned').checked ? 1 : 0,
             setdate: document.querySelector('#evt_setdate').value,
-            importance: document.querySelector('#evt_importance').value,
+            // importance: document.querySelector('#evt_importance').value,
         };
         return myObject;
     }
@@ -319,7 +307,7 @@ class EventorFlow {
         document.querySelector('#evt_starred').checked = data.starred === 1;
         document.querySelector('#evt_pinned').checked = data.pinned === 1;
         document.querySelector('#evt_setdate').value = data.setdate;
-        document.querySelector('#evt_importance').value = data.importance;
+        // document.querySelector('#evt_importance').value = data.importance;
     }
 
 
@@ -445,10 +433,6 @@ class EventorFlow {
                 } else {
                     // EventorFlow.loadedSections[cdate] = [];
                     // EventorFlow.loadedSections[cdate].push(sectionid);
-                    console.log('DayFlow.dateArray :>> ', DayFlow.dateArray);
-                    console.log('NO DATE IN THE ARRAY');
-                    console.log('this.EventorFlow.activeSection :>> ', EventorFlow.activeSection);
-                    console.log('Eventorflow.loadedSections :>> ', EventorFlow.loadedSections);
                     let callParamsArray = [];
                     for (let i = 0; i < DayFlow.dateArray.length; i++) {
                         //console.log(eventor.dateArray[i]);

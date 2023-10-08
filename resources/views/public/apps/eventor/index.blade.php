@@ -247,7 +247,7 @@
 
 let smenu = EventorNav.buildMenu();
 sideMenu = new SidebarMenu(smenu);
-let menuHandler = new EventorNav();
+
 
 
 

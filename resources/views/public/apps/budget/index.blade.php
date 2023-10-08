@@ -66,14 +66,40 @@
             grid-template-columns: auto;
             }
         }
-        .cl-row > div, .cl-restrictor > div {
+        .cl-row > div > div, .cl-restrictor > div {
             padding: 6px;
         }
         .cl-restrictor {
             text-align: center;
             font-weight: bold;
         }
+        .bud-colhead {
+            padding: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .bud-colhead > span {
+            color: gray;
+        }
+        .bud-acc-col {
+            align-content: flex-start;
+        }
+        .uk-grid-small>.uk-grid-margin {
+    margin-top: 0px;
+}
+.uk-grid-column-small, .uk-grid-small {
+    margin-left: 0px;
+}
     </style>
+
+<button class="uk-button uk-button-default uk-margin-small-right" type="button" uk-toggle="target: #offcanvas-slide">Slide</button>
+
+
+<button class="uk-button uk-button-default uk-margin-small-right" type="button" uk-toggle="target: #offcanvas-push">Push</button>
+
+<button class="uk-button uk-button-default uk-margin-small-right" type="button" uk-toggle="target: #offcanvas-reveal">Reveal</button>
+
+<button class="uk-button uk-button-default uk-margin-small-right" type="button" uk-toggle="target: #offcanvas-none">None</button>
 
 <div id="calendar_nav">
         
@@ -85,6 +111,56 @@
 <br>
 <div id="calendar_nav_down">
     
+</div>
+
+<div id="offcanvas-slide" uk-offcanvas="overlay: true; flip:true; overlay: false">
+    <div class="uk-offcanvas-bar">
+
+        <button class="uk-offcanvas-close" type="button" uk-close></button>
+        <div class="bud-droparea" id='bud_template_pool'>
+            <h3>Title</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <br><br><br><br><br>
+        </div>
+
+
+    </div>
+</div>
+
+<div id="offcanvas-push" uk-offcanvas="mode: push; overlay: true; flip:true; overlay: false">
+    <div class="uk-offcanvas-bar">
+
+        <button class="uk-offcanvas-close" type="button" uk-close></button>
+
+        <h3>Title</h3>
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+    </div>
+</div>
+
+<div id="offcanvas-reveal" uk-offcanvas="mode: reveal; overlay: true; flip:true; overlay: false">
+    <div class="uk-offcanvas-bar">
+
+        <button class="uk-offcanvas-close" type="button" uk-close></button>
+
+        <h3>Title</h3>
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+    </div>
+</div>
+
+<div id="offcanvas-none" uk-offcanvas="mode: none; overlay: true; flip:true; overlay: false">
+    <div class="uk-offcanvas-bar">
+
+        <button class="uk-offcanvas-close" type="button" uk-close></button>
+
+        <h3>Title</h3>
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+    </div>
 </div>
 
 @endsection

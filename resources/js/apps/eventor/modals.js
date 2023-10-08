@@ -41,7 +41,7 @@ class EventModal {
     this.fields.push(this.createFormField('Content:', 'evt_content', 'content', 'textarea', [], 'Default Content'));
     this.fields.push(this.createFormField('Section:', 'evt_section', 'section', 'select', options));
     this.fields.push(this.createFormField('Category:', 'evt_category', 'category', 'select', categorises));
-    this.fields.push(this.createFormField('Importance:', 'evt_importance', 'importance', 'range', [], '2'));
+    // this.fields.push(this.createFormField('Importance:', 'evt_importance', 'importance', 'range', [], '2'));
     this.fields.push(this.createFormField('Set Date:', 'evt_setdate', 'setdate', 'date'));
     this.fields.push(this.createFormField('Access:', 'evt_access', 'access', 'select', access));
     this.fields.push(this.createFormField('Status:', 'evt_status', 'status', 'select', status));
@@ -200,6 +200,34 @@ class EventModal {
     modalTitle.textContent = 'Headline';
     modalTitle.id = 'evt_eventEditorTitle';
   
+    // Type trigButtons
+    let typeTrigs = document.createElement('div');
+    typeTrigs.id = 'evt_trigCreateButtons';
+    typeTrigs.classList.add('evt-modal-type_triggers');
+    
+    let bt1 = document.createElement('div');
+    bt1.id = '';
+    bt1.classList.add('evt-mod-typetrig', 'evt-event-color', 'active');
+    bt1.setAttribute('data-type', '1');
+    bt1.innerHTML = "Event";
+    typeTrigs.appendChild(bt1);
+    
+    let bt2 = document.createElement('div');
+    bt2.id = '';
+    bt2.classList.add('evt-mod-typetrig', 'evt-action-color');
+    bt2.setAttribute('data-type', '2');
+    bt2.innerHTML = "Action";
+    typeTrigs.appendChild(bt2);
+
+    let bt3 = document.createElement('div');
+    bt3.id = '';
+    bt3.classList.add('evt-mod-typetrig', 'evt-note-color');
+    bt3.setAttribute('data-type', '3');
+    bt3.innerHTML = "Note";
+    typeTrigs.appendChild(bt3);
+    
+
+
     // Modal body
     const modalBody = document.createElement('div');
     modalBody.classList.add('uk-modal-body');
@@ -289,6 +317,7 @@ class EventModal {
     modalFooter.appendChild(editButtonGroup);
     modalDialog.appendChild(modalCloseButtonInsideDialog);
     modalDialog.appendChild(modalHeader);
+    modalDialog.appendChild(typeTrigs);
     modalDialog.appendChild(modalBody);
     modalDialog.appendChild(modalFooter);
     modalContainer.appendChild(modalExpandTextareaButton);

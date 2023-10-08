@@ -300,7 +300,7 @@ font-family: system-ui;
   border: 1px solid #ebebeb;
   border-left: 0px;
   border-right: 0px;
-  background-color: #f3f3f3;
+  background-color: #ffffff5e;
   color: dimgray;
   transition: all ease 0.3s;
 }
@@ -424,4 +424,54 @@ font-family: system-ui;
 
 .th-navbar-item a {
   color: white;
+}
+.evt-stickybar-button {
+  padding: 0px 12px;
+}
+
+.evt-event-color.active {
+  background-color: #76c38530;
+}
+.evt-action-color.active {
+  background-color: #d1b50030;
+}
+.evt-note-color.active {
+  background-color: #21a7f12e;
+}
+
+.uk-notification-message {
+  background-color: #00000059;
+  backdrop-filter: blur(12px);
+  padding: 6px;
+  border-radius: 6px;
+
+}
+.uk-notification-message-success {
+  background-color: #048b005c;
+    backdrop-filter: blur(12px);
+    color: white;
+    text-shadow: 0 0 14px #000000a1;
+}
+.uk-notification-message-primary {
+  background-color: #01bedcc7;
+  backdrop-filter: blur(12px);
+  color: white;
+  text-shadow: 0 0 14px #00547a;
+}
+
+.evt-modal-type_triggers {
+  display: grid;
+    grid-template-columns: auto auto auto;
+    text-align: center;
+    font-size: 0.9rem;
+    text-transform: lowercase;
+    letter-spacing: 3px;
+  }
+.evt-modal-type_triggers > div {
+    background-color: #8080801a;
+    cursor: pointer;
+    
+}
+.evt-modal-type_triggers > div.active {
+  text-transform: uppercase;
 }

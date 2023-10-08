@@ -1,6 +1,7 @@
 class EventorNav {
 
   static expendedRows = true;
+  static activeTypes = [1,2,3];
   constructor()
   {
     this.mainMenuItemsContainer = document.querySelector('#th_sidenav_items');
@@ -37,6 +38,20 @@ class EventorNav {
           };
       };
       EventorFlow.clearFounders();
+        let secName = 'All sections';
+        for (let i = 0; i < section_container.length; i++) {
+          const sc = section_container[i];
+          if (sc.id == EventorFlow.activeSection){
+            secName = sc.title;
+            break;
+          }
+        }
+        UIkit.notification({
+          message: 'Active section: ' + secName,
+          status: 'primary',
+          pos: 'bottom-right',
+          timeout: 3000
+      });
       }
     });
 
@@ -86,7 +101,99 @@ class EventorNav {
       });
     });
 
+
+    document.addEventListener('click', (e)=> {
+      if (e.target.closest('.evt-stb-group')){
+        let tg = e.target.closest('.evt-stb-group');
+        e.preventDefault();
+        if (!e.ctrlKey) {
+        tg.classList.toggle('active');
+
+        let tggroup = document.querySelectorAll('.evt-stb-group');
+        let active = false;
+        for (let i = 0; i < tggroup.length; i++) {
+          const element = tggroup[i];
+          if (element.classList.contains('active')){
+            active = true;
+            break;
+          }
+        }
+
+        if (!active){
+          tg.classList.toggle('active');
+        } else {
+          EventorNav.activeTypes = [];
+          for (let i = 0; i < tggroup.length; i++) {
+            const element = tggroup[i];
+            if (element.classList.contains('active')){
+              let ax = element.getAttribute('data-type');
+              EventorNav.activeTypes.push(ax);
+            }
+          }
+          this.triggerTypeToggle();
+          console.log("Itrigyou!");
+          UIkit.notification({
+            message: 'Type toggled!',
+            status: 'success',
+            pos: 'bottom-left',
+            timeout: 3000
+        });
+        }
+      } else {
+        let oldTypes = JSON.stringify(EventorNav.activeTypes);
+        let tggroup = document.querySelectorAll('.evt-stb-group');
+
+        for (let i = 0; i < tggroup.length; i++) {
+          const element = tggroup[i];
+          element.classList.remove('active');
+        };
+        tg.classList.toggle('active');
+        
+
+          EventorNav.activeTypes = [];
+          for (let i = 0; i < tggroup.length; i++) {
+            const element = tggroup[i];
+            if (element.classList.contains('active')){
+              let ax = element.getAttribute('data-type');
+              EventorNav.activeTypes.push(ax);
+            }
+          }
+          if (JSON.stringify(EventorNav.activeTypes.length) != oldTypes ){
+            this.triggerTypeToggle();
+            console.log("Itrigyou!2");
+            UIkit.notification({
+              message: 'Type toggled!',
+              status: 'success',
+              pos: 'bottom-left',
+              timeout: 3000
+          });
+          }
+      }
+      }
+      
+    });
+
+
   }
+
+
+    /**
+    * Trigger the move or expand event.
+    */
+    triggerTypeToggle() {
+      if (typeof this.typeCallback === 'function') {
+          this.typeCallback(EventorNav.activeTypes);
+      }
+  }
+
+  /**
+   *
+   * @param {Function} callback - The callback function to be called when the user changed or expand calendar.
+   */
+  onTypeToggle(callback) {
+      this.typeCallback = callback;
+  }
+
 
   static shrinkAllRows(){
     let evesec = document.querySelectorAll('.event-section');
@@ -119,6 +226,7 @@ class EventorNav {
         element.classList.add('th-active');
       }
     }
+
   }
 
 
@@ -201,27 +309,54 @@ class EventorNav {
     
         // Create the third flex container
         const flexContainer3 = document.createElement('div');
-        flexContainer3.title = 'Create an event';
+        flexContainer3.title = 'Toggle item types';
     
         // Create the "shrink rows" button
         const shrinkRowsButton = document.createElement('a');
-        shrinkRowsButton.classList.add('uk-button');
+        shrinkRowsButton.classList.add('uk-button', 'evt-stickybar-button');
         shrinkRowsButton.id = 'evt_expandRows';
         shrinkRowsButton.setAttribute('uk-icon', 'icon: shrink');
         shrinkRowsButton.title = 'shrink rows';
+        flexContainer3.appendChild(shrinkRowsButton);
     
         // Create the "create event" button
         const createEventButton = document.createElement('a');
-        createEventButton.classList.add('uk-button');
-        createEventButton.id = 'callCreateModal';
-        createEventButton.href = '#modalHtmlEditor';
-        createEventButton.setAttribute('uk-toggle', '');
+        createEventButton.classList.add('uk-button', 'evt-stickybar-button', 'evt-stb-group', 'evt-event-color');
+        if (EventorNav.activeTypes.includes(1)){
+          createEventButton.classList.add( 'active');
+        }
+        createEventButton.id = 'evt_toggle_events';
+        createEventButton.href = '#';
         createEventButton.setAttribute('aria-expanded', 'false');
-        createEventButton.setAttribute('uk-icon', 'icon: plus');
+        createEventButton.setAttribute('data-type', '1');
+        createEventButton.setAttribute('uk-icon', 'icon: image');
+        flexContainer3.appendChild(createEventButton);
+
+        const createEventButton2 = document.createElement('a');
+        createEventButton2.classList.add('uk-button', 'evt-stickybar-button', 'evt-stb-group', 'evt-action-color');
+        if (EventorNav.activeTypes.includes(2)){
+          createEventButton2.classList.add( 'active');
+        }
+        createEventButton2.id = 'evt_toggle_actions';
+        createEventButton2.href = '#';
+        createEventButton2.setAttribute('aria-expanded', 'false');
+        createEventButton2.setAttribute('data-type', '2');
+        createEventButton2.setAttribute('uk-icon', 'icon: crosshairs');
+        flexContainer3.appendChild(createEventButton2);
+
+        const createEventButton3 = document.createElement('a');
+        createEventButton3.classList.add('uk-button', 'evt-stickybar-button', 'evt-stb-group', 'evt-note-color');
+        if (EventorNav.activeTypes.includes(3)){
+          createEventButton3.classList.add( 'active');
+        }
+        createEventButton3.id = 'evt_toggle_notes';
+        createEventButton3.href = '#';
+        createEventButton3.setAttribute('aria-expanded', 'false');
+        createEventButton3.setAttribute('data-type', '3');
+        createEventButton3.setAttribute('uk-icon', 'icon: pencil');
+        flexContainer3.appendChild(createEventButton3);
     
         // Append shrinkRowsButton and createEventButton to flexContainer3
-        flexContainer3.appendChild(shrinkRowsButton);
-        flexContainer3.appendChild(createEventButton);
     
         // Append flexContainer1, flexContainer2, and flexContainer3 to the main container div
         containerDiv.appendChild(flexContainer1);
