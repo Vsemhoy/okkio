@@ -475,3 +475,13 @@ font-family: system-ui;
 .evt-modal-type_triggers > div.active {
   text-transform: uppercase;
 }
+
+.evt-type-action {
+  outline: 1px dashed #b1b0b0;
+  border-radius: 1.1rem;
+}
+.evt-type-note {
+  border-style: dashed;
+  border-left-width: 4px;
+  border-radius: 0px;
+}

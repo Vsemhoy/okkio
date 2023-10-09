@@ -4,6 +4,7 @@ class EventorFlow {
     static loadedSections = {};
     static dayFlow = null;
     static activeSection = 'all';
+    static activeTypes = [1,2,3];
     constructor(selector) {
         // { 'date' => [ 'afklsjdklfjas', 'jdlfkajsdf' ]}
         let cursect = EventorUtils.getParam('sect');
@@ -260,7 +261,10 @@ class EventorFlow {
 
     toggleItemType(types)
     {
-        console.log(types);
+        EventorFlow.activeTypes = types;
+        // tyepes.join(',');
+        // console.log(types);
+        EventorFlow.refreshEvents();
     }
 
 
@@ -289,6 +293,8 @@ class EventorFlow {
             starred: document.querySelector('#evt_starred').checked ? 1 : 0,
             pinned: document.querySelector('#evt_pinned').checked ? 1 : 0,
             setdate: document.querySelector('#evt_setdate').value,
+            type: document.querySelector('#evt_type').value,
+            params: document.querySelector('#evt_params').value,
             // importance: document.querySelector('#evt_importance').value,
         };
         return myObject;
@@ -307,11 +313,23 @@ class EventorFlow {
         document.querySelector('#evt_starred').checked = data.starred === 1;
         document.querySelector('#evt_pinned').checked = data.pinned === 1;
         document.querySelector('#evt_setdate').value = data.setdate;
+        document.querySelector('#evt_type').value = data.type;
+        document.querySelector('#evt_params').value = data.params;
         // document.querySelector('#evt_importance').value = data.importance;
+
+        let trigs = document.querySelectorAll('.evt-mod-typetrig');
+        for (let i = 0; i < trigs.length; i++) {
+            let tgs = trigs[i];
+            tgs.classList.remove('active');
+            if (data.type == parseInt( tgs.getAttribute('data-type'))){
+                tgs.classList.add('active');
+            };
+        }
     }
 
 
     static saveEvent(event_id = "", object = null) {
+        console.log('saveEvent :>> ');
         let counter = 0;
         let formdata = EventorFlow.harvestModalData();
         if (event_id == "") {
@@ -337,8 +355,8 @@ class EventorFlow {
                     alert("You are not registered!");
                     return 0;
                 };
-                //console.log(this.responseText);
-                //console.log(JSON.parse(this.responseText));
+                console.log(this.responseText);
+                console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Event") {
@@ -362,6 +380,7 @@ class EventorFlow {
                                         break;
                                     }
                                 }
+                                
                                 event_container.push(item2);
                             }
                         });
@@ -657,15 +676,19 @@ class EventorFlow {
                 // if (document.querySelector('#' + event.id) != null){
                 //     document.querySelector('#' + event.id).remove();
                 // }
-                let rid = "row_" + event.setdate;
+                console.log('EventorFlow.activeTypes :>> ', EventorFlow.activeTypes);
+                if (EventorFlow.activeTypes.includes(event.type)){
 
-                let row = document.querySelector('#' + rid);
-                if (row != null) {
-                    let erc = row.querySelector('.eventor-row-content');
-                    //let card = EventorTemplate.createEventCard(event.title, event.setdate, event.category, event.content);
-                    let card = EventorTemplate.makeEventCard(event);
-                    erc.insertAdjacentHTML('beforeend', card);
-                    //erc.appendChild(card);
+                    let rid = "row_" + event.setdate;
+    
+                    let row = document.querySelector('#' + rid);
+                    if (row != null) {
+                        let erc = row.querySelector('.eventor-row-content');
+                        //let card = EventorTemplate.createEventCard(event.title, event.setdate, event.category, event.content);
+                        let card = EventorTemplate.makeEventCard(event);
+                        erc.insertAdjacentHTML('beforeend', card);
+                        //erc.appendChild(card);
+                    }
                 }
 
                 //console.log(rid);

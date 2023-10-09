@@ -39,16 +39,18 @@ class EventModal {
     this.fields = [];
     this.fields.push(this.createFormField('Title:', 'evt_title', 'title', 'text', [], 'Default Title'));
     this.fields.push(this.createFormField('Content:', 'evt_content', 'content', 'textarea', [], 'Default Content'));
-    this.fields.push(this.createFormField('Section:', 'evt_section', 'section', 'select', options));
     this.fields.push(this.createFormField('Category:', 'evt_category', 'category', 'select', categorises));
-    // this.fields.push(this.createFormField('Importance:', 'evt_importance', 'importance', 'range', [], '2'));
-    this.fields.push(this.createFormField('Set Date:', 'evt_setdate', 'setdate', 'date'));
     this.fields.push(this.createFormField('Access:', 'evt_access', 'access', 'select', access));
     this.fields.push(this.createFormField('Status:', 'evt_status', 'status', 'select', status));
+    // this.fields.push(this.createFormField('Importance:', 'evt_importance', 'importance', 'range', [], '2'));
     this.fields.push(this.createFormField('Starred', 'evt_starred', 'starred', 'checkbox', [], '1', true));
     this.fields.push(this.createFormField('Pinned', 'evt_pinned', 'pinned', 'checkbox', [], '0', true));
     this.fields.push(this.createFormField('Locked', 'evt_locked', 'locked', 'checkbox', [], '0', true));
     this.fields.push(this.createFormField('Format:', 'evt_format', 'format', 'select', format, 0, true, true));
+    this.fields.push(this.createFormField('Params:', 'evt_params', 'params', 'text', [], '', false, true));
+    this.fields.push(this.createFormField('Type:', 'evt_type', 'params', 'number', [], 1, false, true));
+    this.fields.push(this.createFormField('Section:', 'evt_section', 'section', 'select', options));
+    this.fields.push(this.createFormField('Set Date:', 'evt_setdate', 'setdate', 'date'));
     
     this.modalBody = this.modalEventEditor(this.fields);
 
@@ -73,10 +75,6 @@ class EventModal {
     // });
 
 
-    document.querySelector("body").addEventListener('click', (e) => {
-
-    });
-
 
     document.querySelector("body").addEventListener('click', (e) => {
       if (e.target.closest('.evt-full-trigger') || e.target.id == 'evt_toggleTextarea' || e.target.parentElement != null && e.target.parentElement.id == 'evt_toggleTextarea'){
@@ -84,6 +82,18 @@ class EventModal {
         document.querySelector('.evt-full-trigger').classList.toggle('evt-full-trigger-fullscreen');
         document.querySelector("#modalHtmlEditor").querySelector('.uk-modal-close-full').classList.toggle('uk-hidden');
         document.querySelector("#modalHtmlEditor").querySelector('.evt-textarea-toggle').classList.toggle('uk-hidden');
+      }
+
+      if (e.target.closest('.evt-mod-typetrig')){
+        let item = e.target.closest('.evt-mod-typetrig');
+        let itms = document.querySelector('#evt_trigCreateButtons').querySelectorAll('.evt-mod-typetrig');
+        for (let i = 0; i < itms.length; i++) {
+          itms[i].classList.remove('active');
+          
+        }
+        item.classList.add('active');
+        let type = item.getAttribute('data-type');
+        document.querySelector('#evt_type').value = type;
       }
     });
 
@@ -306,10 +316,37 @@ class EventModal {
   
     // Append all elements together to create the modal structure
     modalHeader.appendChild(modalTitle);
-    for (let i = 0 ; i < elements.length; i++)
-    {
-      modalForm.appendChild(elements[i]);
-    }
+    // for (let i = 0 ; i < elements.length; i++)
+    // {
+    //   modalForm.appendChild(elements[i]);
+    // }
+    modalForm.appendChild(elements[0]);
+    modalForm.appendChild(elements[1]);
+    modalForm.appendChild(elements[2]);
+
+    let diver = document.createElement('div');
+    diver.classList.add('uk-column-1-2@s','uk-column-1-2@m');
+    diver.appendChild(elements[3]);
+    diver.appendChild(elements[4]);
+    modalForm.appendChild(diver);
+    
+    let diver1 = document.createElement('div');
+    diver1.classList.add('uk-column-1-2@s','uk-column-1-4@m');
+    diver1.appendChild(elements[5]);
+    diver1.appendChild(elements[6]);
+    diver1.appendChild(elements[7]);
+    modalForm.appendChild(diver1);
+    
+    modalForm.appendChild(document.createElement('br'));
+    let diver2 = document.createElement('div');
+    diver2.classList.add('uk-column-1-1@s','uk-column-1-2@m');
+    diver2.appendChild(elements[11]);
+    diver2.appendChild(elements[12]);
+    diver2.appendChild(elements[8]);
+    diver2.appendChild(elements[9]);
+    diver2.appendChild(elements[10]);
+    modalForm.appendChild(diver2);
+
    // modalForm.appendChild(/* Add your form fields and elements here */);
     modalBody.appendChild(modalForm);
     modalFooter.appendChild(cancelButton);
@@ -356,6 +393,7 @@ class EventModal {
     switch (type) {
       case 'text':
       case 'date':
+      case 'number':
         inputElement = document.createElement('input');
         inputElement.classList.add('uk-input');
         inputElement.setAttribute('type', type);
@@ -369,7 +407,7 @@ class EventModal {
         inputElement.classList.add('addmathevaluate');
         inputElement.id = id;
         inputElement.name = name;
-        inputElement.rows = '6';
+        inputElement.rows = '10';
         inputElement.textContent = defaultValue;
         break;
       case 'select':

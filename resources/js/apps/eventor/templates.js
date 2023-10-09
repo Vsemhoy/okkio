@@ -43,6 +43,12 @@ class EventorTemplate
             }
           }
         };
+        let additionalClasses = '';
+        if (event.type == 2){
+          additionalClasses = "evt-type-action";
+        } else if (event.type == 3){
+          additionalClasses = "evt-type-note";
+        }
         let starredMark = "";
         if (event.starred == 1){
           starredMark = " evt-starred";
@@ -83,9 +89,9 @@ class EventorTemplate
           editLink = '<span uk-icon="icon: lock"></span>';
         }
         return `
-          <div id='${event.id}' class='evt-card-wrapper${starredMark}'>
+          <div id='${event.id}' class='evt-card-wrapper${starredMark}' data-type='${event.type}'>
             <div class="uk-card uk-box-shadow-small uk-box-shadow-hover-large 
-            uk-card-small uk-card-default uk-text-left left-corrector event-card"
+            uk-card-small uk-card-default uk-text-left left-corrector event-card ${additionalClasses}"
              style='border-color: #${rootcolor};'>
               <div class="uk-card-header">
                 <div class="uk-width-expand">

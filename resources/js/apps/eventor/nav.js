@@ -71,8 +71,6 @@ class EventorNav {
     }
 
     this.expendor.addEventListener('click', (e) => {
-      
-
       if (EventorNav.expendedRows == true){
         EventorNav.shrinkAllRows();
         this.expendor.setAttribute('uk-icon', 'icon: expand');
@@ -127,7 +125,7 @@ class EventorNav {
             const element = tggroup[i];
             if (element.classList.contains('active')){
               let ax = element.getAttribute('data-type');
-              EventorNav.activeTypes.push(ax);
+              EventorNav.activeTypes.push(parseInt(ax));
             }
           }
           this.triggerTypeToggle();
@@ -155,7 +153,7 @@ class EventorNav {
             const element = tggroup[i];
             if (element.classList.contains('active')){
               let ax = element.getAttribute('data-type');
-              EventorNav.activeTypes.push(ax);
+              EventorNav.activeTypes.push(parseInt(ax));
             }
           }
           if (JSON.stringify(EventorNav.activeTypes.length) != oldTypes ){
@@ -309,7 +307,7 @@ class EventorNav {
     
         // Create the third flex container
         const flexContainer3 = document.createElement('div');
-        flexContainer3.title = 'Toggle item types';
+
     
         // Create the "shrink rows" button
         const shrinkRowsButton = document.createElement('a');
@@ -330,6 +328,7 @@ class EventorNav {
         createEventButton.setAttribute('aria-expanded', 'false');
         createEventButton.setAttribute('data-type', '1');
         createEventButton.setAttribute('uk-icon', 'icon: image');
+        createEventButton.setAttribute("uk-tooltip", "title: Toggle Events; pos: bottom-right");
         flexContainer3.appendChild(createEventButton);
 
         const createEventButton2 = document.createElement('a');
@@ -342,6 +341,7 @@ class EventorNav {
         createEventButton2.setAttribute('aria-expanded', 'false');
         createEventButton2.setAttribute('data-type', '2');
         createEventButton2.setAttribute('uk-icon', 'icon: crosshairs');
+        createEventButton2.setAttribute("uk-tooltip", "title: Toggle Actions; pos: bottom-right");
         flexContainer3.appendChild(createEventButton2);
 
         const createEventButton3 = document.createElement('a');
@@ -354,6 +354,7 @@ class EventorNav {
         createEventButton3.setAttribute('aria-expanded', 'false');
         createEventButton3.setAttribute('data-type', '3');
         createEventButton3.setAttribute('uk-icon', 'icon: pencil');
+        createEventButton3.setAttribute("uk-tooltip", "title: Toggle Notes; pos: bottom-right");
         flexContainer3.appendChild(createEventButton3);
     
         // Append shrinkRowsButton and createEventButton to flexContainer3
