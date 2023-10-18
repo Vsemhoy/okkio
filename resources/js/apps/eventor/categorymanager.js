@@ -143,25 +143,101 @@ class CategoryManager
     }
 
     renderCategoryList(){
-        let result = "";
-        result += `
-        <div uk-sortable="group: sortable-group; handle: .uk-sortable-hand" class="uk-sortable" id='evt_categorys'>`;
+        let div = document.createElement('div');
+        div.id = 'evt_categorys';
+        div.classList.add('uk-sortable');
+        div.setAttribute('uk-sortable', 'group: sortable-group; handle: .uk-sortable-hand');
+        
+
         for (let index = 0; index < category_container.length; index++) {
             const item = category_container[index];
             // console.log(item);
-            result += CategoryManager.getCategoryCard(item, index);
+            div.appendChild(CategoryManager.getCategoryCard(item, index));
+
         };
-
-        result += `</div>`;
-
-        document.querySelector('#evt_categoryList').innerHTML = result;
-        return result;
+        document.querySelector('#evt_categoryList').innerHTML = '';
+        document.querySelector('#evt_categoryList').appendChild(div);
+        return div;
     }
 
 
     static getCategoryCard(item, index, catgroups = []){
-        let content = item.content == null ? '' : item.content;
-        let color = item.color == null ? '' : item.color;
+        const content = item.content == null ? '' : item.content;
+        const color = item.color == null ? '' : item.color;
+      
+        const cardBox = document.createElement('div');
+        cardBox.classList.add('uk-margin-sm', 'card-box');
+        cardBox.dataset.id = item.id;
+        cardBox.id = item.id;
+        cardBox.dataset.order = index;
+        if (item.status == 0){
+            cardBox.classList.add('evt-disabled');
+        }
+        if (item.status == 2){
+            cardBox.classList.add('evt-archieved');
+        }
+        const ukCard = document.createElement('div');
+        ukCard.classList.add(
+          'uk-card',
+          'uk-card-sm',
+          'uk-padding-small',
+          'uk-box-shadow-small',
+          'uk-box-shadow-hover-medium',
+          'uk-card-small',
+          'evt-section-card'
+        );
+        ukCard.style.borderColor = `#${color}`;
+      
+        const evtGridHeader = document.createElement('div');
+        evtGridHeader.classList.add('evt-grid-header');
+      
+        const moveIcon = document.createElement('span');
+        moveIcon.classList.add('uk-icon-link', 'uk-sortable-hand', 'uk-icon');
+        moveIcon.setAttribute('uk-icon', 'move');
+        moveIcon.style.userSelect = 'none';
+      
+        const sectionNameInput = document.createElement('input');
+        sectionNameInput.placeholder = 'Event name';
+        sectionNameInput.classList.add('evt-section-name-in');
+        sectionNameInput.maxLength = 60;
+        sectionNameInput.type = 'text';
+        sectionNameInput.value = item.title;
+
+        const sectionEditorTrigger = document.createElement('span');
+        sectionEditorTrigger.classList.add('evt-category-editor-trigger');
+        sectionEditorTrigger.setAttribute('uk-icon', 'icon: cog; ratio: 1.2;');
+      
+        const colorPickerInput = document.createElement('input');
+        colorPickerInput.classList.add('evt-category-colorpicker');
+        colorPickerInput.type = 'color';
+        colorPickerInput.value = `#${color}`;
+        
+        let div1 = document.createElement('div');
+        div1.appendChild(moveIcon);
+        div1.appendChild(sectionNameInput);
+        
+        evtGridHeader.appendChild(div1);
+
+        let div2 = document.createElement('div');
+        div2.classList.add('evt-grid-icons');
+        div2.appendChild(sectionEditorTrigger);
+       // div2.appendChild(sectionGroupTrigger);
+        div2.appendChild(colorPickerInput);
+        
+        evtGridHeader.appendChild(div2);
+        // Continue appending elements as needed
+
+        ukCard.appendChild(evtGridHeader);
+
+
+
+        cardBox.appendChild(ukCard);
+        return cardBox;
+
+
+        ////
+        // let content = item.content == null ? '' : item.content;
+        // let color = item.color == null ? '' : item.color;
         let result =`  
             <div class="uk-margin-sm card-box" data-id='${item.id}' id="sec_${item.id}" data-order="${index}">
         <div class="uk-card uk-card-sm uk-padding-small uk-box-shadow-small uk-box-shadow-hover-medium uk-card-small
@@ -237,7 +313,7 @@ class CategoryManager
                                 category_container.push(item2);
                                 // let sortableContainer = UIkit.sortable('#evt_categoryList');
                                 let card = CategoryManager.getCategoryCard(item2, category_container.length);
-                                document.querySelector('#evt_categorys').insertAdjacentHTML('beforeend', card);
+                                document.querySelector('#evt_categorys').appendChild(card);
                                 // Update the sortable container
                                 // sortableContainer.update();
 

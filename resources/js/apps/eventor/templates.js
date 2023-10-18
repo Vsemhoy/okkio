@@ -44,15 +44,27 @@ class EventorTemplate
           }
         };
         let additionalClasses = '';
-        if (event.type == 2){
+        let typeName = 'event';
+        if (event.type == 1){
+          additionalClasses = "evt-type-event";
+        } else if (event.type == 2){
           additionalClasses = "evt-type-action";
+          typeName = 'action';
         } else if (event.type == 3){
           additionalClasses = "evt-type-note";
+          typeName = 'note';
         }
+        let headerIcon = "<span>";
         let starredMark = "";
         if (event.starred == 1){
           starredMark = " evt-starred";
+          headerIcon += "<span uk-icon='icon: star;' class='uk-icon'></span> ";
         }
+        if (event.locked == 1){
+          headerIcon += "<span uk-icon='icon: lock;' class='uk-icon'></span> ";
+        }
+        headerIcon += "</span>";
+
         if (event.status == 0){
           starredMark += " evt-disabled";
           cutlength = 300;
@@ -84,7 +96,7 @@ class EventorTemplate
             <p>${content}</p>
           </div>`;
         };
-        let editLink = "<a href='#' class='uk-button uk-button-text evt-edit-button'>Edit</a>";
+        let editLink = "<a href='#' class='uk-button uk-button-text evt-edit-button'>Edit " + typeName + "</a>";
         if (event.locked == 1){
           editLink = '<span uk-icon="icon: lock"></span>';
         }
@@ -95,7 +107,7 @@ class EventorTemplate
              style='border-color: #${rootcolor};'>
               <div class="uk-card-header">
                 <div class="uk-width-expand">
-                  <h3 class="evt-card-title uk-margin-remove-bottom">${event.title}</h3>
+                  <h3 class="evt-card-title uk-margin-remove-bottom">${event.title}${headerIcon}</h3>
                   <div class="uk-text-meta uk-margin-remove-top flex-space"><time datetime="${time}">${time}</time> ${secBlock}</div>
                 </div>
               </div>
