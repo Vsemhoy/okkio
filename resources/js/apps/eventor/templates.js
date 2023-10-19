@@ -18,7 +18,7 @@ class EventorTemplate
 
 
       static makeEventCard(event) {
-        let cutlength = 800;
+        let cutlength = 300;
         let category = null;
         let section = null;
         let time  = new Date( event.created_at).toLocaleTimeString();
@@ -86,7 +86,7 @@ class EventorTemplate
         if (event.format == 0){
           content = event.content.substring(0, cutlength);
           if (event.content.length > cutlength){
-            content = content.trim() + "...";
+            content = content.trimEnd() + "...";
           }
           content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
         }
@@ -122,7 +122,7 @@ class EventorTemplate
 
 
       static makeEventSearchCard(event, searchWord) {
-        let cutlength = 800;
+        let cutlength = 300;
         let category = null;
         let section = null;
         let time  = new Date( event.created_at).toLocaleTimeString();
@@ -174,7 +174,7 @@ class EventorTemplate
         if (event.format == 0){
           content = event.content.substring(0, cutlength);
           if (event.content.length > cutlength){
-            content = content.trim() + "...";
+            content = content.trimEnd() + "...";
           }
           content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
         }
@@ -335,9 +335,15 @@ class EventorTemplate
   }
 
   static wrapTextToHtmlView(text) {
+    var tab = RegExp("\\t", "g");
     let lines = text.split('\n');
     let result = [];
-    
+    for (let i = 0; i < lines.length; i++) {
+      lines[i] =
+      lines[i].replace(tab,'&nbsp;&nbsp;&nbsp;&nbsp;');
+      
+    }
+
     // Regular expression to find URLs starting with "http://" or "https://"
     const urlPattern = /https?:\/\/\S+/g;
   
@@ -352,7 +358,7 @@ class EventorTemplate
   
       // Set the div's innerHTML to the line with links
       div.innerHTML = lineWithLinks;
-  
+   
       if (line.startsWith('- ')) {
         div.classList.add('evt-list-item');
         div.innerHTML = lineWithLinks.replace(/^-\s*/, '');
@@ -362,11 +368,16 @@ class EventorTemplate
         let text = lineWithLinks.replace(/^-\s*/, '');
         result.push(document.createElement('hr'));
         div.innerHTML = text.replace(/^[-]+/, '');
-        if (div.innerHTML.trim() == ''){
+        if (div.innerHTML.trimEnd() == ''){
           skip = true;
         }
       }
-  
+      // replace each space
+      div.innerHTML = div.innerHTML.replace(/ /g, '&nbsp;');
+      // replace to only one space
+      //div.innerHTML = div.innerHTML.replace(/\s+/g, '&nbsp;');
+
+
       if (!skip){
         result.push(div);
       }
@@ -409,8 +420,6 @@ class EventorTemplate
             html +=`</select>
         </div>
     </div>
-
-
 
     <div class="uk-margin">
     <label class="uk-form-label" 
@@ -455,7 +464,60 @@ class EventorTemplate
 
     subform.innerHTML = html;
     return subform;
-    
   }
 
+
+  static categorySubEditorForm(object)
+  {
+    let subform = document.createElement('div');
+    subform.id = 'evt_category_subeditor';
+    subform.classList.add('evt-cat-subeditor');
+    subform.setAttribute('data-id', object.id);
+    subform.style.borderColor = "#" + object.color;
+    let html = `
+    <div class="uk-form-horizontal">
+
+    <div class="uk-margin">
+        <label class="uk-form-label" for="form-horizontal-text">Description of the category</label>
+        <div class="uk-form-controls">
+            <textarea class='evt-category-content-in uk-textarea' placeholder='Description...'>${object.content}</textarea>
+        </div>
+    </div>
+
+
+    <div class="uk-margin">
+      <label class="uk-form-label" 
+      for="form-horizontal3-select">Status </label>
+        <div class="uk-form-controls">
+            <select class="uk-select evt-cat-status-selector" id="form-horizontal3-select">`;
+            (EventorTypes.getStatus()).forEach(element => {
+              let active = "";
+              if (object.status == element.value){
+                active = "selected";
+              }
+              let option = "<option value='" + element.value + "' " + active + ">" + element.label + "</option>";
+              html += option;
+          });
+
+            html +=`</select>
+            
+        </div>
+    </div>
+    <div>(Disabled are automatically unbind from all sections and events, but archieved will not shown in list)</div>
+    <br>
+
+
+    <div class='uk-modal-footer uk-text-right'>
+    <button class="uk-button uk-button-default" id='evt_closeCategoryEditor'>CLOSE</button>
+    <div>
+    <button class="uk-button uk-button-danger" style='margin-right: 6px;' id='evt_act_deleteCategory'>Delete</button>
+    <button class="uk-button uk-button-primary evt-act-update-category">Update</button>
+    </div>
+    </div>
+  </div>
+    `;
+
+    subform.innerHTML = html;
+    return subform;
+  }
 }

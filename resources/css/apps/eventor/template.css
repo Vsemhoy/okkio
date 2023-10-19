@@ -187,12 +187,12 @@
   border: 0px;
   font-size: 1.1rem;
 }
-.evt-category-content-in {
+/* .evt-category-content-in {
 width: 100%;
 color: gray;
 border: none;
 font-family: system-ui;
-}
+} */
 .uk-align-right {
   margin-bottom: 0px;
 }
@@ -414,7 +414,7 @@ font-family: system-ui;
   backdrop-filter: blur(4px);
 }
 
-.evt-sec-subeditor {
+.evt-sec-subeditor, .evt-cat-subeditor {
   background: white;
   padding: 12px;
   border-radius: 9px;

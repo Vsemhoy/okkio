@@ -80,41 +80,6 @@ class SectionManager
             }
         });
 
-        // document.body.addEventListener('change', (e) => {
-        //     const targetClass = 'evt-section-content-in';
-        
-        //     if (e.target.classList.contains(targetClass)) {
-        //         const card = e.target.closest('.card-box'); // Replace with the actual class name of your card
-        //         if (card) {
-        //             let id = card.getAttribute('data-id');
-        //             let value = card.querySelector('.evt-section-content-in').value;
-        //             for (let i = 0; i < section_container.length; i++) {
-        //                 let element = section_container[i];
-        //                 if (element.id == id){
-        //                     element.content = value.replace(/[^\p{L}\p{N}\s]/gu, '');
-        //                     this.saveSection(element, element.id);
-        //                     console.log("call to update content");
-        //                     break;
-        //                 }
-        //             }
-        //         }
-        //     }
-        // });
-
-        // document.body.addEventListener('click', (e) => {
-        //     const targetClass = 'evt-section-group-trigger';
-        //     let modal = document.querySelector('.evt-cat-group-modal');
-
-        //     if (e.target.classList.contains(targetClass)) {
-        //         const card = e.target.closest('.evt-section-card'); // Replace with the actual class name of your card
-        //         if (card) {
-        //             // Handle color change within the card
-        //             modal.classList.toggle('uk-hidden');
-
-
-        //         }
-        //     }
-        // });
 
         UIkit.util.on('#evt_sectionList', 'moved', function(e) {
             // This code will run after an item is moved within the sortable container
@@ -191,7 +156,7 @@ class SectionManager
                     }
                     let subbox = EventorTemplate.sectionSubEditorForm(obj);
                     box.appendChild(subbox);
-                
+                    subbox.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
                     let input = box.querySelector('.evt-sec-cat-selector');
                     let strcats = '';
                     for (let i = 0; i < section_container.length; i++) {
@@ -225,8 +190,6 @@ class SectionManager
                         break;
                     }
                 }
-
-
             }
 
             if (e.target.closest('#evt_act_deleteSection')){
@@ -482,26 +445,11 @@ class SectionManager
         const sectionEditorTrigger = document.createElement('span');
         sectionEditorTrigger.classList.add('evt-section-editor-trigger');
         sectionEditorTrigger.setAttribute('uk-icon', 'icon: cog; ratio: 1.2;');
-
-    //     const sectionGroupTrigger = document.createElement('span');
-    //     sectionGroupTrigger.classList.add('evt-section-group-trigger');
-    //     sectionGroupTrigger.setAttribute('uk-icon', 'icon: list; ratio: 1.2;');
-      
-    //     const catSelector = document.createElement('select');
-    //     catSelector.classList.add('evt-sec-cat-selector');
-    //     catSelector.multiple = true;
-    //     catSelector.size = 1;
-    //   sectionGroupTrigger.appendChild(catSelector);
-        // You can add options to catSelector here
       
         const colorPickerInput = document.createElement('input');
         colorPickerInput.classList.add('evt-section-colorpicker');
         colorPickerInput.type = 'color';
         colorPickerInput.value = `#${color}`;
-      
-        // Continue creating the rest of your elements
-      
-        // Append elements to their respective parents
         
         let div1 = document.createElement('div');
         div1.appendChild(moveIcon);
@@ -595,6 +543,7 @@ class SectionManager
                                 section_container.push(item2);
                                 let card = SectionManager.getSectionCard(item2, section_container.length);
                                 document.querySelector('#evt_sections').appendChild(card);
+                                card.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
                             } else {
                                 let card = document.querySelector('#' + section_id.replace('.', `\\.`));
                                 //console.log(card);
@@ -626,7 +575,7 @@ class SectionManager
                 }
             }
         };
-        xhttp.open("POST", "/eventor/postcall", false);
+        xhttp.open("POST", "/eventor/postcall", true);
         // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
@@ -702,7 +651,7 @@ class SectionManager
                 }
             }
         };
-        xhttp.open("POST", "/eventor/postcall", false);
+        xhttp.open("POST", "/eventor/postcall", true);
         // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
@@ -774,7 +723,7 @@ class SectionManager
                     }
                 }
             };
-            xhttp.open("POST", "/eventor/postcall", false);
+            xhttp.open("POST", "/eventor/postcall", true);
             xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
     
@@ -876,7 +825,7 @@ class SectionManager
                 }
             }
         };
-        xhttp.open("POST", "/eventor/postcall", false);
+        xhttp.open("POST", "/eventor/postcall", true);
         // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
@@ -957,7 +906,7 @@ class SectionManager
                 }
             }
         };
-        xhttp.open("POST", "/eventor/postcall", false);
+        xhttp.open("POST", "/eventor/postcall", true);
         // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);

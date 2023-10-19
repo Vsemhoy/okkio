@@ -116,6 +116,96 @@ class CategoryManager
             CategoryManager.updateEventOrder(array);
             // Perform additional actions here
         });
+
+
+
+        document.body.addEventListener('click', (e)=> {
+            if ((e.target.closest('.evt-section-group-trigger') || e.target.closest('.evt-sec-cat-selector')) && !e.target.closest('.evt-cs-open')){
+                if (document.querySelector('.evt-cs-open')){
+                    // document.querySelector('.evt-cs-open').setAttribute('rows', 1);
+                    document.querySelector('.evt-cs-open').classList.remove('evt-cs-open');
+                    document.querySelector('.evt-s-selected').classList.remove('evt-s-selected');
+                }
+                
+                let trig = e.target.closest('.evt-section-group-trigger');
+                let input = trig.querySelector('.evt-sec-cat-selector');
+                input.classList.add('evt-cs-open');
+                let card = e.target.closest('.evt-section-card');
+                let id = card.parentElement.id;
+                card.classList.add('evt-s-selected');
+
+                console.log('hello :>>33 ');
+            } 
+            
+            
+            if (e.target.closest('.evt-category-editor-trigger')){
+                
+                console.log('hello :>>33 twetg ');
+                this.changedItem = null;
+                let box = e.target.closest('.card-box');
+                let id = box.id;
+                let obj = null;
+                for (let i = 0; i < category_container.length; i++) {
+                    const element = category_container[i];
+                    if (element.id == id){
+                        obj = element;
+                        this.changedItem = obj;
+                        break;
+                    }
+                }
+                if (obj != null){
+                    if (document.querySelector('#evt_category_subeditor') != null){
+                        document.querySelector('#evt_category_subeditor').remove();
+                    }
+                    let subbox = EventorTemplate.categorySubEditorForm(obj);
+                    box.appendChild(subbox);
+                
+                    subbox.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+                }
+            }
+
+            if (e.target.closest('.evt-act-update-section')){
+                console.log('hello :>> 1');
+                let card = e.target.closest('.card-box');
+                let id = card.id;
+                card.classList.remove('evt-disabled');
+                card.classList.remove('evt-archieved');
+                // Iterate through selected options
+                for (let i = 0; i < section_container.length; i++) {
+                    const element = section_container[i];
+                    if (element.id == id){
+                        this.saveSection(element, id);
+                        if (element.status == 0){
+                            card.classList.add('evt-disabled');
+                        }
+                        if (element.status == 2){
+                            card.classList.add('evt-archieved');
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if (e.target.closest('#evt_act_deleteCategory')){
+
+                let id = document.querySelector('#evt_section_subeditor').getAttribute('data-id');
+                this.tryToDeleteSection(id);
+            }
+
+            if (e.target.closest('#evt_closeCategoryEditor')){
+                let card = e.target.closest('.card-box');
+                let id = card.id;
+                for (let i = 0; i < section_container.length; i++) {
+                    const element = section_container[i];
+                    if (element.id == id){
+                        section_container[i] = this.changedItem;
+                        break;
+                    }
+                }
+                document.querySelector('#evt_category_subeditor').remove();
+            }
+        });
+        
     }
 
 
@@ -316,7 +406,7 @@ class CategoryManager
                                 document.querySelector('#evt_categorys').appendChild(card);
                                 // Update the sortable container
                                 // sortableContainer.update();
-
+                                card.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
                             } else {
                                 let card = document.querySelector('#' + category_id.replace('.', `\\.`));
                                 //console.log(card);
@@ -345,7 +435,7 @@ class CategoryManager
                 }
             }
         };
-        xhttp.open("POST", "/eventor/postcall", false);
+        xhttp.open("POST", "/eventor/postcall", true);
         // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
@@ -412,7 +502,7 @@ class CategoryManager
                 }
             }
         };
-        xhttp.open("POST", "/eventor/postcall", false);
+        xhttp.open("POST", "/eventor/postcall", true);
         // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
@@ -433,6 +523,180 @@ class CategoryManager
             task.where.push(where);
             taskArray.push(task);
         }
+        xhttp.send(JSON.stringify(taskArray));
+    }
+
+
+
+
+
+
+    static updateEvents(fromCategory, toCategory = '') {
+        console.log('saveEvents :>> ');
+        
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                if (this.responseText == -1) {
+                    alert("You are not registered!");
+                    return 0;
+                };
+                console.log(this.responseText);
+                console.log(JSON.parse(this.responseText));
+                let result = JSON.parse(this.responseText);
+                Array.from(result.results).forEach((item) => {
+                    if (item.type == "Event") {
+                        //console.log(item.results);
+                        Array.from(item.results).forEach((item2) => {
+                            if (event_id == "") {
+                                event_container.push(item2);
+                                EventorUtils.setCookie('eventorEventDraft', '', 1);
+                            } else {
+                                let card = document.querySelector('#' + event_id.replace('.', `\\.`));
+                                //console.log(card);
+                                if (card != null) {
+                                    card.remove();
+
+                                }
+
+                                for (let i = 0; i < event_container.length; i++) {
+                                    let el = event_container[i];
+                                    if (el.id == event_id) {
+                                        event_container.splice(i, 1);
+                                        break;
+                                    }
+                                }
+                                
+                                event_container.push(item2);
+                            }
+                        });
+
+                    };
+                });
+                EventorFlow.refreshEvents();
+            }
+            else if (this.status > 200) {
+                if (counter < 1) {
+                    alert("Oops! There is some problems with the server connection, or you are not logged in.");
+
+                    counter++;
+                }
+            }
+        };
+        xhttp.open("POST", "/eventor/postcall", true);
+        // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
+
+        //alert(JSON.stringify(data));
+
+        const where = {
+            column: "user",
+            value: me,
+        };
+
+        let taskArray = [];
+        let task = EventorTypes.GetNewTask();
+        formdata = {
+            column: "category",
+            value : toCategory
+        };
+        task.objects.push(formdata);
+        task.user = me;
+        if (event_id == "") {
+            task.action = 3;
+
+        } else {
+            task.action = 7;
+        }
+        let where2 = {
+            column: "category",
+            value: fromCategory
+        }
+
+        task.type = "event";
+        task.where.push(where);
+        task.where.push(where2);
+        taskArray.push(task);
+        xhttp.send(JSON.stringify(taskArray));
+    }
+
+
+
+    deleteCategory(section_id) {
+        let counter = 0;
+        let formdata = null;
+        category_container.forEach(sect => {
+              if (sect.id == section_id)
+              {
+                formdata = sect;
+              };
+        });
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                if (this.responseText == -1) {
+                    alert("You are not registered!");
+                    return 0;
+                };
+                //console.log(this.responseText);
+                console.log(JSON.parse(this.responseText));
+                let result = JSON.parse(this.responseText);
+                Array.from(result.results).forEach((item) => {
+                    if (item.type == "Section") {
+                        Array.from(item.results).forEach((item2) => {
+                            console.log(item2);
+                            let card = document.querySelector('#' + item2.id);
+                            if (card != null) {
+                                card.remove();
+                            }
+
+                            for (let i = 0; i < category_container.length; i++) {
+                                let el = category_container[i];
+                                if (el.id == item2.id) {
+                                    category_container.splice(i, 1);
+                                    break;
+                                }
+                            }
+                        });
+
+                    };
+                });
+                //EventorFlow.refreshEvents();
+
+                // let result = JSON.parse(this.responseText);
+                // console.log('рудзукы updated ' + this.responseText);
+            }
+            else if (this.status > 200) {
+                if (counter < 1) {
+                    alert("Oops! There is some problems with the server connection.");
+
+                    counter++;
+                }
+            }
+        };
+        xhttp.open("POST", "/eventor/postcall", true);
+        // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
+
+        //alert(JSON.stringify(data));
+
+        const where = {
+            column: "user",
+            value: me,
+        };
+
+        let taskArray = [];
+        let task = EventorTypes.GetNewTask();
+        task.objects.push(formdata);
+        task.user = me;
+        task.action = 10;
+        task.type = "category";
+        task.where.push(where);
+        taskArray.push(task);
         xhttp.send(JSON.stringify(taskArray));
     }
 }
