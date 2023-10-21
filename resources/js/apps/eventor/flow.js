@@ -26,7 +26,6 @@ class EventorFlow {
 
         document.querySelector('.th-central-menu').prepend(menuitem);
 
-
         document.addEventListener("dblclick", function (e) {
             if (e.target.closest(".event-section") && !e.target.closest(".event-card")) {
                 e.preventDefault();
@@ -144,7 +143,6 @@ class EventorFlow {
                 EventorFlow.loadSingleEvent([targetEvent]); // It loaded eventId into targetEvents array
                 // define it's month and section
                 if (EventorFlow.targetEvents.length > 0) {
-                    console.log(EventorFlow.targetEvents[0]);
                     let setdate = EventorFlow.targetEvents[0].setdate;
                     let section = EventorFlow.targetEvents[0].section;
                     let tdate = new ShortDate(setdate);
@@ -162,7 +160,6 @@ class EventorFlow {
 
             let callParamsArray = [];
             for (let i = 0; i < DayFlow.dateArray.length; i++) {
-                //console.log(eventor.dateArray[i]);
                 callParamsArray.push([DayFlow.dateArray[i], EventorFlow.activeSection]);
             };
             EventorFlow.loadEvents(callParamsArray);
@@ -255,7 +252,26 @@ class EventorFlow {
                     }
                 }
             }
-        })
+        });
+
+
+        /**
+         * Create Section content, category content and Search listener
+         */
+        // Depends on global variable
+        let smenu = EventorNav.buildMenu();
+        sideMenu = new SidebarMenu(smenu);
+        let categoryManager = new CategoryManager();
+        let searchMan = new EventorSearch('modal_searchManager');
+        
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('#evt_openSectionManager')) {
+                this.sectionManager = new SectionManager();
+
+            }
+        });
+
+
     }
 
 
@@ -355,8 +371,6 @@ class EventorFlow {
                     alert("You are not registered!");
                     return 0;
                 };
-                console.log(this.responseText);
-                console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Event") {
@@ -388,9 +402,6 @@ class EventorFlow {
                     };
                 });
                 EventorFlow.refreshEvents();
-                //console.log('event_container.length :>> ', event_container.length);
-                // let result = JSON.parse(this.responseText);
-                // console.log('рудзукы updated ' + this.responseText);
             }
             else if (this.status > 200) {
                 if (counter < 1) {
@@ -554,7 +565,6 @@ class EventorFlow {
             }
         }
         let catar = strcats.split(',');
-        console.log('catar :>> ', catar);
         Array.from(category_container).forEach((option) => {
             if (catar.includes(option.id) || section == "" || section == 'all') {
                 const optionElement = document.createElement('option');
@@ -575,7 +585,6 @@ class EventorFlow {
             EventorFlow.activeSection = 'all';
         } else {
             EventorFlow.activeSection = cursect.trim();
-            console.log("YEP2", EventorFlow.activeSection);
         }
         let counter = 0;
         var xhttp = new XMLHttpRequest();
@@ -594,7 +603,6 @@ class EventorFlow {
                             section_container.push(item2);
 
                             if (EventorFlow.activeSection == 'all') {
-                                console.log('cursect :>> ', EventorFlow.activeSection);
                                 for (let i = 0; i < DayFlow.dateArray.length; i++) {
                                     let cdate = DayFlow.dateArray[i].getShortDate();
                                     if (EventorFlow.loadedSections[cdate] != null) {
@@ -617,7 +625,6 @@ class EventorFlow {
                     }
                 });
                 EventorFlow.refreshCategoriesAndSections();
-                console.log(EventorFlow.loadedSections);
                 // let result = JSON.parse(this.responseText);
             }
             else if (this.status > 200) {
@@ -676,7 +683,6 @@ class EventorFlow {
                 // if (document.querySelector('#' + event.id) != null){
                 //     document.querySelector('#' + event.id).remove();
                 // }
-                console.log('EventorFlow.activeTypes :>> ', EventorFlow.activeTypes);
                 if (EventorFlow.activeTypes.includes(event.type)){
 
                     let rid = "row_" + event.setdate;
@@ -710,7 +716,6 @@ class EventorFlow {
 
     static loadEvents(callArray) {
         console.log('command :>> ', 'loadEvents');
-        console.log('Called section', EventorFlow.activeSection);
         let counter = 0;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -775,10 +780,6 @@ class EventorFlow {
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
 
-        // console.log(datePast);
-        // console.log(dateFuture);
-        // console.log(EventorUtils.getSimpleDate(datePast, true));
-        // console.log(EventorUtils.getSimpleDate(dateFuture, true));
         let taskArray = [];
 
         for (let ind = 0; ind < callArray.length; ind++) {
@@ -808,9 +809,7 @@ class EventorFlow {
                     value: section,
                 };
                 task.where.push(where3);
-                console.log('WHERE SECTION: ', section);
             }
-            console.log(task);
             taskArray.push(task);
         }
         xhttp.send(JSON.stringify(taskArray));
@@ -820,7 +819,6 @@ class EventorFlow {
 
     static loadSingleEvent(callArray) {
         EventorFlow.targetEvents = [];
-        console.log('command :>> ', 'loadSingleEvent');
         let counter = 0;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -829,8 +827,6 @@ class EventorFlow {
                     console.log("You are not registered!");
                     return 0;
                 };
-                //console.log(this.responseText);
-                //console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Event") {
@@ -849,7 +845,6 @@ class EventorFlow {
                         return;
                     };
                     console.log("Oops! There is some problems with the server connection.");
-                    //console.log(this.responseText);
                     counter++;
                 }
             }
@@ -858,10 +853,6 @@ class EventorFlow {
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
 
-        // console.log(datePast);
-        // console.log(dateFuture);
-        // console.log(EventorUtils.getSimpleDate(datePast, true));
-        // console.log(EventorUtils.getSimpleDate(dateFuture, true));
         let taskArray = [];
 
         for (let ind = 0; ind < callArray.length; ind++) {
@@ -882,7 +873,6 @@ class EventorFlow {
             };
             task.where.push(where2);
 
-            console.log(task);
             taskArray.push(task);
         }
         xhttp.send(JSON.stringify(taskArray));

@@ -185,8 +185,8 @@
 
 @section('page-script')
 <script>
-    var event_container = [];
-    var section_container = [];
+    var event_container    = [];
+    var section_container  = [];
     var category_container = [];
 
     // EventorUtils.changeAddressBar('page', 'bro');
@@ -245,16 +245,7 @@
 
 
 
-let smenu = EventorNav.buildMenu();
-sideMenu = new SidebarMenu(smenu);
 
-
-
-
-
-let sectionManager = new SectionManager();
-let categoryManager = new CategoryManager();
-let searchMan = new EventorSearch('modal_searchManager');
 // console.log('object :>> ', 'GEOLOCATION');
 // if ("geolocation" in navigator) {
 //     navigator.geolocation.getCurrentPosition(function(position) {

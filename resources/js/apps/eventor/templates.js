@@ -373,7 +373,7 @@ class EventorTemplate
         }
       }
       // replace each space
-      div.innerHTML = div.innerHTML.replace(/ /g, '&nbsp;');
+      div.innerHTML = div.innerHTML.replace(/  /g, '&nbsp;&nbsp;');
       // replace to only one space
       //div.innerHTML = div.innerHTML.replace(/\s+/g, '&nbsp;');
 

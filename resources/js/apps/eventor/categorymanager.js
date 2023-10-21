@@ -42,13 +42,11 @@ class CategoryManager
                     let value = card.querySelector('.evt-category-colorpicker').value;
                     // console.log(value, id, category_container.length);
                     for (let i = 0; i < category_container.length; i++) {
-                        // console.log(i);
                         let element = category_container[i];
                         if (element.id == id){
                             element.color = value.replace('#', '');
                             element.content = element.content == null ? '' : element.content;
                             this.savecategory(element, element.id);
-                            console.log("call to update content");
                             break;
                         }
                     }
@@ -70,7 +68,6 @@ class CategoryManager
                             element.title = value.replace(/[^\p{L}\p{N}\s]/gu, '');
                             element.content = element.content == null ? '' : element.content;
                             this.savecategory(element, element.id);
-                            console.log("call to update name");
                             break;
                         }
                     }
@@ -91,7 +88,6 @@ class CategoryManager
                         if (element.id == id){
                             element.content = value.replace(/[^\p{L}\p{N}\s]/gu, '');
                             this.savecategory(element, element.id);
-                            console.log("call to update content");
                             break;
                         }
                     }
@@ -107,7 +103,6 @@ class CategoryManager
             for (let i = 0; i < items.length; i++) {
                 const element = items[i];
                 let id = element.getAttribute('data-id');
-                console.log(id, i + 1);
                 let item = {};
                 item.id = id;
                 item.ordered = i + 1;
@@ -133,14 +128,11 @@ class CategoryManager
                 let card = e.target.closest('.evt-section-card');
                 let id = card.parentElement.id;
                 card.classList.add('evt-s-selected');
-
-                console.log('hello :>>33 ');
             } 
             
             
             if (e.target.closest('.evt-category-editor-trigger')){
                 
-                console.log('hello :>>33 twetg ');
                 this.changedItem = null;
                 let box = e.target.closest('.card-box');
                 let id = box.id;
@@ -164,17 +156,18 @@ class CategoryManager
                 }
             }
 
-            if (e.target.closest('.evt-act-update-section')){
-                console.log('hello :>> 1');
+            if (e.target.closest('.evt-act-update-category')){
                 let card = e.target.closest('.card-box');
                 let id = card.id;
                 card.classList.remove('evt-disabled');
                 card.classList.remove('evt-archieved');
                 // Iterate through selected options
-                for (let i = 0; i < section_container.length; i++) {
-                    const element = section_container[i];
+                for (let i = 0; i < category_container.length; i++) {
+                    const element = category_container[i];
                     if (element.id == id){
-                        this.saveSection(element, id);
+                        element.content = document.querySelector('.evt-category-content-in').value;
+                        element.status  = document.querySelector('.evt-cat-status-selector').value;
+                        this.savecategory(element, id);
                         if (element.status == 0){
                             card.classList.add('evt-disabled');
                         }
@@ -188,7 +181,7 @@ class CategoryManager
 
             if (e.target.closest('#evt_act_deleteCategory')){
 
-                let id = document.querySelector('#evt_section_subeditor').getAttribute('data-id');
+                let id = document.querySelector('#evt_category_subeditor').getAttribute('data-id');
                 this.tryToDeleteSection(id);
             }
 
@@ -206,6 +199,14 @@ class CategoryManager
             }
         });
         
+    }
+
+
+    tryToDeleteSection(catId)
+    {
+        CategoryManager.removeCategoryFromSections(catId);
+        CategoryManager.updateEvents(catId, '');
+        this.deleteCategory(catId);
     }
 
 
@@ -241,7 +242,6 @@ class CategoryManager
 
         for (let index = 0; index < category_container.length; index++) {
             const item = category_container[index];
-            // console.log(item);
             div.appendChild(CategoryManager.getCategoryCard(item, index));
 
         };
@@ -288,7 +288,7 @@ class CategoryManager
       
         const sectionNameInput = document.createElement('input');
         sectionNameInput.placeholder = 'Event name';
-        sectionNameInput.classList.add('evt-section-name-in');
+        sectionNameInput.classList.add('evt-category-name-in');
         sectionNameInput.maxLength = 60;
         sectionNameInput.type = 'text';
         sectionNameInput.value = item.title;
@@ -392,15 +392,11 @@ class CategoryManager
                     alert("You are not registered!");
                     return 0;
                 };
-                // console.log(this.responseText);
-                // console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Category") {
-                        // console.log(item.results);
                         Array.from(item.results).forEach((item2) => {
                             if (category_id == ""){
-                                category_container.push(item2);
                                 // let sortableContainer = UIkit.sortable('#evt_categoryList');
                                 let card = CategoryManager.getCategoryCard(item2, category_container.length);
                                 document.querySelector('#evt_categorys').appendChild(card);
@@ -408,11 +404,7 @@ class CategoryManager
                                 // sortableContainer.update();
                                 card.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
                             } else {
-                                let card = document.querySelector('#' + category_id.replace('.', `\\.`));
-                                //console.log(card);
-                                if (card != null){
-                                    card.remove();
-                                }
+                                category_container.push(item2);
 
                                 for (let i = 0; i < category_container.length; i++){
                                     let el = category_container[i];
@@ -458,8 +450,6 @@ class CategoryManager
         task.type = "Category";
         task.where.push(where);
         taskArray.push(task);
-        // console.log(taskArray);
-        // console.log(formdata);
         xhttp.send(JSON.stringify(taskArray));
     }
 
@@ -473,12 +463,9 @@ class CategoryManager
                     alert("You are not registered!");
                     return 0;
                 };
-                // console.log(this.responseText);
-                // console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "category") {
-                        console.log(item.results);
                         Array.from(item.results).forEach((item2) => {
                                 for (let i = 0; i < category_container.length; i++){
                                     let el = category_container[i];
@@ -529,6 +516,68 @@ class CategoryManager
 
 
 
+    static removeCategoryFromSections(catId){
+        let sectionsToUpdate = [];
+        for (let i = 0; i < section_container.length; i++) {
+            const element = section_container[i];
+            let arr = element.categories.split(',');
+            if (arr.includes(catId))
+            {
+                let indexToRemove = arr.indexOf(catId);
+                if (indexToRemove > -1)
+                {
+                    arr.splice(indexToRemove, 1);
+                    element.categories = arr.join(',');
+                    sectionsToUpdate.push(element);
+                }
+            }
+        }
+
+        if (sectionsToUpdate.length == 0)
+        {
+            return 0;
+        }
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                if (this.responseText == -1) {
+                    alert("You are not registered!");
+                    return 0;
+                };
+                let result = JSON.parse(this.responseText);
+                Array.from(result.results).forEach((item) => {
+                    if (item.type == "Section") {
+                        console.log(item.results);
+                        
+                    };
+                });
+            }
+            else if (this.status > 200) {
+                if (counter < 1) {
+                    alert("Oops! There is some problems with the server connection, or you are not logged in.");
+
+                    counter++;
+                }
+            }
+        };
+        xhttp.open("POST", "/eventor/postcall", true);
+        // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
+
+        const where = {
+            column: "user",
+            value: me,
+        };
+        let taskArray = [];
+        let task = EventorTypes.GetNewTask();
+        task.objects = sectionsToUpdate;
+        task.user = me;
+        task.action = 5;
+        task.type = "section";
+        taskArray.push(task);
+        xhttp.send(JSON.stringify(taskArray));
+    }
 
 
     static updateEvents(fromCategory, toCategory = '') {
@@ -542,36 +591,20 @@ class CategoryManager
                     alert("You are not registered!");
                     return 0;
                 };
-                console.log(this.responseText);
-                console.log(JSON.parse(this.responseText));
+         
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Event") {
-                        //console.log(item.results);
-                        Array.from(item.results).forEach((item2) => {
-                            if (event_id == "") {
-                                event_container.push(item2);
-                                EventorUtils.setCookie('eventorEventDraft', '', 1);
-                            } else {
-                                let card = document.querySelector('#' + event_id.replace('.', `\\.`));
-                                //console.log(card);
-                                if (card != null) {
-                                    card.remove();
-
-                                }
-
                                 for (let i = 0; i < event_container.length; i++) {
-                                    let el = event_container[i];
-                                    if (el.id == event_id) {
-                                        event_container.splice(i, 1);
-                                        break;
+                                    if (event_container[i].category == fromCategory){
+                                        let card = document.querySelector('#' + event_container[i].id.replace('.', `\\.`));
+                                        if (card != null) {
+                                            card.remove();
+                                        }
+
+                                        event_container[i].category = toCategory;
                                     }
                                 }
-                                
-                                event_container.push(item2);
-                            }
-                        });
-
                     };
                 });
                 EventorFlow.refreshEvents();
@@ -598,18 +631,12 @@ class CategoryManager
 
         let taskArray = [];
         let task = EventorTypes.GetNewTask();
-        formdata = {
-            column: "category",
-            value : toCategory
+        let formdata = {
+            category: toCategory
         };
         task.objects.push(formdata);
         task.user = me;
-        if (event_id == "") {
-            task.action = 3;
-
-        } else {
-            task.action = 7;
-        }
+        task.action = 7;
         let where2 = {
             column: "category",
             value: fromCategory
@@ -624,11 +651,11 @@ class CategoryManager
 
 
 
-    deleteCategory(section_id) {
+    deleteCategory(category_id) {
         let counter = 0;
         let formdata = null;
         category_container.forEach(sect => {
-              if (sect.id == section_id)
+              if (sect.id == category_id)
               {
                 formdata = sect;
               };
@@ -641,13 +668,10 @@ class CategoryManager
                     alert("You are not registered!");
                     return 0;
                 };
-                //console.log(this.responseText);
-                console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
-                    if (item.type == "Section") {
+                    if (item.type == "Category") {
                         Array.from(item.results).forEach((item2) => {
-                            console.log(item2);
                             let card = document.querySelector('#' + item2.id);
                             if (card != null) {
                                 card.remove();

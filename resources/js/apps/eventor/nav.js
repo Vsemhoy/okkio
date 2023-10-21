@@ -26,7 +26,7 @@ class EventorNav {
         EventorUtils.changeAddressBar('sect', section);
         EventorFlow.clearAllCardBodyFromChart();
         EventorFlow.activeSection = section;
-        console.log('section to load :>> ', section);
+        // console.log('section to load :>> ', section);
         eventor.reloadSectionEvents(section);
         if (prevExpended == false){
           EventorNav.shrinkAllRows();
@@ -129,7 +129,6 @@ class EventorNav {
             }
           }
           this.triggerTypeToggle();
-          console.log("Itrigyou!");
           UIkit.notification({
             message: 'Type toggled!',
             status: 'success',
@@ -158,7 +157,6 @@ class EventorNav {
           }
           if (JSON.stringify(EventorNav.activeTypes.length) != oldTypes ){
             this.triggerTypeToggle();
-            console.log("Itrigyou!2");
             UIkit.notification({
               message: 'Type toggled!',
               status: 'success',
@@ -421,7 +419,7 @@ class EventorNav {
       let setItem1 = SidebarMenu.getNewItem();
       setItem1.name  = "Sections";
       setItem1.ukicon = 'thumbnails';
-      setItem1.id = "djsfgaks";
+      setItem1.id = "evt_openSectionManager";
       setItem1.ref='#modal_sectionManager';
       setItem1.linkSingleAttribute = "uk-toggle";
       smenu.setItems.push(setItem1);
@@ -429,7 +427,7 @@ class EventorNav {
       let setItem2 = SidebarMenu.getNewItem();
       setItem2.name  = "Categories";
       setItem2.ukicon = 'social';
-      setItem2.id = "djsfakfs";
+      setItem2.id = "evt_openCategoryManager";
       setItem2.ref='#modal_categoryManager';
       setItem2.linkSingleAttribute = "uk-toggle";
       smenu.setItems.push(setItem2);
@@ -437,10 +435,10 @@ class EventorNav {
       let setItem3 = SidebarMenu.getNewItem();
       setItem3.name  = "Settings";
       setItem3.ukicon = 'settings';
-      setItem3.id = "djsfaks";
+      setItem3.id = "evt_openSetingsManager";
       setItem3.ref='#modal_settingsManager';
       setItem3.linkSingleAttribute = "uk-toggle";
-      smenu.setItems.push(setItem3);
+      //smenu.setItems.push(setItem3);
 
       return smenu;
     }

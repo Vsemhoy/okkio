@@ -42,15 +42,12 @@ class SectionManager
                 if (card) {
                     let id = card.getAttribute('data-id');
                     let value = card.querySelector('.evt-section-colorpicker').value;
-                    console.log(value, id, section_container.length);
                     for (let i = 0; i < section_container.length; i++) {
-                        console.log(i);
                         let element = section_container[i];
                         if (element.id == id){
                             element.color = value.replace('#', '');
                             element.content = element.content == null ? '' : element.content;
                             this.saveSection(element, element.id);
-                            console.log("call to update content");
                             break;
                         }
                     }
@@ -72,7 +69,6 @@ class SectionManager
                             element.title = value.replace(/[^\p{L}\p{N}\s]/gu, '');
                             element.content = element.content == null ? '' : element.content;
                             this.saveSection(element, element.id);
-                            console.log("call to update name");
                             break;
                         }
                     }
@@ -532,12 +528,9 @@ class SectionManager
                     alert("You are not registered!");
                     return 0;
                 };
-                console.log(this.responseText);
-                console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Section") {
-                        //console.log(item.results);
                         Array.from(item.results).forEach((item2) => {
                             if (section_id == ""){
                                 section_container.push(item2);
@@ -546,7 +539,6 @@ class SectionManager
                                 card.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
                             } else {
                                 let card = document.querySelector('#' + section_id.replace('.', `\\.`));
-                                //console.log(card);
                                 if (card != null){
                                     //card.remove();
                                 }
@@ -598,7 +590,6 @@ class SectionManager
         task.type = "section";
         task.where.push(where);
         taskArray.push(task);
-        console.log(taskArray);
         xhttp.send(JSON.stringify(taskArray));
 
         if (document.querySelector('#evt_section_subeditor') != null){
@@ -619,12 +610,9 @@ class SectionManager
                     alert("You are not registered!");
                     return 0;
                 };
-                console.log(this.responseText);
-                console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Section") {
-                        console.log(item.results);
                         Array.from(item.results).forEach((item2) => {
                                 for (let i = 0; i < section_container.length; i++){
                                     let el = section_container[i];
@@ -689,8 +677,6 @@ class SectionManager
                         console.log("You are not registered!");
                         return 0;
                     };
-                    //console.log(this.responseText);
-                    //console.log(JSON.parse(this.responseText));
                     let result = JSON.parse(this.responseText);
                     Array.from(result.results).forEach((item) => {
                         if (item.type == "Event") {
@@ -744,15 +730,12 @@ class SectionManager
                 };
                 task.where.push(where2);
                 
-                //console.log(task);
                 taskArray.push(task);
             
             xhttp.send(JSON.stringify(taskArray));
-            //console.log(JSON.stringify(taskArray));
             let removed = false;
         if (SectionManager.bindedTaskCount > 0){
             // TO MOVE
-            console.log('SectionManager.bindedTaskCount :>> ', SectionManager.bindedTaskCount);
             // ('This section contains ' + SectionManager.bindedTaskCount + ' events, move events to other section before delete.');
             let result = confirm('This section contains ' + SectionManager.bindedTaskCount + ' events, Delete all events from section before?');
             if (result){
@@ -763,7 +746,6 @@ class SectionManager
                 document.querySelector('#evt_act_deleteSection').setAttribute('disabled', 'disabled');
             }
         } else {
-            console.log('NO :>> ');
             this.deleteSection(section_id);
             removed = true;
         }
@@ -788,15 +770,10 @@ class SectionManager
                     alert("You are not registered!");
                     return 0;
                 };
-                console.log(this.responseText);
-                //console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
-                console.log('result :>> ', result);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Event") {
-                        //console.log(item.results);
                         Array.from(item.results).forEach((item2) => {
-                            console.log('item2 :>> ', item2);
                             if (item2.length == 0){
                                 let newContainer = [];
                                 event_container.forEach(evt => {
@@ -871,12 +848,10 @@ class SectionManager
                     return 0;
                 };
                 //console.log(this.responseText);
-                console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Section") {
                         Array.from(item.results).forEach((item2) => {
-                            console.log(item2);
                             let card = document.querySelector('#' + item2.id);
                             if (card != null) {
                                 card.remove();
