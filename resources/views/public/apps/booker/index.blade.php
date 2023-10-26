@@ -32,11 +32,17 @@
         margin-bottom: 1px;
         transition: border 0.3s;
         }
+        .boo-nav-item.active {
+            outline: 1px dashed gray;
+            border-radius: 4px;
+        }
         .boo-nav-content {
         display: flex;
         flex-direction: column;
             overflow-y: auto;
         padding: 12px;
+        height: 100%;
+    padding-bottom: 50%;
         }
         .boo-nav-footer {
         padding: 12px;
@@ -186,6 +192,13 @@
 
 @section('page-script')
 <script>
+class BookerFlow
+{
+    constructor()
+    {
+
+    }
+}
 
 class BookerDef
  {
@@ -287,7 +300,7 @@ class BookerTemplates
   }
 }
 
-class BookerNavigator
+class TreeNav
 {
     static makeHanlerSat = false;
     constructor(containerId)
@@ -318,7 +331,7 @@ class BookerNavigator
     recycler.addEventListener("dragover", this.handleDragOver);
     recycler.addEventListener("drop", this.handleRemoveContainerDrop);
 
-    if (!BookerNavigator.makeHanlerSat){
+    if (!TreeNav.makeHanlerSat){
             let boomakers = document.querySelectorAll('.boo-maker');
         Array.from(boomakers).forEach((boom) => {
             boom.addEventListener('dblclick', (e)=>{
@@ -337,11 +350,12 @@ class BookerNavigator
                 wrp.querySelector(".boo-nav-content").appendChild(newItemToSend);
             });
         });
-        BookerNavigator.makeHanlerSat = true;
+        TreeNav.makeHanlerSat = true;
     }
 
     this.container.addEventListener('click', (e)=> {
         if (e.target.closest('.boo-puller')){
+            // Pull expand or shrink item
             let childcontainer = e.target.closest('.boo-nav-item').querySelector('.boo-nav-item-subs');
             let boches = childcontainer.querySelectorAll('.boo-nav-item');
             if (boches.length > 0){
@@ -363,7 +377,33 @@ class BookerNavigator
                     e.target.closest('.boo-nav-item').classList.remove('boo-list-closed');
                 }
             }
+
+            if (e.target.closest('.boo-nav-title')){
+                let item = e.target.closest('.boo-nav-item');
+                let type = item.getAttribute('data-type');
+                let id = item.id;
+                this.itemTriggerClicked(id, type);
+                switch (type) {
+                    case 1:
+                        // Folder
+
+                    break;
+                    case 2:
+                        // Group
+
+                    break;
+                    case 3:
+                        // Item
+
+                    break;
+
+                    default:
+                        break;
+                }
+            }
         });
+
+
 
         this.container.addEventListener('dblclick', (e)=> {
         if (e.target.closest('.boo-nav-title')){
@@ -442,9 +482,9 @@ class BookerNavigator
         this.orderChanged = callback;
     }
 
-    triggerItemClicked(id, name, type) {
+    triggerItemClicked(id, type) {
         if (typeof this.itemClicked === 'function') {
-            this.itemClicked(id, name, type);
+            this.itemClicked(id, type);
         }
     }
     onClickItem(callback) {
@@ -838,7 +878,7 @@ function cb(id, name){
     alert( name);
 };
 
-let a = new BookerNavigator('sortableList');
+let a = new TreeNav('sortableList');
 a.onChangedName(cb);
 /*
   let subs = this.container.querySelectorAll('.boo-nav-item-subs');
