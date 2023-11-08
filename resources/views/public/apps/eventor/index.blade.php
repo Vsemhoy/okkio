@@ -170,7 +170,7 @@
             <h2 class="uk-modal-title evt-reader-title">Headline</h2>
         </div>
 
-        <div class="uk-modal-body evt-reader-body" uk-overflow-auto>
+        <div class="uk-modal-body evt-reader-body">
 
         </div>
 

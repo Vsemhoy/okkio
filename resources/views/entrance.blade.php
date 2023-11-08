@@ -16,577 +16,209 @@
     <!-- Add more CSS files if needed -->
     @yield('page-styles')
     <style>
-    .uk-navbar-container .uk-navbar-item {
-        height: 40px !important;
-        background: red;
-    }
+body {
+  margin: 0;
+}
+.body-shop {
+   width: 100%;
+  height: 100vh;
+  position: relative;
+  background-image: url(https://images.unsplash.com/photo-1444927714506-8492d94b4e3d?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=067f0b097deff88a789e125210406ffe);
+  background-size: cover;
+  background-position: center center;
+  display: block;
+}
 
-    main {
-        min-height: 100vh;
-    }
+.phone-wrapper {
 
-    .th-navbar {
-        /* display: grid;
-            grid-template-columns: 120px auto 120px; */
-        display: flex;
-        justify-content: space-between;
-        z-index: 9;
-    }
-
-    .th-navbar>div {
-
-        display: flex;
-        justify-content: space-around;
-    }
-
-    .th-navbar>div>* {}
-
-    .th-navbar-item {
-        vertical-align: middle;
-        font-size: 1.2rem;
-        text-align: center;
-        padding: 6px;
-        min-width: 42px;
-        transition: all ease 0.2s;
-        border-right: 1px solid transparent;
-        border-left: 1px solid transparent;
-    }
-
-    .th-navbar-item a {
-        color: gray;
-    }
-
-    .th-navbar-item:hover {
-        cursor: pointer;
-        /* background-color: #fff;
-        box-shadow: 0 5px 12px rgba(0, 0, 0, .15); */
-        border-right: 1px solid #dfdfdf;
-        border-left: 1px solid #dfdfdf;
-    }
-
-    .th-navbar-item-dd:hover {
-        /* margin-bottom: -6px; */
-    }
-
-    .th-navbar-item-dd .th-navbar-item:hover a {
-        color: #039BE5;
-    }
-
-    .th-central-search,
-    .th-central-menu {
-        width: -webkit-fill-available;
-    }
-
-    .th-central-search {
-        padding: 3px 12px;
-    }
-
-    .th-central-search input {}
-
-    .th-search-wrap {
-        display: flex;
-        border-radius: 6px;
-        border: 1px solid #dfdfdf;
-        background: white;
-        overflow: hidden;
-        width: 100%;
-    }
-
-    .th-search-wrap * {
-        border: none;
-        background: white;
-        height: 31px;
-        color: gray;
-    }
-
-    .th-search-wrap button:hover * {
-        color: black;
-        cursor: pointer;
-    }
-
-    .menu-minimized .th-col-sidenav {
-        width: 60px !important;
-    }
+  margin-left: auto;
+  margin-right: auto;
+  height: calc(100vh - 200px);
+  padding-top: 100px;
+  display: block;
+  width: 400px;
+  max-height: 800px;
+}
+.phone-outline {
+  width: 100%;
+  height: 100%;
+    box-shadow: 1px 1px 178px #00deff, 11px 90px 144px -42px #0fc8e026;
+    border-radius: 1.6rem;
+}
+.phone-body {
+  display: block;
+  width: 100%;
+  height:100%;
+overflow: hidden;
+  border-radius: 1.6rem;
+  background: gray;
+/*   border: 1px solid red; */
+/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#afb5bf+0,6f7577+50,0a0e0a+51,434244+100 */
+/* background: linear-gradient(165deg,  #afb5bf 0%,#6f7577 50%,#0a0e0a 50.3%,#434244 100%); */
+/* background: linear-gradient(168deg, #00deff 0%,#f4e8de 49.7%,#00deff 50.3%,#434244 100%); */
+  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+/*   box-shadow: inset 2px 19px 9px 2px #ffffffc9;
+border-left: 1px solid #ebebebe3;
+    border-right: 1px solid #a2f0ffd4; */
+      display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 1.6rem;
+    background: red;
+    /* border: 1px solid red; */
+    /* background: linear-gradient(165deg, #afb5bf 0%,#6f7577 50%,#0a0e0a 50.3%,#434244 100%); */
+    background: linear-gradient(168deg, #00deff 0%,#f4e8de 49.7%,#00deff 50.3%,#1ccae4 100%);
+    box-shadow: inset 2px 19px 9px 2px #ffffffc9;
+    border-left: 1px solid #ebebebe3;
+    border-right: 1px solid #a2f0ffd4;
+    border-bottom: 2px solid #ffffff61;
+    border-top: 1px solid #38d2f994;
+  transition: all 3s;
+  user-select: none; 
+}
 
 
+.phone-screen-1 {
+  background:  #a1b6c6ad;
 
-    .th-col-sidenav {
-        overflow: auto;
-        float: left;
-        /* background-color: rgba(0, 122, 193, 0.82); */
-        background-color: rgb(20 20 20 / 82%);
-        position: fixed;
-        z-index: 1;
-        transition: all ease 0.3s;
-        overflow: hidden;
-        /* box-shadow: rgba(0, 54, 108, 0.7) 0px 0px 200px inset; */
-        height: 100vh;
-        width: 46px;
-        top: 0px;
-        backdrop-filter: blur(3px);
-    }
+    width: calc(100% - 36px);
+    height: calc(100% - 36px);
+  margin-left: 18px;
+  margin-top: 18px;
+  display: block;
+    box-shadow: 0 0 7px 7px #a1b6c6ad;
+    border-radius: 6px;
+}
 
-    .menu-minimized .th-nav-rail {
-        position: fixed;
-        height: 100vh;
-        margin-left: 0px;
-        width: 8px !important;
-        padding: 0px;
-        top: 0px;
-    }
-
-    .th-nav-rail {
-        position: fixed;
-        z-index: 99999;
-        transition: all ease 0.3s;
-        padding: 0px;
-        opacity: 0;
-        cursor: pointer;
-        background: rgb(3 169 244 / 56%);
-        height: 100vh;
-        left: 0px;
-        width: 6px;
-    }
-
-    .th-nav-rail:hover {
-        opacity: 1;
-    }
-
-    .col-main {
-        width: 100%;
-        float: left;
-        margin-left: 0px;
-    }
-
-    .th-sidenav-show .col-main {
-        width: calc(100% - 46px);
-        float: left;
-        margin-left: 46px;
-    }
-
-    .th-sidenav-trigger,
-    .th-col-sidenav,
-    .th-nav-rail {
-        display: none;
-    }
-
-    .th-sidenav-trigger-back {
-        vertical-align: middle;
-        font-size: 1.2rem;
-        text-align: center;
-        padding: 6px;
-        min-width: 42px;
-        transition: all ease 0.2s;
-        border-right: 1px solid transparent;
-        border-left: 1px solid transparent;
-        padding: 1px;
-        text-align: center;
-        color: gray;
-    }
-
-    .th-sidenav-trigger-back:hover {
-        color: white;
-    }
-
-
-    .th-sidenav-show .th-sidenav-trigger,
-    .th-sidenav-show .th-col-sidenav,
-    .th-sidenav-show .th-nav-rail {
-        display: block;
-    }
-
-    .th-sidebar-opened .th-col-sidenav {
-        width: 260px;
-    }
-    #sidebarMenu {
-        z-index: 999;
-    }
-
-    @media only screen and (max-width: 992px) {
-        .th-col-sidenav {
-            margin-left: -46px;
-        }
-
-        .col-main {
-            width: 100%;
-            margin-left: 0px;
-        }
-
-        .th-sidebar-opened .th-col-sidenav {
-            margin-left: 0px !important;
-            width: 260px !important;
-        }
-
-        .th-sidenav-show .col-main {
-            width: 100%;
-            float: left;
-            margin-left: 0px;
-        }
-
-        .section-padding {
-            padding: 6px;
-        }
-    }
-    @media only screen and (max-width: 639px) {
-        .uk-modal {
-            padding: 0px !important;
-        }
-
-    }
-
-    .th-com-s-nav-item.th-active {
-        background-color: #212121;
-    }
-
-    .flex-column {
-        flex-direction: column !important;
-    }
-
-    .nav-link {
-        display: block;
-        padding: 6px 12px 6px 12px;
-        text-decoration: none;
-        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
-        color: rgb(221, 221, 221);
-    }
-
-    .menu-minimized .icon-square {
-        display: block;
-    }
-
-    .icon-square {
-        font-size: large;
-        text-align: center;
-        width: 32px;
-        padding-right: 6px;
-    }
-
-    .th-flex-column {
-        flex-direction: column !important;
-    }
-
-    .th-com-s-nav {
-        display: flex;
-        flex-wrap: wrap;
-        padding-left: 0;
-        margin: 0px;
-        margin-bottom: 12px;
-        list-style: none;
-    }
-
-    .th-sn-item-icon {}
-
-    .th-sn-item-text {
-        overflow: hidden;
-        display: none;
-        text-align: left;
-    }
-
-    .th-sidebar-opened .th-sn-item-text {
-        display: block;
-    }
-
-    .th-com-s-nav-item>a {
-        display: grid;
-        display: grid;
-        grid-template-columns: 42px auto min-content;
-    }
-
-    .th-sn-column {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: calc(100vh - 42px);
-        margin-top: 6px;
-    }
-
-    .th-com-s-nav-item:hover {
-        background-color: #03A9F4;
-    }
-    .th-com-s-nav-item:hover a {
-        color: white;
-        text-decoration: none;
-    }
-    .th-com-s-nav-item:hover .th-sn-round {
-        opacity: 1;
-        padding: 5px;
-        margin-left: 35px;
-        margin-top: -12px;
-    }
-    .th-user-go {
-        vertical-align: middle;
-        display: grid;
-        grid-template-columns: auto auto;
-        text-wrap: nowrap;
-        align-items: center;
-        height: 100%;
-    }
-    .th-padding-small {
-    padding: 3px 12px;
-    }
-
-    .th-sticky-bottom-box {
-        background: white;
-        box-shadow: 1px 6px 16px -10px #00000040;
-    }
-    .th-sn-round {
-        display: block;
-        padding: 3px;
-        position: absolute;
-        margin-left: 37px;
-        margin-top: -10px;
-        opacity: 0.6;
-        transition: all ease 0.3s;
-        border-radius: 2px;
-    }
-    .th-sidebar-opened .th-sn-round {
-        margin-left: 248px;
-    }
-    .th-sidebar-opened .th-com-s-nav-item:hover .th-sn-round {
-        margin-left: 246px;
-    }
-
-    .th-user-container {
-    border: 1px solid #fff;
-    }
-    .th-user-container-header, .th-user-container-footer, .th-user-evt-card {
-    padding: 1.2rem !important;
-    border-radius: 9px;
-    word-break: break-word;
-    }
-    .th-user-evt-card-footer , .th-user-evt-card-footer > div {
+.phone-interface {
+    background: linear-gradient(168deg, #00deff00 0%,#f4e8de63 49.7%,#00deff4d 50.3%,#1ccae400 100%);
+  display: block;
+  height: 100%;
+  box-shadow: inset 1px 0px 100px #a1b6c6ad;
+}
+.phone-interface form {
     display: flex;
-        grid-gap: 1rem;
-        justify-content: space-between;
-    }
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+  grid-gap: 2rem;
+}
 
-    .th-user-evt-card-badge {
-    border: 1px solid pink;
-    padding: 0px 6px;
-    border-radius: 0.5rem;
-    color: gray;
-    }
-    .uk-user-readmore {
-    font-weight: 400;
-    cursor: pointer;
-    }
-    .uk-user-readmore:hover {
-    color: #1E88E5;
-    }
-    .th-user-container {
-        padding-bottom: 3rem;
-    }
-    .col-main {
-        margin-bottom: 5rem;
-    }
+.phone-interface input {
+  widht: 100%;
+  font-size: 2rem;
+  opacity: 0.6;
+  border-radius: 0.5rem;
+  border: 1px solid white;
+  background: #ffffff73;
+  transition: all ease 0.4s;
+  padding: 0.5rem;
+  backdrop-filter: blur(16px);
+text-align: center;
+}
+.phone-interface input:hover {
+/*    box-shadow: 1px 1px 33px #00deff; */
+  border: 1px solid #ffffff73;
+  opacity: 0.9;
+}
+.phone-interface input:focus-visible {
+   outline: none;
+box-shadow: inset 1px 1px 13px 4px #ffffffb5;
+  background: #e9f8fab5;
+  
+}
+.phone-greeting {
+    color: white;
+    font-size: 3rem;
+    font-family: monospace;
+    text-align: center;
+  text-shadow: 1px 3px 5px #cbf7ff;
+}
+.phone-checkbox {
+  height: 50px;
+  filter: blur(78px);
+}
+.phone-checkbox:hover {
+  height: 50px;
+  filter: blur(0px);
+}
+.page-name {
+  font-size: 2rem;
+  color: white;
+  font-family: monospace;
+  display: flex;
+    justify-content: space-around;
+}
+.page-policy {
+  font-size: 1.2rem;
+  color: white;
+  font-family: monospace;
+}
+.page-footer {
+ display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.uk-text-danger {
+    font-size: 2rem;
+}
+a {
+    color: white;
+}
+a:hover {
+    color: white;
+    text-decoration: none;
+    text-shadow: 1px 3px 5px #cbf7ff;
+}
     </style>
 </head>
 
-<body class='th-sidenav-show'>
 
-
-	@auth
-    <?php // Offcanvas Menu ?>
-    <div id="offcanvas-nav" uk-offcanvas="mode: slide; overlay: true; flip: true">
-        <div class="uk-offcanvas-bar">
-            <button class="uk-offcanvas-close" type="button" uk-close></button>
-            <h5 class='uk-text-title'>Applications:</h5>
-            <!-- Add your offcanvas menu content here -->
-            <ul class="uk-nav uk-nav-default">
-                <li class="{{ Request::routeIs('budget') ? 'uk-active' : '' }}"><a
-                        href="{{ route('budget') }}">Budget</a></li>
-                <li class="{{ Request::routeIs('eventor') ? 'uk-active' : '' }}"><a
-                        href="{{ route('eventor') }}">Eventor</a></li>
-
-
-                <!-- Add more menu items if needed -->
-            </ul>
-        </div>
-    </div>
-	@endauth
-
-    <?php // Navbar ?>
-    <nav class="uk-navbar-container uk-margin-none th-navbar" uk-navbar>
-        <div>
-            <div class='th-navbar-item th-sidenav-trigger' style='padding-left: 1px; padding-right: 1px;'>
-                <a class="" href="#offcanvas-nav2">
-                    <span uk-navbar-toggle-icon></span>
-                </a>
-            </div>
-        </div>
-        <div class='th-central-menu'>
-            <div class='th-navbar-item'>
-                <!-- here will be main nav items -->
-                <!-- Check if the user is authenticated -->
-                <?php /*
-                @auth
-                    <!-- Display the username -->
-                    Welcome, {{ Auth::user()->name }}
-                @endauth
-                */ ?>
-            </div>
-        </div>
-        <div class='th-central-search uk-hidden'>
-            <div class='uk-form-custom th-search-wrap uk-box-shadow-hover-medium'>
-                <input class="uk-input" type="text" placeholder="Input" aria-label="Input" id='th_searchArea'>
-                <button type="button" id='th_topSearch'><span uk-icon="search"></span></button>
-                <button type="button" id='th_searchClose'><span uk-icon="close"></span></button>
-
-            </div>
-            <div uk-form-custom="target: true">
-
-            </div>
-
-        </div>
-        <div>
-            <div class='th-navbar-item' id='th_topSearchTrigger'>
-                <a class="" href="#">
-                    <span uk-icon="search"></span>
-                </a>
-            </div>
-            <div class='th-navbar-item th-navbar-item-dd'>
-                <a class="th-user-go" href="#">
+<div class="body-shop">
+  <div class="phone-wrapper">
+    <div class="phone-outline">
+      <div class="phone-body">
+        <div class="phone-screen-1">
+          <div class="phone-interface">
+            <form id="login-form">
+              <h3 class='phone-greeting'>Halo, 
 @auth
-<!-- Display the username -->
 {{ Auth::user()->name }}
 @endauth
-                    <span uk-icon="user"></span>
-                </a>
-                <div class="uk-navbar-dropdown" uk-dropdown="mode: click">
-                    <ul class="uk-nav uk-navbar-dropdown-nav">
-                        @guest
-                        <li uk-toggle="target: #login-modal"><a href="#">Login</a></li>
-                        <li class="uk-active" uk-toggle="target: #register-modal"><a href="#">Registration</a></li>
-                        @endguest
-                        @auth
-                        <li><a id='logout' href="#">Logout</a></li>
-                        <li><a href="#">Account settings</a></li>
-                        @endauth
-                        <li><a href="#">Terms of service</a></li>
-                    </ul>
-                </div>
-            </div>
-			@auth
-            <div class='th-navbar-item'>
-                <a class="" href="#offcanvas-nav" uk-toggle>
-                    <span uk-icon='grid'></span>
-                </a>
-            </div>
-			@endauth
-        </div>
-
-    </nav>
-
-
-
-    <div class="uk-width-1-1 "><a href="http://new.teftele.com/logout?token=qgH8Z217juVMgHxL5uo84paIhBOBtHSzIayDwmYy"
-            class="app-item login-btn">
-
-        </a>
-        <nav id="sidebarMenu" class="th-col-sidenav uk-background-muted uk-hidden"><a
-                href="http://new.teftele.com/logout?token=qgH8Z217juVMgHxL5uo84paIhBOBtHSzIayDwmYy"
-                class="app-item login-btn">
-            </a>
-            <div class="position-sticky pt-3"><a
-                    href="http://new.teftele.com/logout?token=qgH8Z217juVMgHxL5uo84paIhBOBtHSzIayDwmYy"
-                    class="app-item login-btn">
-                </a><a class="th-sidenav-trigger th-sidenav-trigger-back" id="" style="justify-items: none;">
-                    <div class="uk-width-1-1 " style="padding: 3px;">
-                        <span uk-navbar-toggle-icon="" class="uk-icon uk-navbar-toggle-icon"></span>
-                    </div>
-                </a>
-                <div class='th-sn-column'>
-                    <ul class="th-com-s-nav th-flex-column" id="th_sidenav_items">
-                        <li class="th-com-s-nav-item">
-                            <a class="nav-link active" aria-current="page" href="http://new.teftele.com/budger">
-                                <div class="th-sn-item-icon">
-                                    MA </div>
-                                <div class="th-sn-item-text">
-                                    Main </div>
-                                <span data-feather="home" class="align-text-bottom"></span>
-                            </a>
-                        </li>
-                        <li class="th-com-s-nav-item">
-                            <a class="nav-link active" aria-current="page"
-                                href="http://new.teftele.com/budger/accmanager">
-                                <div class="th-sn-item-icon">
-                                    BS </div>
-                                <div class="th-sn-item-text">
-                                    Account manager </div>
-                                <span data-feather="home" class="align-text-bottom"></span>
-                            </a>
-                        </li>
-                        <li class="th-com-s-nav-item">
-                            <a class="nav-link active" aria-current="page"
-                                href="http://new.teftele.com/budger/catmanager">
-                                <div class="th-sn-item-icon">
-                                    GM </div>
-                                <div class="th-sn-item-text">
-                                    Category Manager </div>
-                                <span data-feather="home" class="align-text-bottom"></span>
-                            </a>
-                        </li>
-                    </ul>
-
-                    <ul class="th-com-s-nav flex-column" id="th_sidenav_settings">
-                        <li class="th-com-s-nav-item">
-                            <a class="nav-link active" aria-current="page"
-                                href="http://new.teftele.com/budger/commstat">
-                                <div class="th-sn-item-icon">
-                                    CS </div>
-                                <div class="th-sn-item-text">
-                                    Common stat </div>
-                            </a>
-                            <span data-feather="home" class="align-text-bottom"></span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <div id="navRail" class="th-nav-rail th-sidenav-trigger">
-        </div>
-
-
-
-        <main class="col-main ms-sm-auto p-0" id="officialEventWrapper">
-        
-        </main>
-    </div>
-
-
-
-
-    </div>
-
-    @guest
-    <?php // Login modal ?>
-    <div id="login-modal" uk-modal>
-        <div class="uk-modal-dialog uk-modal-body">
-            <h2 class="uk-modal-title">Login</h2>
-            <!-- Add your login form content here -->
-            <form id='login-form'>
-                <div class="uk-margin">
-                    <label class="uk-form-label" for="email">Email:</label>
-                    <input class="uk-input" type="email" id="email" placeholder="Enter your email">
-                </div>
-                <div class="uk-margin">
-                    <label class="uk-form-label" for="password">Password:</label>
-                    <input class="uk-input" type="password" id="password" placeholder="Enter your password">
-                </div>
-                <div class="uk-margin">
-                <label><input class="uk-checkbox" id='rememberme' type="checkbox"> Remember me</label>
-                </div>
-                <div class="uk-margin uk-text-danger" id="wrong-credentials_error"></div>
-                <div
-                    class="uk-modal-footer uk-text-right uk-padding-remove-left uk-padding-remove-right uk-padding-remove-bottom">
-                    <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-                    <button class="uk-button uk-button-primary" type="submit">Login</button>
-                </div>
+@guest
+ 2U!
+@endguest
+                </h3>
+@guest 
+            <input type='text' type="email" id="email" placeholder='email'/>
+            <input type='password' type="password" id="password" placeholder='password'/>
+            <input type='submit' name="login" value='Let me in, please!'/>
+                
+              <input class="phone-checkbox"  id='rememberme' type="checkbox" title='and remember me'>
+              <div class="uk-margin uk-text-danger" id="wrong-credentials_error"></div>
+@endguest
+@auth
+<h3 class='page-name'><a href="{{ route('eventor') }}">Enter</a> 
+|| <a id='logout' href="#">Logout</a></h3>
+@endauth
             </form>
+          </div>
         </div>
+      </div>
     </div>
-    <script>
+  </div>
+  <div class="page-footer">
+  @auth 
+  <h5 class='page-name'><a href="{{ route('eventor') }}">Okkio.ru</a></h5>
+  @endauth
+  @guest
+  <h5 class='page-name'>Okkio.ru</h5>
+  @endguest
+    <h6 class='page-policy'>Полититики конфиденциальности</h6>
+  </div>
+</div>
+<script>
     class LoginHandler {
         static calling = false;
         constructor() {
@@ -660,7 +292,7 @@ console.log(remember);
                 console.log('Login successful');
                 //console.log('User token:', data.token); // Assuming the server returns a token
                 document.querySelector('meta[name="csrf-token"]').content = data.token;
-                me = data.user_id;
+            
                 //UIkit.modal('#login-modal').hide();
                             location.reload();
             } catch (error) {
@@ -677,6 +309,12 @@ console.log(remember);
     // Create an instance of the LoginHandler class
     const loginHandler = new LoginHandler();
     </script>
+
+
+
+    @guest
+
+
 
 
 	<?php // Register modal ?>
@@ -707,7 +345,7 @@ console.log(remember);
                     <input class="uk-input" type="password" id="reg_confirm-password"
                         placeholder="Confirm your password" required>
                 </div>
-                <div class="uk-margin uk-text-danger" id="password-match-error"></div>
+                <div class="uk-text-danger" id="password-match-error"></div>
                 <div class="uk-margin">
                     <button class="uk-button uk-button-primary" type="submit">Register</button>
                 </div>
@@ -915,111 +553,22 @@ console.log(remember);
     <!-- Add your JavaScript files here -->
     <script src="{{ asset('resources/js/uikit.js') }}"></script>
     <script src="{{ asset('resources/js/uikit-icons.js') }}"></script>
-    <script src="{{ asset('resources/js/template/SidebarMenu.js') }}"></script>
+
     @yield('page-scripts')
 
     <!-- Add more JavaScript files if needed -->
     <script>
-    var sideMenu = new SidebarMenu();
     </script>
-    <script>
-    class SearchBar {
-        constructor() {
-            this.cst = document.querySelector("#th_topSearchTrigger");
-            this.searchbar = document.querySelector(".th-central-search");
-            this.menubar = document.querySelector(".th-central-menu");
-            this.closearch = document.querySelector("#th_searchClose");
-
-
-            this.cst.addEventListener('click', (e) => {
-                e.preventDefault;
-                this.trigSearchBar();
-            });
-            this.closearch.addEventListener('click', (e) => {
-                e.preventDefault;
-                this.trigSearchBar();
-            });
-
-
-        }
-
-        trigSearchBar() {
-            if (this.searchbar.classList.contains('uk-hidden')) {
-                this.searchbar.classList.remove('uk-hidden');
-                this.menubar.classList.add('uk-hidden');
-                this.cst.classList.add('uk-hidden');
-
-            } else {
-                this.searchbar.classList.add('uk-hidden');
-                this.menubar.classList.remove('uk-hidden');
-                this.cst.classList.remove('uk-hidden');
-            }
-        }
-    }
-
-
-    class SideNav {
-        constructor() {
-            this.body = document.querySelector("body");
-            this.triggers = document.querySelectorAll(".th-sidenav-trigger");
-
-            this.triggers.forEach((el) => {
-                el.addEventListener('click', (e) => {
-                    e.preventDefault;
-                    this.body.classList.toggle('th-sidebar-opened');
-                });
-            });
-            document.addEventListener('click', (e)=> {
-            let elem = e.target;
-            if (elem.classList.contains('th-sidenav-trigger') || elem.closest('.th-sidenav-trigger')){ return;};
-            if (!elem.closest('.th-col-sidenav')){
-                if (this.body.classList.contains('th-sidebar-opened')){
-                    this.body.classList.remove('th-sidebar-opened');
-                }
-            }
-
-                if (elem.closest('.th-com-s-nav-item')){
-                    this.body.classList.remove('th-sidebar-opened');
-                }
-            });
-
-        }
-
-        trigSearchBar() {
-            if (this.searchbar.classList.contains('uk-hidden')) {
-                this.searchbar.classList.remove('uk-hidden');
-                this.menubar.classList.add('uk-hidden');
-                this.cst.classList.add('uk-hidden');
-
-            } else {
-                this.searchbar.classList.add('uk-hidden');
-                this.menubar.classList.remove('uk-hidden');
-                this.cst.classList.remove('uk-hidden');
-            }
-        }
-    }
-
-    $sb = new SearchBar();
-	
-    //$sn = new SideNav();
-
-    let me = '{{ Auth::user() != null ? Auth::user()->id : ""}}';
-    </script>
+   
 
     <script src="{{ asset('resources/js/apps/eventor/page.js') }}"></script>
-    <script src="{{ asset('resources/js/apps/eventor/sidemenu.js') }}"></script>
-    <script src="{{ asset('resources/js/apps/eventor/templates.js') }}"></script>
-    <script src="{{ asset('resources/js/apps/eventor/types.js') }}"></script>
-    <script src="{{ asset('resources/js/apps/eventor/utils.js') }}"></script>
-    <script src="{{ asset('resources/js/apps/eventor/nav.js') }}"></script>
-    <script src="{{ asset('resources/js/apps/eventor/modals.js') }}"></script>
-    <script src="{{ asset('resources/js/apps/eventor/flowofficial.js') }}"></script>
-    <script src="{{ asset('resources/js/apps/eventor/sectionmanager.js') }}"></script>
-    <script src="{{ asset('resources/js/apps/eventor/categorymanager.js') }}"></script>
+
+
+
 
     <script>
 
-        let FO = new FlowOfficial();
+        
     </script>
 </body>
 

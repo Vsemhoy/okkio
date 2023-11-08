@@ -1025,6 +1025,12 @@ class CalTemplate
         row.classList.add('cl-row');
         row.setAttribute('data-date', date);
         row.classList.add('uk-text-center','uk-grid-collapse','start-collapse','uk-background-muted','event-section','uk-grid');
+        let dweek = new Date(date).getDay();
+        console.log(dweek);
+        if (dweek == 0 || dweek == 6)
+        {
+          row.classList.add("row-weekend");
+        }
 
         let day = CalTemplate.getDayOfWeek(date);
         day = day.slice(0, 3);

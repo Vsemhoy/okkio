@@ -193,7 +193,7 @@ class EventorTemplate
              style='border-color: #${rootcolor};'>
               <div class="uk-card-header">
                 <div class="uk-width-expand">
-                  <h3 class="evt-card-title uk-margin-remove-bottom">${event.title}</h3>
+                  <h3 class="evt-card-title uk-margin-remove-bottom"><span class='evt-ctitle-string'>${event.title}</span></h3>
                   <div class="uk-text-meta uk-margin-remove-top flex-space"><time datetime="${time}">${date}</time> ${secBlock}</div>
                 </div>
               </div>
@@ -231,7 +231,12 @@ class EventorTemplate
             content += cards[i];
         }
         let todate = EventorUtils.isDateToday(date) ? "eventor-today" : "";
-
+        let dweek = new Date(date).getDay();
+        console.log(dweek);
+        if (dweek == 0 || dweek == 6)
+        {
+          todate += " evt-weekend";
+        }
         let todateId = EventorUtils.isDateToday(date) ? "id='row_today'" : "";
         let noEventClass = cards.length == 0 ? "eventor-hiddenrow" : "";
         let day = EventorTemplate.getDayOfWeek(date);
@@ -352,8 +357,9 @@ class EventorTemplate
       const div = document.createElement('div'); // Create a new div element
       let skip = false;
       // Use regular expression to find and replace URLs with <a> tags
+      
       const lineWithLinks = line.replace(urlPattern, (match) => {
-        return `<a href="${match}" class='uk-link-text' target="_blank">${match}</a>`;
+        return `<a href="${match}" class='uk-link-text' target="_blank">${ match.slice(0,23)}...</a>`;
       });
   
       // Set the div's innerHTML to the line with links
@@ -382,8 +388,55 @@ class EventorTemplate
         result.push(div);
       }
     });
-  
-    return result;
+
+    let nuresult = [];
+    let child = null;
+    let codeLinesCount = 2;
+    for (let i = 0; i < result.length; i++) {
+      const element = result[i];
+      
+      if (element.innerHTML.indexOf('```') != -1){
+        let text = element.innerHTML;
+        if (codeLinesCount % 2 == 0)
+        {
+          child = document.createElement('code');
+          let codeline = document.createElement('span');
+          codeline.innerHTML = text.replace('```','') + "<br>";
+          child.appendChild(codeline);
+          codeLinesCount++;
+          if (codeline.innerHTML.indexOf('```') != -1)
+          {
+            codeline.innerHTML = codeline.innerHTML.replace('```', '');
+            let parent = document.createElement('span');
+            parent.classList.add('evt-pre');
+            parent.appendChild(child);
+            nuresult.push(parent);
+            child = null;
+            codeLinesCount++;
+          }
+        } else {
+          let codeline = document.createElement('span');
+          codeline.innerHTML = text.replace('```','');
+          child.appendChild(codeline);
+          let parent = document.createElement('pre');
+          parent.classList.add('evt-pre');
+          parent.appendChild(child);
+          nuresult.push(parent);
+          child = null;
+          codeLinesCount++;
+        }
+
+      } else {
+        if (child != null){
+          let codeline = document.createElement('span');
+          codeline.innerHTML = element.innerHTML.replace('```','') + "<br>";
+          child.appendChild(codeline);
+        } else {
+          nuresult.push(element);
+        }
+      }
+    }
+    return nuresult;
   }
 
 
