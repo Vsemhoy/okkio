@@ -4,7 +4,7 @@ class EventorFlow {
     static loadedSections = {};
     static dayFlow = null;
     static activeSection = 'all';
-    static activeTypes = [1,2,3];
+    static activeTypes = [1,2,3,4,5,6,7,8];
     constructor(selector) {
         // { 'date' => [ 'afklsjdklfjas', 'jdlfkajsdf' ]}
         let cursect = EventorUtils.getParam('sect');

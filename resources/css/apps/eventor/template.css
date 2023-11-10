@@ -433,7 +433,9 @@ font-family: system-ui;
 .evt-stickybar-button {
   padding: 0px 12px;
 }
-
+.evt-mod-typetrig {
+  user-select: none;
+}
 .evt-event-color.active {
   background-color: #76c38530;
 }
@@ -441,7 +443,16 @@ font-family: system-ui;
   background-color: #d1b50030;
 }
 .evt-note-color.active {
-  background-color: #21a7f12e;
+  background-color: #9c27b029;
+}
+.evt-task-color.active {
+  background-color: #ff960036;
+}
+.evt-synopsis-color.active {
+  background-color: #0075ff3b;
+}
+.evt-info-color.active {
+  background-color: #00d9cd54;
 }
 
 .uk-notification-message {
@@ -468,9 +479,14 @@ font-family: system-ui;
   display: grid;
     grid-template-columns: auto auto auto;
     text-align: center;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     text-transform: lowercase;
     letter-spacing: 3px;
+  }
+  @media screen and (min-width: 768px){
+    .evt-modal-type_triggers {
+        grid-template-columns: auto auto auto auto auto auto;
+    }
   }
 .evt-modal-type_triggers > div {
     background-color: #8080801a;
@@ -487,12 +503,28 @@ font-family: system-ui;
 }
 .evt-type-action .uk-card-header {
   background-color: #d1b50030;
-  background: linear-gradient(192deg, rgb(213 186 0 / 28%) 0%, rgb(193 180 0 / 5%) 100%);
+  background: linear-gradient(192deg, rgb(241 211 0 / 28%) 0%, rgb(193 180 0 / 5%) 100%);
 }
-.evt-type-note .uk-card-header {
+.evt-type-synopsis .uk-card-header {
   background-color: #21a7f12e;
   background: linear-gradient(192deg, rgb(29 152 253 / 36%) 0%, rgb(0 159 255 / 4%) 100%);
 }
+
+.evt-type-task .uk-card-header {
+  background-color: #76c38530;
+  background: linear-gradient(192deg, rgb(231 110 0 / 20%) 0%, rgb(255 148 0 / 5%) 100%);
+ }
+ .evt-type-note .uk-card-header {
+   background-color: #ca00d130;
+   background: linear-gradient(192deg, rgb(4 0 231 / 20%) 0%, rgb(7 0 255 / 5%) 100%);
+ }
+ .evt-type-info .uk-card-header {
+   background-color: #21eaf12e;
+   background: linear-gradient(192deg, rgb(0 231 195 / 20%) 0%, rgb(0 236 255 / 5%) 100%);
+ }
+
+
+
  .evt-card-title {
   display: flex;
   align-items: center;

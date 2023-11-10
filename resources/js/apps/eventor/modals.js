@@ -215,28 +215,42 @@ class EventModal {
     typeTrigs.id = 'evt_trigCreateButtons';
     typeTrigs.classList.add('evt-modal-type_triggers');
     
-    let bt1 = document.createElement('div');
-    bt1.id = '';
-    bt1.classList.add('evt-mod-typetrig', 'evt-event-color', 'active');
-    bt1.setAttribute('data-type', '1');
-    bt1.innerHTML = "Event";
-    typeTrigs.appendChild(bt1);
+    // let bt1 = document.createElement('div');
+    // bt1.id = '';
+    // bt1.classList.add('evt-mod-typetrig', 'evt-event-color', 'active');
+    // bt1.setAttribute('data-type', '1');
+    // bt1.innerHTML = "Event";
+    // typeTrigs.appendChild(bt1);
     
-    let bt2 = document.createElement('div');
-    bt2.id = '';
-    bt2.classList.add('evt-mod-typetrig', 'evt-action-color');
-    bt2.setAttribute('data-type', '2');
-    bt2.innerHTML = "Action";
-    typeTrigs.appendChild(bt2);
+    // let bt2 = document.createElement('div');
+    // bt2.id = '';
+    // bt2.classList.add('evt-mod-typetrig', 'evt-action-color');
+    // bt2.setAttribute('data-type', '2');
+    // bt2.innerHTML = "Action";
+    // typeTrigs.appendChild(bt2);
 
-    let bt3 = document.createElement('div');
-    bt3.id = '';
-    bt3.classList.add('evt-mod-typetrig', 'evt-note-color');
-    bt3.setAttribute('data-type', '3');
-    bt3.innerHTML = "Note";
-    typeTrigs.appendChild(bt3);
+    // let bt3 = document.createElement('div');
+    // bt3.id = '';
+    // bt3.classList.add('evt-mod-typetrig', 'evt-note-color');
+    // bt3.setAttribute('data-type', '3');
+    // bt3.innerHTML = "Note";
+    // typeTrigs.appendChild(bt3);
     
-
+    for (let i = 0 ; i < EventorTypes.DataTypes.length; i++){
+      let item = EventorTypes.DataTypes[i];
+      if (item.state == 1){
+        let block = document.createElement('div');
+        block.id = '';
+        block.classList.add('evt-mod-typetrig', item.class);
+        if (i == 0){
+          block.classList.add('active');
+        }
+        
+        block.setAttribute('data-type', item.value);
+        block.innerHTML = item.name;
+        typeTrigs.appendChild(block);
+      }
+    }
 
     // Modal body
     const modalBody = document.createElement('div');

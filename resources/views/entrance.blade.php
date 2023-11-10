@@ -26,7 +26,9 @@ body {
   background-image: url(https://images.unsplash.com/photo-1444927714506-8492d94b4e3d?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=067f0b097deff88a789e125210406ffe);
   background-size: cover;
   background-position: center center;
-  display: block;
+  display: grid;
+    grid-template-rows: auto 85px;
+    align-items: center;
 }
 
 .phone-wrapper {
@@ -40,10 +42,12 @@ body {
   max-height: 800px;
 }
 .phone-outline {
-  width: 100%;
-  height: 100%;
-    box-shadow: 1px 1px 178px #00deff, 11px 90px 144px -42px #0fc8e026;
+    width: 100%;
+    height: 100%;
+    box-shadow: 1px 1px 178px #00deff00, 11px 90px 144px -42px #00000026;
     border-radius: 1.6rem;
+    border: 2px solid #00000073;
+    backdrop-filter: blur(6px);
 }
 .phone-body {
   display: block;
@@ -51,7 +55,7 @@ body {
   height:100%;
 overflow: hidden;
   border-radius: 1.6rem;
-  background: gray;
+
 /*   border: 1px solid red; */
 /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#afb5bf+0,6f7577+50,0a0e0a+51,434244+100 */
 /* background: linear-gradient(165deg,  #afb5bf 0%,#6f7577 50%,#0a0e0a 50.3%,#434244 100%); */
@@ -60,42 +64,47 @@ overflow: hidden;
 /*   box-shadow: inset 2px 19px 9px 2px #ffffffc9;
 border-left: 1px solid #ebebebe3;
     border-right: 1px solid #a2f0ffd4; */
-      display: block;
+    display: block;
     width: 100%;
     height: 100%;
     overflow: hidden;
     border-radius: 1.6rem;
-    background: red;
+    /* background: black; */
     /* border: 1px solid red; */
     /* background: linear-gradient(165deg, #afb5bf 0%,#6f7577 50%,#0a0e0a 50.3%,#434244 100%); */
-    background: linear-gradient(168deg, #00deff 0%,#f4e8de 49.7%,#00deff 50.3%,#1ccae4 100%);
-    box-shadow: inset 2px 19px 9px 2px #ffffffc9;
+    /* background: linear-gradient(168deg, #00deff 0%,#f4e8de 49.7%,#00deff 50.3%,#1ccae4 100%); */
+    /* box-shadow: inset 2px 19px 9px 2px #ffffffc9;
     border-left: 1px solid #ebebebe3;
     border-right: 1px solid #a2f0ffd4;
     border-bottom: 2px solid #ffffff61;
-    border-top: 1px solid #38d2f994;
+    border-top: 1px solid #38d2f994; */
   transition: all 3s;
   user-select: none; 
 }
-
+.phone-body:hover {
+    /* background-color: #f4e8de; */
+}
+.phone-outline:hover {
+    /* box-shadow: 1px 1px 178px #00deff, 11px 90px 144px -42px #0fc8e026; */
+}
 
 .phone-screen-1 {
-  background:  #a1b6c6ad;
-
+    background: #00000040;
     width: calc(100% - 36px);
     height: calc(100% - 36px);
-  margin-left: 18px;
-  margin-top: 18px;
-  display: block;
-    box-shadow: 0 0 7px 7px #a1b6c6ad;
+    margin-left: 18px;
+    margin-top: 18px;
+    display: block;
+    box-shadow: 0 0 6px 20px #d7d6d44d;
     border-radius: 6px;
+    backdrop-filter: grayscale(1);
 }
 
 .phone-interface {
-    background: linear-gradient(168deg, #00deff00 0%,#f4e8de63 49.7%,#00deff4d 50.3%,#1ccae400 100%);
+    /* background: linear-gradient(168deg, #00deff00 0%,#f4e8de63 49.7%,#00deff00 50.3%,#1ccae400 100%); */
   display: block;
   height: 100%;
-  box-shadow: inset 1px 0px 100px #a1b6c6ad;
+  /* box-shadow: inset 1px 0px 100px #a1b6c6ad; */
 }
 .phone-interface form {
     display: flex;
@@ -111,7 +120,7 @@ border-left: 1px solid #ebebebe3;
   opacity: 0.6;
   border-radius: 0.5rem;
   border: 1px solid white;
-  background: #ffffff73;
+  /* background: #ffffff73; */
   transition: all ease 0.4s;
   padding: 0.5rem;
   backdrop-filter: blur(16px);
@@ -124,7 +133,7 @@ text-align: center;
 }
 .phone-interface input:focus-visible {
    outline: none;
-box-shadow: inset 1px 1px 13px 4px #ffffffb5;
+/* box-shadow: inset 1px 1px 13px 4px #ffffffb5; */
   background: #e9f8fab5;
   
 }
@@ -170,6 +179,40 @@ a:hover {
     color: white;
     text-decoration: none;
     text-shadow: 1px 3px 5px #cbf7ff;
+}
+@media screen and (max-width: 800px) {
+    .body-shop {
+    grid-template-rows: auto 140px;
+    align-items: center;
+}
+.phone-wrapper {
+    padding-top: 0px;
+}
+.page-footer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+}
+.body-shop div {
+    /* background: none; */
+    border: none;
+    box-shadow: none;
+    
+}
+.body-shop > div {
+    backdrop-filter: blur(12px);
+    margin-left: 0px;
+    margin-right: 0px;
+    height: 100%;
+    padding-top: 0px;
+    width: 100%;
+    max-height: 100%;
+    
+}
+.phone-screen-1 {
+    background: #00000040;
+}
 }
     </style>
 </head>

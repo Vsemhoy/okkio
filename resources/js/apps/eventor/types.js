@@ -43,4 +43,26 @@ class EventorTypes
       ];
       return status;
     }
+
+    static getDataType(val)
+    {
+      for (let i = 0 ; i < EventorTypes.DataTypes.length; i++){
+        if (val == EventorTypes.DataTypes[i].value){
+          return EventorTypes.DataTypes[i];
+          break;
+        }
+      }
+      return null;
+    }
+
+    static DataTypes = [
+      { value : '1' ,  name: 'Event', class : 'evt-event-color', cardClass : 'evt-type-event', state : 1 , icon: 'image'},
+      { value : '2' ,  name: 'Action', class : 'evt-action-color', cardClass : 'evt-type-action', state : 1 , icon: 'crosshairs'},
+      { value : '3' ,  name: 'Note', class : 'evt-note-color', cardClass : 'evt-type-note', state : 1, icon: 'pencil' },
+      { value : '4' ,  name: 'Task', class : 'evt-task-color', cardClass : 'evt-type-task', state : 1, icon: 'bell' },
+      { value : '5' ,  name: 'synopsis', class : 'evt-synopsis-color', cardClass : 'evt-type-synopsis', state : 1, icon: 'commenting' },
+      { value : '6' ,  name: 'Info', class : 'evt-info-color', cardClass : 'evt-type-info', state : 1 , icon: 'info'},
+      { value : '7' ,  name: 'Event', class : 'evt-event-color', cardClass : 'evt-type-type', state : 0, icon: 'bag' },
+      { value : '8' ,  name: 'Event', class : 'evt-event-color', cardClass : 'evt-type-type', state : 0, icon: 'mail' },
+    ]
 }

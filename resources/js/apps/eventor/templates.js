@@ -45,15 +45,13 @@ class EventorTemplate
         };
         let additionalClasses = '';
         let typeName = 'event';
-        if (event.type == 1){
-          additionalClasses = "evt-type-event";
-        } else if (event.type == 2){
-          additionalClasses = "evt-type-action";
-          typeName = 'action';
-        } else if (event.type == 3){
-          additionalClasses = "evt-type-note";
-          typeName = 'note';
+        let obj = EventorTypes.getDataType(event.type);
+        if (obj != null)
+        {
+          additionalClasses = obj.cardClass;
+          typeName = obj.name.toLowerCase();
         }
+ 
         let headerIcon = "<span>";
         let starredMark = "";
         if (event.starred == 1){

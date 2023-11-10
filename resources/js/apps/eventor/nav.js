@@ -316,44 +316,50 @@ class EventorNav {
         flexContainer3.appendChild(shrinkRowsButton);
     
         // Create the "create event" button
-        const createEventButton = document.createElement('a');
-        createEventButton.classList.add('uk-button', 'evt-stickybar-button', 'evt-stb-group', 'evt-event-color');
-        if (EventorNav.activeTypes.includes(1)){
-          createEventButton.classList.add( 'active');
+        for (let i = 0 ; i < EventorTypes.DataTypes.length; i++){
+          let item = EventorTypes.DataTypes[i];
+          if (item.state == 1){
+            const createEventButton = document.createElement('a');
+            createEventButton.classList.add('uk-button', 'evt-stickybar-button', 'evt-stb-group', item.class);
+            if (EventorNav.activeTypes.includes(1)){
+              createEventButton.classList.add( 'active');
+            }
+            createEventButton.id = 'evt_toggle_' + item.name.toLowerCase() + 's';
+            createEventButton.href = '#';
+            createEventButton.setAttribute('aria-expanded', 'false');
+            createEventButton.setAttribute('data-type', item.value);
+            createEventButton.setAttribute('uk-icon', 'icon: ' + item.icon);
+            createEventButton.setAttribute("uk-tooltip", "title: Toggle " + item.name + "; pos: bottom-right");
+            flexContainer3.appendChild(createEventButton);
+          }
         }
-        createEventButton.id = 'evt_toggle_events';
-        createEventButton.href = '#';
-        createEventButton.setAttribute('aria-expanded', 'false');
-        createEventButton.setAttribute('data-type', '1');
-        createEventButton.setAttribute('uk-icon', 'icon: image');
-        createEventButton.setAttribute("uk-tooltip", "title: Toggle Events; pos: bottom-right");
-        flexContainer3.appendChild(createEventButton);
 
-        const createEventButton2 = document.createElement('a');
-        createEventButton2.classList.add('uk-button', 'evt-stickybar-button', 'evt-stb-group', 'evt-action-color');
-        if (EventorNav.activeTypes.includes(2)){
-          createEventButton2.classList.add( 'active');
-        }
-        createEventButton2.id = 'evt_toggle_actions';
-        createEventButton2.href = '#';
-        createEventButton2.setAttribute('aria-expanded', 'false');
-        createEventButton2.setAttribute('data-type', '2');
-        createEventButton2.setAttribute('uk-icon', 'icon: crosshairs');
-        createEventButton2.setAttribute("uk-tooltip", "title: Toggle Actions; pos: bottom-right");
-        flexContainer3.appendChild(createEventButton2);
 
-        const createEventButton3 = document.createElement('a');
-        createEventButton3.classList.add('uk-button', 'evt-stickybar-button', 'evt-stb-group', 'evt-note-color');
-        if (EventorNav.activeTypes.includes(3)){
-          createEventButton3.classList.add( 'active');
-        }
-        createEventButton3.id = 'evt_toggle_notes';
-        createEventButton3.href = '#';
-        createEventButton3.setAttribute('aria-expanded', 'false');
-        createEventButton3.setAttribute('data-type', '3');
-        createEventButton3.setAttribute('uk-icon', 'icon: pencil');
-        createEventButton3.setAttribute("uk-tooltip", "title: Toggle Notes; pos: bottom-right");
-        flexContainer3.appendChild(createEventButton3);
+        // const createEventButton2 = document.createElement('a');
+        // createEventButton2.classList.add('uk-button', 'evt-stickybar-button', 'evt-stb-group', 'evt-action-color');
+        // if (EventorNav.activeTypes.includes(2)){
+        //   createEventButton2.classList.add( 'active');
+        // }
+        // createEventButton2.id = 'evt_toggle_actions';
+        // createEventButton2.href = '#';
+        // createEventButton2.setAttribute('aria-expanded', 'false');
+        // createEventButton2.setAttribute('data-type', '2');
+        // createEventButton2.setAttribute('uk-icon', 'icon: crosshairs');
+        // createEventButton2.setAttribute("uk-tooltip", "title: Toggle Actions; pos: bottom-right");
+        // flexContainer3.appendChild(createEventButton2);
+
+        // const createEventButton3 = document.createElement('a');
+        // createEventButton3.classList.add('uk-button', 'evt-stickybar-button', 'evt-stb-group', 'evt-note-color');
+        // if (EventorNav.activeTypes.includes(3)){
+        //   createEventButton3.classList.add( 'active');
+        // }
+        // createEventButton3.id = 'evt_toggle_notes';
+        // createEventButton3.href = '#';
+        // createEventButton3.setAttribute('aria-expanded', 'false');
+        // createEventButton3.setAttribute('data-type', '3');
+        // createEventButton3.setAttribute('uk-icon', 'icon: pencil');
+        // createEventButton3.setAttribute("uk-tooltip", "title: Toggle Notes; pos: bottom-right");
+        // flexContainer3.appendChild(createEventButton3);
     
         // Append shrinkRowsButton and createEventButton to flexContainer3
     
