@@ -52,7 +52,7 @@
     border: 3px solid;
   } 
   .eventor-today .uk-text-lead {
-    color: #03A9F4;
+    color: #03A9F4 !important;
   }
   .eventor-hiddenrow {
     /* display: none; */
