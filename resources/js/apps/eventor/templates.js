@@ -571,4 +571,30 @@ class EventorTemplate
     subform.innerHTML = html;
     return subform;
   }
+
+  static createCategoryBadge(bid, name, color, active = false){
+    // Create a container div element with class "evt-catgroup-s-item"
+    const containerDiv = document.createElement('div');
+    containerDiv.classList.add('evt-catgroup-f-item');
+    containerDiv.setAttribute('data-target', bid);
+    containerDiv.style.border = '3px solid #' + color;
+    if (active){
+      containerDiv.classList.add('active');
+    }
+    // Create the first span element with class "catGroupName" and set its text content
+    const span1 = document.createElement('span');
+    span1.classList.add('catGroupName');
+    span1.textContent = name + ' ';
+
+    // Create the second span element with class "catGroupUnlink" and set its text content
+    const span2 = document.createElement('span');
+    span2.classList.add('catGroupUnlink');
+    span2.textContent = '';
+    // span2.style.backgroundColor = '#' + color;
+
+    // Append the span elements to the container div
+    containerDiv.appendChild(span1);
+    containerDiv.appendChild(span2);
+    return containerDiv;
+}
 }

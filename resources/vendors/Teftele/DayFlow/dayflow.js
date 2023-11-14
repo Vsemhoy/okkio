@@ -132,6 +132,26 @@ class DayFlow {
                 this.triggerMoveEvent();
             };
 
+            if (e.target.closest(".cl-com-today")){
+                e.preventDefault();
+                let calledMonth = new ShortDate();
+                DayFlow.dateArray = [];
+                this.pool.innerHTML = "";
+                this.startMonth = calledMonth;
+                this.endMonth = calledMonth;
+                DateUtils.changeAddressBar(DayFlow.startParam,
+                    this.startMonth.getShortDate());
+                DateUtils.changeAddressBar(DayFlow.endParam,
+                    this.endMonth.getShortDate());
+                    DayFlow.dateArray.push(calledMonth);
+                this.renderMonth(calledMonth);
+                this.triggerMoveEvent();
+                let row = document.querySelector('#row_today');
+                if (row != null){
+                    row.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+                }
+            };
+
             if (e.target.closest(".cl-nav")){
                 let el = e.target.closest(".cl-nav");
                 let trig = el.getAttribute('cl-move-down');

@@ -4,6 +4,8 @@ class EventorFlow {
     static loadedSections = {};
     static dayFlow = null;
     static activeSection = 'all';
+    static filteredCategories = [];
+    static activeCategory = '';
     static activeTypes = [1,2,3,4,5,6,7,8];
     constructor(selector) {
         // { 'date' => [ 'afklsjdklfjas', 'jdlfkajsdf' ]}
@@ -225,6 +227,24 @@ class EventorFlow {
                     }
                 }
             }
+
+
+            // Handle categoryFilterClick
+            if (e.target.closest('.evt-catgroup-f-item')){
+                let button = e.target.closest('.evt-catgroup-f-item');
+                let cid = button.getAttribute('data-target');
+                if (cid == 'evt_clear_grp_filter'){
+                    EventorFlow.activeCategory = '';
+                } else {
+                    if (EventorFlow.activeCategory == cid){
+                        EventorFlow.activeCategory = '';
+                    } else {
+                        
+                        EventorFlow.activeCategory = cid;
+                    }
+                }
+                EventorFlow.refreshEvents();
+            }
         });
 
 
@@ -245,6 +265,7 @@ class EventorFlow {
         });
 
 
+        
     }
 
     static goToTargetEvent()
@@ -274,6 +295,24 @@ class EventorFlow {
             EventorFlow.reloadSectionEvents();
 
             EventorFlow.markTargetEvent(element);
+        }
+    }
+
+    static refreshCategoryFilter(){
+        let minidivg = document.querySelector('#evt_cat_filter');
+        minidivg.innerHTML = "";
+        minidivg.appendChild(
+            EventorTemplate.createCategoryBadge("evt_clear_grp_filter", "Reset filter", "03A9F4"));
+        
+        for (let i = 0; i < category_container.length; i++) {
+            const element = category_container[i];
+            if (EventorFlow.filteredCategories.includes(element.id)){
+                minidivg.appendChild(
+                EventorTemplate.createCategoryBadge(element.id,
+                     element.title, element.color,
+                     EventorFlow.activeCategory == element.id ? true : false));
+            }
+            
         }
     }
 
@@ -703,7 +742,9 @@ class EventorFlow {
             const element = arsenal[ind];
             element.remove();
         }
-
+        if (EventorFlow.activeCategory == ""){
+            EventorFlow.filteredCategories = [];
+        }
         Array.from(event_container).forEach((event) => {
             if (EventorFlow.activeSection == 'all' || event.section == EventorFlow.activeSection) {
                 //console.log(event.setdate);
@@ -716,10 +757,26 @@ class EventorFlow {
     
                     let row = document.querySelector('#' + rid);
                     if (row != null) {
-                        let erc = row.querySelector('.eventor-row-content');
-                        //let card = EventorTemplate.createEventCard(event.title, event.setdate, event.category, event.content);
-                        let card = EventorTemplate.makeEventCard(event);
-                        erc.insertAdjacentHTML('beforeend', card);
+                        if (event.category != '' && 
+                        !EventorFlow.filteredCategories.includes(event.category))
+                        {
+                            EventorFlow.filteredCategories.push(event.category);
+                        }
+                        if (EventorFlow.activeCategory != ''){
+                            if (EventorFlow.activeCategory == event.category){
+
+                                let erc = row.querySelector('.eventor-row-content');
+                                //let card = EventorTemplate.createEventCard(event.title, event.setdate, event.category, event.content);
+                                let card = EventorTemplate.makeEventCard(event);
+                                erc.insertAdjacentHTML('beforeend', card);
+                            }
+                        } else {
+                            let erc = row.querySelector('.eventor-row-content');
+                            //let card = EventorTemplate.createEventCard(event.title, event.setdate, event.category, event.content);
+                            let card = EventorTemplate.makeEventCard(event);
+                            erc.insertAdjacentHTML('beforeend', card);
+
+                        }
                         //erc.appendChild(card);
                     }
                 }
@@ -728,6 +785,7 @@ class EventorFlow {
             }
 
         });
+        EventorFlow.refreshCategoryFilter();
     }
 
     static clearAllCardBodyFromChart() {

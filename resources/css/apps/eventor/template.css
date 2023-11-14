@@ -48,7 +48,7 @@
     font-weight: 500;
   }
   .eventor-today {
-    color: #03A9F4;
+    color: #03A9F4 !important;
     border: 3px solid;
   } 
   .eventor-today .uk-text-lead {
@@ -336,16 +336,33 @@ font-family: system-ui;
 .cl-row {
   display: grid;
   grid-template-columns: 110px auto;
+  user-select: none;
 }
 .cl-row:last-child {
 
   /* border-bottom: 0px; */
 }
+ .stb-mobile {
+  display: none;
+}
+.stb-full {
+  display:  inline-block;;
+} 
+
 @media screen and (max-width: 900px) {
   .cl-row {
   display: grid;
   grid-template-columns: auto;
   }
+  .evt-toolbar-sectionname {
+    font-size: 0.8rem;
+  }
+  .stb-mobile {
+    display:  inline-block;
+  }
+  .stb-full {
+    display:  none;
+  } 
 }
 .cl-row > div, .cl-restrictor > div {
   
@@ -432,6 +449,13 @@ font-family: system-ui;
 }
 .evt-stickybar-button {
   padding: 0px 12px;
+  border: none;
+  background-color: transparent;
+  color: #6f6f6f;
+}
+.evt-stickybar-button > button {
+  padding-right: 16px;
+    cursor: pointer;
 }
 .evt-mod-typetrig {
   user-select: none;
@@ -581,4 +605,69 @@ pre > code {
 }
 .row-weekend:hover {
   background-color:#0000001C;
+}
+
+
+
+.evt-mini-nav {
+  display: block;
+  position: fixed;
+  
+  bottom: 2rem;
+  right: 1rem;
+  backdrop-filter: blur(3px);
+}
+.evt-mini-nav-buttons > div {
+  padding: 0.6rem;
+  background-color: #00000045;
+  color: #252525;
+}
+.evt-mini-nav-buttons > div:hover {
+  background-color: #0000001e;
+  cursor: pointer;
+}
+.evt-open-button {
+  border: none;
+  background-color: transparent;
+}
+
+.evt-category-row {
+
+  width: 100%;
+
+}
+.evt-catgroup-f-item:first-child {
+  margin-left: 40px;
+}
+.evt-catgroup-f-item {
+  display: flex;
+  margin: 3px;
+  border-radius: 6px;
+  min-width: 82px;
+  padding: 0.3rem;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.499);
+  cursor: pointer;
+
+  transition: all ease 0.2s;
+  user-select: none;
+  box-shadow: 1px 1px 6px gray;
+  backdrop-filter: blur(12px);
+}
+.evt-catgroup-f-item:hover {
+  background-color: white;
+}
+.evt-catgroup-f-item.active {
+  opacity: 1;
+  background: #3e3e3e;
+  color: white;
+  outline: 2px solid #3e3e3e;
+}
+.evt-dd-background {
+  background: transparent;
+  /* backdrop-filter: blur(6px); */
+  box-shadow: none;
 }

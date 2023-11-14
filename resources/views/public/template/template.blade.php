@@ -239,6 +239,9 @@
         }
 
     }
+    .th-com-s-nav * {
+        user-select: none;
+    }
     .th-com-s-nav-item {
         display: flex;
     flex-direction: row;

@@ -19,7 +19,19 @@
   <div id="calendar_nav_down">
       
   </div>
-
+  <div id="mini_nav" class='evt-mini-nav'>
+    <div class="evt-mini-nav-buttons">
+        <div class="evt-mini-nav-item cl-com-next">
+        <span uk-icon="icon: chevron-up"></span>
+        </div>
+        <div class="evt-mini-nav-item cl-com-today">
+        <span uk-icon="icon: reply"></span>
+        </div>
+        <div class="evt-mini-nav-item cl-com-prev">
+        <span uk-icon="icon: chevron-down"></span>
+        </div>
+    </div>
+</div>
 
   <div id="modal_searchManager" class="uk-modal-full" uk-modal>
     <div class="uk-modal-dialog" uk-height-viewport style='display: flex;    flex-direction: column;
@@ -181,6 +193,8 @@
 
     </div>
 </div>
+
+
 @endsection
 
 @section('page-script')

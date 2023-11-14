@@ -245,7 +245,6 @@ class EventModal {
         if (i == 0){
           block.classList.add('active');
         }
-        
         block.setAttribute('data-type', item.value);
         block.innerHTML = item.name;
         typeTrigs.appendChild(block);
