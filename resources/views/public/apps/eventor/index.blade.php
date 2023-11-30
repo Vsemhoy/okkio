@@ -2,6 +2,9 @@
 
 @section('page-styles')
 <link rel="stylesheet" href="{{ asset('resources/css/apps/eventor/template.css') }}">
+<link rel="stylesheet" href="{{ asset('resources/vendors/Prism/prism.css') }}">
+<!-- <link rel="stylesheet" href="{{ asset('resources/vendors/Prism/prism-okaidia.css') }}"> -->
+<!-- <link rel="stylesheet" href="{{ asset('resources/vendors/Prism/prism-coy.css') }}"> -->
 @endsection
 
 
@@ -19,7 +22,19 @@
   <div id="calendar_nav_down">
       
   </div>
-
+  <div id="mini_nav" class='evt-mini-nav'>
+    <div class="evt-mini-nav-buttons">
+        <div class="evt-mini-nav-item cl-com-next">
+        <span uk-icon="icon: chevron-up"></span>
+        </div>
+        <div class="evt-mini-nav-item cl-com-today">
+        <span uk-icon="icon: reply"></span>
+        </div>
+        <div class="evt-mini-nav-item cl-com-prev">
+        <span uk-icon="icon: chevron-down"></span>
+        </div>
+    </div>
+</div>
 
   <div id="modal_searchManager" class="uk-modal-full" uk-modal>
     <div class="uk-modal-dialog" uk-height-viewport style='display: flex;    flex-direction: column;
@@ -170,7 +185,7 @@
             <h2 class="uk-modal-title evt-reader-title">Headline</h2>
         </div>
 
-        <div class="uk-modal-body evt-reader-body" uk-overflow-auto>
+        <div class="uk-modal-body evt-reader-body">
 
         </div>
 
@@ -181,6 +196,8 @@
 
     </div>
 </div>
+
+
 @endsection
 
 @section('page-script')
@@ -267,6 +284,12 @@
 @section('page-scripts')
 <script src="{{ asset('resources/vendors/Teftele/DayFlow/dayflow.js') }}"></script>
 
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/commonmark/0.29.3/commonmark.min.js"></script> -->
+
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/prism.min.js"></script> -->
+<script src="{{ asset('resources/vendors/Commonmark/commonmark.js') }}"></script>
+<script src="{{ asset('resources/vendors/Prism/prism.js') }}"></script>
+
 <script src="{{ asset('resources/js/apps/eventor/page.js') }}"></script>
 <script src="{{ asset('resources/js/apps/eventor/sidemenu.js') }}"></script>
 <script src="{{ asset('resources/js/apps/eventor/templates.js') }}"></script>
@@ -280,4 +303,10 @@
 <script src="{{ asset('resources/js/apps/eventor/searchmanager.js') }}"></script>
 
 <script src="{{ asset('resources/vendors/Teftele/TeleInput/teleinput.js') }}"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+
+  });
+</script>
 @endsection

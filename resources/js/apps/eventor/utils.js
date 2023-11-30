@@ -255,4 +255,42 @@ class EventorUtils {
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
     document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
   }
+
+
+  static replaceEntities(inputString)
+  {
+    var outputString = inputString.replace(/&#[0-9]+;|&lt;|&quot;|&gt;|&amp;/g, function(match) {
+      // Map each matched HTML entity to its replacement
+      var replacements = {
+          '&#039;': "'",
+          '&lt;': '<',
+          '&quot;': '"',
+          '&gt;': '>',
+          '&amp;' : '&',
+
+          // Add more mappings as needed
+          /*
+          &amp; - Ampersand (&)
+&nbsp; - Non-breaking space
+&copy; - Copyright symbol (©)
+&reg; - Registered trademark symbol (®)
+&trade; - Trademark symbol (™)
+&mdash; - Em dash (—)
+&ndash; - En dash (–)
+&hellip; - Ellipsis (…)
+&frac12; - Fraction one-half (½)
+&frac14; - Fraction one-fourth (¼)
+&frac34; - Fraction three-fourths (¾)
+&eacute; - E with acute accent (é)
+&ouml; - O with umlaut (ö)
+&agrave; - A with grave accent (à)
+&copy; - Copyright symbol (©)
+*/
+      };
+  
+      // Return the replacement or the original match if not found in the mapping
+      return replacements[match] || match;
+  });
+    return outputString;
+  }
 }

@@ -45,15 +45,13 @@ class EventorTemplate
         };
         let additionalClasses = '';
         let typeName = 'event';
-        if (event.type == 1){
-          additionalClasses = "evt-type-event";
-        } else if (event.type == 2){
-          additionalClasses = "evt-type-action";
-          typeName = 'action';
-        } else if (event.type == 3){
-          additionalClasses = "evt-type-note";
-          typeName = 'note';
+        let obj = EventorTypes.getDataType(event.type);
+        if (obj != null)
+        {
+          additionalClasses = obj.cardClass;
+          typeName = obj.name.toLowerCase();
         }
+ 
         let headerIcon = "<span>";
         let starredMark = "";
         if (event.starred == 1){
@@ -67,7 +65,7 @@ class EventorTemplate
 
         if (event.status == 0){
           starredMark += " evt-disabled";
-          cutlength = 300;
+          cutlength = 500;
         } else if (event.status == 2){
           starredMark += " evt-archieved";
           cutlength = 500;
@@ -88,12 +86,17 @@ class EventorTemplate
           if (event.content.length > cutlength){
             content = content.trimEnd() + "...";
           }
-          content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
+
+          var reader = new commonmark.Parser();
+          var parsed = reader.parse(EventorUtils.replaceEntities( content));
+          var writer = new commonmark.HtmlRenderer();
+          var html = writer.render(parsed);
+          //content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
         }
         let body = '';
         if (event.content != ''){
           body = `              <div class="uk-card-body evt-card-body">
-            <p>${content}</p>
+            ${html}
           </div>`;
         };
         let editLink = "<a href='#' class='uk-button uk-button-text evt-edit-button'>Edit " + typeName + "</a>";
@@ -193,7 +196,7 @@ class EventorTemplate
              style='border-color: #${rootcolor};'>
               <div class="uk-card-header">
                 <div class="uk-width-expand">
-                  <h3 class="evt-card-title uk-margin-remove-bottom">${event.title}</h3>
+                  <h3 class="evt-card-title uk-margin-remove-bottom"><span class='evt-ctitle-string'>${event.title}</span></h3>
                   <div class="uk-text-meta uk-margin-remove-top flex-space"><time datetime="${time}">${date}</time> ${secBlock}</div>
                 </div>
               </div>
@@ -231,7 +234,12 @@ class EventorTemplate
             content += cards[i];
         }
         let todate = EventorUtils.isDateToday(date) ? "eventor-today" : "";
-
+        let dweek = new Date(date).getDay();
+        console.log(dweek);
+        if (dweek == 0 || dweek == 6)
+        {
+          todate += " evt-weekend";
+        }
         let todateId = EventorUtils.isDateToday(date) ? "id='row_today'" : "";
         let noEventClass = cards.length == 0 ? "eventor-hiddenrow" : "";
         let day = EventorTemplate.getDayOfWeek(date);
@@ -352,8 +360,9 @@ class EventorTemplate
       const div = document.createElement('div'); // Create a new div element
       let skip = false;
       // Use regular expression to find and replace URLs with <a> tags
+      
       const lineWithLinks = line.replace(urlPattern, (match) => {
-        return `<a href="${match}" class='uk-link-text' target="_blank">${match}</a>`;
+        return `<a href="${match}" class='uk-link-text' target="_blank">${ match.slice(0,23)}...</a>`;
       });
   
       // Set the div's innerHTML to the line with links
@@ -382,8 +391,55 @@ class EventorTemplate
         result.push(div);
       }
     });
-  
-    return result;
+
+    let nuresult = [];
+    let child = null;
+    let codeLinesCount = 2;
+    for (let i = 0; i < result.length; i++) {
+      const element = result[i];
+      
+      if (element.innerHTML.indexOf('```') != -1){
+        let text = element.innerHTML;
+        if (codeLinesCount % 2 == 0)
+        {
+          child = document.createElement('code');
+          let codeline = document.createElement('span');
+          codeline.innerHTML = text.replace('```','') + "<br>";
+          child.appendChild(codeline);
+          codeLinesCount++;
+          if (codeline.innerHTML.indexOf('```') != -1)
+          {
+            codeline.innerHTML = codeline.innerHTML.replace('```', '');
+            let parent = document.createElement('span');
+            parent.classList.add('evt-pre');
+            parent.appendChild(child);
+            nuresult.push(parent);
+            child = null;
+            codeLinesCount++;
+          }
+        } else {
+          let codeline = document.createElement('span');
+          codeline.innerHTML = text.replace('```','');
+          child.appendChild(codeline);
+          let parent = document.createElement('pre');
+          parent.classList.add('evt-pre');
+          parent.appendChild(child);
+          nuresult.push(parent);
+          child = null;
+          codeLinesCount++;
+        }
+
+      } else {
+        if (child != null){
+          let codeline = document.createElement('span');
+          codeline.innerHTML = element.innerHTML.replace('```','') + "<br>";
+          child.appendChild(codeline);
+        } else {
+          nuresult.push(element);
+        }
+      }
+    }
+    return nuresult;
   }
 
 
@@ -520,4 +576,30 @@ class EventorTemplate
     subform.innerHTML = html;
     return subform;
   }
+
+  static createCategoryBadge(bid, name, color, active = false){
+    // Create a container div element with class "evt-catgroup-s-item"
+    const containerDiv = document.createElement('div');
+    containerDiv.classList.add('evt-catgroup-f-item');
+    containerDiv.setAttribute('data-target', bid);
+    containerDiv.style.border = '3px solid #' + color;
+    if (active){
+      containerDiv.classList.add('active');
+    }
+    // Create the first span element with class "catGroupName" and set its text content
+    const span1 = document.createElement('span');
+    span1.classList.add('catGroupName');
+    span1.textContent = name + ' ';
+
+    // Create the second span element with class "catGroupUnlink" and set its text content
+    const span2 = document.createElement('span');
+    span2.classList.add('catGroupUnlink');
+    span2.textContent = '';
+    // span2.style.backgroundColor = '#' + color;
+
+    // Append the span elements to the container div
+    containerDiv.appendChild(span1);
+    containerDiv.appendChild(span2);
+    return containerDiv;
+}
 }

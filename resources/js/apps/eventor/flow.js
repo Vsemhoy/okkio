@@ -4,7 +4,9 @@ class EventorFlow {
     static loadedSections = {};
     static dayFlow = null;
     static activeSection = 'all';
-    static activeTypes = [1,2,3];
+    static filteredCategories = [];
+    static activeCategory = '';
+    static activeTypes = [1,2,3,4,5,6,7,8];
     constructor(selector) {
         // { 'date' => [ 'afklsjdklfjas', 'jdlfkajsdf' ]}
         let cursect = EventorUtils.getParam('sect');
@@ -163,7 +165,7 @@ class EventorFlow {
                 callParamsArray.push([DayFlow.dateArray[i], EventorFlow.activeSection]);
             };
             EventorFlow.loadEvents(callParamsArray);
-            EventorFlow.dayFlow.onMoved(this.reloadSectionEvents);
+            EventorFlow.dayFlow.onMoved(EventorFlow.reloadSectionEvents);
             
             if (targetEvent != null) {
                 let tgE = document.querySelector('#' + targetEvent.replace('.', `\\.`));
@@ -210,47 +212,38 @@ class EventorFlow {
                             if (element.id == tid){
                                 eInArray == true;
                                 EventorFlow.targetEvents.push( element);
+                                console.log("I FOUND EM!");
                                 break;
                             }
+                        }
+                        
+                        // Target Event should be loaded
+                        if (EventorFlow.targetEvents.length > 0){
+                            EventorFlow.goToTargetEvent();
                         }
                         if (!eInArray){
                             EventorFlow.loadSingleEvent([tid]);
                         };
-                        // Target Event should be loaded
-                        if (EventorFlow.targetEvents.length > 0){
-                            const element = EventorFlow.targetEvents[0];
-                            let tdate = new ShortDate(element.setdate);
-                            let section = element.section;
-                            DayFlow.dateArray = [];
-                            DayFlow.dateArray.push(tdate);
-                            EventorFlow.activeSection = section;
-
-                            DateUtils.changeAddressBar('stm', tdate.getShortDate());
-                            DateUtils.changeAddressBar('enm', tdate.getShortDate());
-                            DateUtils.changeAddressBar('sect', EventorFlow.activeSection);
-
-                            // Flush event container
-                            event_container = [];
-                            let callParamsArray = [];
-                            for (let i = 0; i < DayFlow.dateArray.length; i++) {
-                                callParamsArray.push([DayFlow.dateArray[i], EventorFlow.activeSection]);
-                            };
-                            EventorFlow.dayFlow.reset(tdate);
-                            EventorFlow.loadEvents(callParamsArray);
-                            EventorNav.recheckMenuItems(section);
-                            this.reloadSectionEvents();
-
-                            let targetEvent = document.querySelector('#' + tid.replace('.', `\\.`));
-                            if (targetEvent != null) {
-                                    targetEvent.classList.add('evt-founded');
-                                    let sec = targetEvent.closest('.event-section');
-                                    sec.classList.add('evt-sec-founded');
-                                    targetEvent.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-                                    DateUtils.changeAddressBar('targ', tid);
-                            }
-                        }
                     }
                 }
+            }
+
+
+            // Handle categoryFilterClick
+            if (e.target.closest('.evt-catgroup-f-item')){
+                let button = e.target.closest('.evt-catgroup-f-item');
+                let cid = button.getAttribute('data-target');
+                if (cid == 'evt_clear_grp_filter'){
+                    EventorFlow.activeCategory = '';
+                } else {
+                    if (EventorFlow.activeCategory == cid){
+                        EventorFlow.activeCategory = '';
+                    } else {
+                        
+                        EventorFlow.activeCategory = cid;
+                    }
+                }
+                EventorFlow.refreshEvents();
             }
         });
 
@@ -272,8 +265,81 @@ class EventorFlow {
         });
 
 
+        
     }
 
+    static goToTargetEvent()
+    {
+        if (EventorFlow.targetEvents.length > 0){
+            console.log("TRY TO LOAD");
+            const element = EventorFlow.targetEvents[0];
+            let tdate = new ShortDate(element.setdate);
+            let section = element.section;
+            DayFlow.dateArray = [];
+            DayFlow.dateArray.push(tdate);
+            EventorFlow.activeSection = section;
+
+            DateUtils.changeAddressBar('stm', tdate.getShortDate());
+            DateUtils.changeAddressBar('enm', tdate.getShortDate());
+            DateUtils.changeAddressBar('sect', EventorFlow.activeSection);
+
+            // Flush event container
+            event_container = [];
+            let callParamsArray = [];
+            for (let i = 0; i < DayFlow.dateArray.length; i++) {
+                callParamsArray.push([DayFlow.dateArray[i], EventorFlow.activeSection]);
+            };
+            EventorFlow.dayFlow.reset(tdate);
+            EventorFlow.loadEvents(callParamsArray);
+            EventorNav.recheckMenuItems(section);
+            EventorFlow.reloadSectionEvents();
+
+            EventorFlow.markTargetEvent(element);
+        }
+    }
+
+    static refreshCategoryFilter(){
+        let minidivg = document.querySelector('#evt_cat_filter');
+        minidivg.innerHTML = "";
+        minidivg.appendChild(
+            EventorTemplate.createCategoryBadge("evt_clear_grp_filter", "Reset filter", "03A9F4"));
+        
+        for (let i = 0; i < category_container.length; i++) {
+            const element = category_container[i];
+            if (EventorFlow.filteredCategories.includes(element.id)){
+                minidivg.appendChild(
+                EventorTemplate.createCategoryBadge(element.id,
+                     element.title, element.color,
+                     EventorFlow.activeCategory == element.id ? true : false));
+            }
+            
+        }
+    }
+
+    /**
+     * Make frame around selected card and focus to it 
+     * @param {object} element 
+     * @param {int} loop 
+     */
+    static async markTargetEvent(element, loop = 0)
+    {
+        let targetEvent = null;
+        loop++;
+        setTimeout(() => {
+            targetEvent = document.querySelector('#' + element.id.replace('.', `\\.`));
+            if (targetEvent != null) {
+                targetEvent.classList.add('evt-founded');
+                let sec = targetEvent.closest('.event-section');
+                sec.classList.add('evt-sec-founded');
+                targetEvent.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+                DateUtils.changeAddressBar('targ', element.id);
+            } else {
+                if (loop < 10){
+                    EventorFlow.markTargetEvent(element, loop);
+                }
+            }
+        }, 250);
+    }
 
     toggleItemType(types)
     {
@@ -441,7 +507,7 @@ class EventorFlow {
 
 
 
-    reloadSectionEvents() {
+    static reloadSectionEvents() {
         let sectionid = EventorFlow.activeSection;
         console.log('command :>> ', 'reloadSectionEvents');
         // check if there not events in the array for this section
@@ -676,7 +742,9 @@ class EventorFlow {
             const element = arsenal[ind];
             element.remove();
         }
-
+        if (EventorFlow.activeCategory == ""){
+            EventorFlow.filteredCategories = [];
+        }
         Array.from(event_container).forEach((event) => {
             if (EventorFlow.activeSection == 'all' || event.section == EventorFlow.activeSection) {
                 //console.log(event.setdate);
@@ -689,10 +757,26 @@ class EventorFlow {
     
                     let row = document.querySelector('#' + rid);
                     if (row != null) {
-                        let erc = row.querySelector('.eventor-row-content');
-                        //let card = EventorTemplate.createEventCard(event.title, event.setdate, event.category, event.content);
-                        let card = EventorTemplate.makeEventCard(event);
-                        erc.insertAdjacentHTML('beforeend', card);
+                        if (event.category != '' && 
+                        !EventorFlow.filteredCategories.includes(event.category))
+                        {
+                            EventorFlow.filteredCategories.push(event.category);
+                        }
+                        if (EventorFlow.activeCategory != ''){
+                            if (EventorFlow.activeCategory == event.category){
+
+                                let erc = row.querySelector('.eventor-row-content');
+                                //let card = EventorTemplate.createEventCard(event.title, event.setdate, event.category, event.content);
+                                let card = EventorTemplate.makeEventCard(event);
+                                erc.insertAdjacentHTML('beforeend', card);
+                            }
+                        } else {
+                            let erc = row.querySelector('.eventor-row-content');
+                            //let card = EventorTemplate.createEventCard(event.title, event.setdate, event.category, event.content);
+                            let card = EventorTemplate.makeEventCard(event);
+                            erc.insertAdjacentHTML('beforeend', card);
+
+                        }
                         //erc.appendChild(card);
                     }
                 }
@@ -701,6 +785,8 @@ class EventorFlow {
             }
 
         });
+        EventorFlow.refreshCategoryFilter();
+        Prism.highlightAll();
     }
 
     static clearAllCardBodyFromChart() {
@@ -833,7 +919,8 @@ class EventorFlow {
                         // console.log(item.results);
                         Array.from(item.results).forEach((item2) => {
                             EventorFlow.targetEvents.push(item2);
-
+                            console.log("I LOAD EM!!! from database", EventorFlow.targetEvents);
+                            EventorFlow.goToTargetEvent();
                         });
 
                     };
