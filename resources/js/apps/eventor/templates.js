@@ -230,7 +230,7 @@ class EventorTemplate
              style='border-color: #${rootcolor};'>
               <div class="uk-card-header">
                 <div class="uk-width-expand">
-                  <h3 class="evt-card-title uk-margin-remove-bottom"><span class='evt-ctitle-string'>${event.title}</span></h3>
+                  <h3 class="evt-card-title uk-margin-remove-bottom"><span class='evt-ctitle-string'><span>${event.title}</span></span></h3>
                   <div class="uk-text-meta uk-margin-remove-top flex-space"><time datetime="${time}">${date}</time> ${secBlock}</div>
                 </div>
               </div>
