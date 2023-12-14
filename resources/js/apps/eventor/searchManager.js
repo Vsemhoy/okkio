@@ -256,7 +256,14 @@ class EventorSearch
                     container.insertAdjacentHTML('beforeend', sepiq);
                 }
                 if (setdate == ''){ setdate = event.setdate;};
-                let card = EventorTemplate.makeEventSearchCard(event, EventorSearch.searchWord);
+                var arrText = EventorSearch.searchWord;
+                try {
+                    arrText =  EventorSearch.searchWord.match(/(?:[^\+]|\+\+)+/g);
+                } catch (catcher){
+                    alert("oops");
+                }
+
+                let card = EventorTemplate.makeEventSearchCard(event, arrText);
                 container.insertAdjacentHTML('beforeend', card);
                 setdate = event.setdate;
             }, delay);
@@ -322,8 +329,15 @@ class EventorSearch
             // console.log(EventorUtils.getSimpleDate(dateFuture, true));
             let taskArray = [];
             
-
+                
                 // let shortdate = element[0];
+                var arrText = text;
+                try {
+                    arrText =  text.match(/(?:[^\+]|\+\+)+/g);
+                } catch (catcher){
+                    alert("oops");
+                }
+                
 
                 let task = EventorTypes.GetNewTask();
                 task.user = me;
@@ -339,9 +353,10 @@ class EventorSearch
                 const where2 = {
                     column: ["content", "title"],
                     operator: "LIKE",
-                    value: text
+                    value: arrText.length == 1 ? arrText[0] : arrText
                 } 
                 task.where.push(where2);
+                task.limit = "100";
                 // const where2 = {
                 //     column: "setdate",
                 //     value: EventorUtils.getSimpleDate(shortdate.getFirstDate(true), true),

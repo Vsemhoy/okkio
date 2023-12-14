@@ -130,7 +130,7 @@ class EventorTemplate
         let section = null;
         let time  = new Date( event.created_at).toLocaleTimeString();
         let date = event.setdate;
-        const regex = new RegExp(searchWord, 'gi');
+
         if (event.category != null && event.category != "")
         {
           for (let i = 0; i < category_container.length; i++){
@@ -181,8 +181,42 @@ class EventorTemplate
           }
           content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
         }
-        content = content.replace(regex, `<span class='evt-found'>$&</span>`);
-        event.title = event.title.replace(regex, `<span class='evt-found'>$&</span>`);
+
+      
+        if (Array.isArray(searchWord)){
+          for (let i = 0; i < searchWord.length; i++) {
+            let sw = searchWord[i];
+            console.log(sw);
+            let reg = "";
+            if (sw.includes('++')){
+              reg = sw;
+              content = content.replace(reg.toLowerCase(), "<span class='evt-found'>" + reg + "</span>");
+              event.title = event.title.replace(reg.toLowerCase(), "<span class='evt-found'>" + reg + "</span>");
+              content = content.replace(reg.toUpperCase(), "<span class='evt-found'>" + reg + "</span>");
+              event.title = event.title.replace(reg.toUpperCase(), "<span class='evt-found'>" + reg + "</span>");
+            } else {
+              reg = new RegExp(sw, 'gi');
+              content = content.replace(reg, `<span class='evt-found'>$&</span>`);
+              event.title = event.title.replace(reg, `<span class='evt-found'>$&</span>`);
+            }
+            
+          }
+        } else {
+          let reg = "";
+          if (searchWord.includes('++')){
+            reg = searchWord;
+            console.log('reg' + ' => ' + reg);
+            content = content.replace(reg.toLowerCase(), "<span class='evt-found'>" + reg + "</span>");
+            event.title = event.title.replace(reg.toLowerCase(), "<span class='evt-found'>" + reg + "</span>");
+            content = content.replace(reg.toUpperCase(), "<span class='evt-found'>" + reg + "</span>");
+            event.title = event.title.replace(reg.toUpperCase(), "<span class='evt-found'>" + reg + "</span>");
+          } else {
+            reg = new RegExp(searchWord, 'gi');
+            content = content.replace(reg, `<span class='evt-found'>$&</span>`);
+            event.title = event.title.replace(reg, `<span class='evt-found'>$&</span>`);
+          }
+          
+        }
         let body = '';
         if (event.content != ''){
           body = `              <div class="uk-card-body evt-card-body">
