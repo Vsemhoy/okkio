@@ -457,8 +457,7 @@ font-family: system-ui;
   font-size: 1.25rem;
 }
 .evt-founded > div {
-  outline: 2px solid #03A9F4;
-  box-shadow: 3px 4px 0 4px #03a7f1;
+  outline: 10px solid #03A9F4;
 }
 .evt-sec-founded {
   border: 2px solid #03a9f4;
