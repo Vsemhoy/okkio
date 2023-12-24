@@ -34,7 +34,6 @@ class CategoryManager
 
         document.body.addEventListener('change', (e) => {
             const targetClass = 'evt-category-colorpicker';
-        
             if (e.target.classList.contains(targetClass)) {
                 const card = e.target.closest('.card-box'); // Replace with the actual class name of your card
                 if (card) {
@@ -56,7 +55,6 @@ class CategoryManager
 
         document.body.addEventListener('change', (e) => {
             const targetClass = 'evt-category-name-in';
-        
             if (e.target.classList.contains(targetClass)) {
                 const card = e.target.closest('.card-box'); // Replace with the actual class name of your card
                 if (card) {
@@ -64,6 +62,7 @@ class CategoryManager
                     let value = card.querySelector('.evt-category-name-in').value;
                     for (let i = 0; i < category_container.length; i++) {
                         let element = category_container[i];
+                        console.log('element.id ' + ' => ' + element.id );
                         if (element.id == id){
                             element.title = value.replace(/[^\p{L}\p{N}\s]/gu, '');
                             element.content = element.content == null ? '' : element.content;
@@ -400,12 +399,11 @@ class CategoryManager
                                 // let sortableContainer = UIkit.sortable('#evt_categoryList');
                                 let card = CategoryManager.getCategoryCard(item2, category_container.length);
                                 document.querySelector('#evt_categorys').appendChild(card);
+                                category_container.push(item2);
                                 // Update the sortable container
                                 // sortableContainer.update();
                                 card.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
                             } else {
-                                category_container.push(item2);
-
                                 for (let i = 0; i < category_container.length; i++){
                                     let el = category_container[i];
                                     if (el.id == category_id){

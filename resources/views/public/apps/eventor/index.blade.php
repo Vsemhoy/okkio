@@ -176,7 +176,7 @@
     </div>
 
 
-    <div id="modal_eventReader" uk-modal>
+    <div id="modal_eventReader" uk-modal class="uk-modal-container">
     <div class="uk-modal-dialog">
 
         <button class="uk-modal-close-default" type="button" uk-close></button>
