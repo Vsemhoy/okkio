@@ -515,6 +515,7 @@ class EventorFlow {
         if (EventorFlow.activeSection != 'all') {
             for (let i = 0; i < DayFlow.dateArray.length; i++) {
                 let cdate = DayFlow.dateArray[i].getShortDate();
+                console.log('cdate' + ' => ' + cdate);
                 if (EventorFlow.loadedSections[cdate] != null) {
                     console.log('not null cdate');
 
@@ -802,6 +803,8 @@ class EventorFlow {
 
     static loadEvents(callArray) {
         console.log('command :>> ', 'loadEvents');
+        console.log(callArray);
+        console.log('callArray' + ' => ' + callArray);
         let counter = 0;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -815,7 +818,6 @@ class EventorFlow {
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Event") {
-                        // console.log(item.results);
                         Array.from(item.results).forEach((item2) => {
                             let exists = false;
                             let newId = item2.id;
@@ -881,12 +883,13 @@ class EventorFlow {
                 column: "user",
                 value: me,
             };
+            console.log(shortdate);
             task.where.push(where);
             const where2 = {
                 column: "setdate",
-                value: EventorUtils.getSimpleDate(shortdate.getFirstDate(true), true),
+                value: shortdate.getFirstDate(true),
                 operator: "BETWEEN",
-                value2: EventorUtils.getSimpleDate(shortdate.getFirstDateOfNextMonth(true), true),
+                value2: shortdate.getFirstDateOfNextMonth(true),
             };
             task.where.push(where2);
             if (section != undefined && section != 'all' && section != '') {

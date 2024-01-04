@@ -542,7 +542,7 @@ class ShortDate {
             );
         }
         if (asString){
-            return this.year + this.delimeter + this.month + this.delimeter + (lastDay.getDate()).toString().padStart(2, '0');
+            return this.year + this.delimeter + this.month.toString().padStart(2,'0') + this.delimeter + (lastDay.getDate()).toString().padStart(2, '0');
         }
         return lastDay;
     }
@@ -568,9 +568,9 @@ class ShortDate {
             );
         }
         if (asString){
-            return this.year + this.delimeter + this.month + this.delimeter + '01';
+            return this.year + this.delimeter + this.month.toString().padStart(2,'0') + this.delimeter + '01';
         }
-        return lastDay;
+        return firstday;
     }
 
     

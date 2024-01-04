@@ -98,6 +98,9 @@
   .evt-card-body {
     font-size: 0.9rem;
   }
+  .evt-card-body code, .evt-reader-body code  {
+    white-space: pre-wrap !important;
+  }
   .evt-card-header {
     border-bottom: 1px solid #dddddd;
     margin-bottom: 12px;

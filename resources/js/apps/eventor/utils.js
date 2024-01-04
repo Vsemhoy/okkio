@@ -202,10 +202,13 @@ class EventorUtils {
     if (realize) {
       relizer = 1;
     }
+    console.log('getSimpledate date' + ' => ' + date);
     const month = String(new Date(date).getUTCMonth() + relizer).padStart(2, 0);
     const year = new Date(date).getFullYear();
     const day = String(new Date(date).getUTCDate()).padStart(2, 0);
-
+    console.log('month' + ' => ' + month);
+    console.log('year' + ' => ' + year);
+    console.log('day' + ' => ' + day);
     return (year + "-" + month + "-" + day);
   }
 
