@@ -1076,18 +1076,18 @@ class CalTemplate
 
         let bodydiv = document.createElement('div');
         bodydiv.id = '';
-        bodydiv.classList.add('uk-child-width-1-4@xl','uk-child-width-1-3@l','uk-child-width-1-2@m','uk-child-width-1-2@s','uk-grid-small','uk-grid-match','start-collapse','section-padding','uk-grid','uk-grid-stack','eventor-row-content');
+        bodydiv.classList.add('uk-child-width-1-4@xl','uk-child-width-1-3@l','uk-child-width-1-2@m','uk-child-width-1-2@s','uk-grid-small','uk-grid-match','start-collapse','section-padding','uk-grid','uk-grid-stack','cl-row-body');
 
         for (let index = 0; index < items.length; index++) {
           const element = items[index];
           bodydiv.appendChild(element);
         }
         if (items.length == 0){
-          row.classList.add('eventor-hiddenrow');
+          row.classList.add('cl-hiddenrow');
         }
 
         if (todateId != ''){
-          row.classList.add('eventor-today');
+          row.classList.add('cl-today');
         }
         row.appendChild(headdiv);
         row.appendChild(bodydiv);

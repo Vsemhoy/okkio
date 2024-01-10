@@ -7,21 +7,47 @@
 
 @section('content')
 <style>
+    .uk-navbar-container:not(.uk-navbar-transparent) {
+    background: #52d376;
+    background-image: url(/storage/site/green-abstract-geometric.jpg);
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll;
+}
+.th-navbar-item.active {
+    background-color: #ffffffc4;
+}
+.th-navbar-item:hover {
+    background-color: #ffffffc4;
+}
+.th-navbar-item:first-child:hover {
+    cursor: context-menu; 
+    background-color: #ffffff00 !important;
+}
+
         body {
             font-family: sans-serif;
         }
         .boo-container {
         display: grid;
         grid-template-columns: 280px auto 280px;
-        min-height: calc(100vh - 42px);
+        height: calc(100vh - 41px);
+
         }
-        .boo-nav-container > div {
-        border-right: 1px solid silver;
+        .boo-wrapper-main {
+            min-height: calc(100vh - 42px);
+        }
+        .boo-nav-container {
+            display: grid;
+            grid-template-rows: auto 1fr;
+        }
+        .boo-nav-section {
+            /* border-right: 1px solid silver; */
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        
-        height: calc(100vh - 42px);
+        height: calc(100vh - 189px);
+
         }
         .boo-mark-container {
         border-left: 1px solid silver;
@@ -54,6 +80,12 @@
             padding-left: 1rem;
             transition: background-color 1.3s;
         }
+        .boo-nav-top {
+            transition: all ease 0.3s;
+        }
+        .boo-nav-top:hover {
+            background: #d8f3dc;
+        }
         .boo-nav-footer {
         display: flex;
         flex-direction: column;
@@ -81,6 +113,12 @@
         .boo-outlined {
             border: 1px solid #0000002b;
             border-radius: 6px;
+        }
+        .boo-current-book-selector {
+            background-color: white;
+    scale: 130%;
+    border-radius: 6px;
+    cursor: pointer;
         }
         @media screen and (max-width: 900px) {
 
@@ -115,9 +153,7 @@
         .boo-nav-control:hover {
             box-shadow: 1px 1px 6px gray;
         }
-        .boo-nav-section {
-            display: none;
-        }
+
         .boo-nav-section .boo-active {
             display: flex;
         }
@@ -142,13 +178,52 @@
             color: #1976D2;
     outline: 1px solid;
         }
+        .boo-main-top {
+            display: grid;
+            grid-template-columns: auto 30px;
+        }
+        .boo-tab-zone {
+            padding: 3px;
+            padding-bottom: 9px;
+            overflow: auto;
+        }
+   .boo-tab {
+        display: inline-block;
+        padding: 0 10px;
+        background: #eeeeee;
+        line-height: 1.5;
+        font-size: .875rem;
+        color: #fff;
+        vertical-align: middle;
+        white-space: nowrap;
+        border-radius: 2px;
+        text-transform: uppercase;
+        color: gray;
+    }
+    .boo-tab.active {
+        background-color: #32d296;
+        color: white;
+    }
+    .boo-nav-item {
+        transition: background-color 0.2s;
+    }
+    .boo-nav-item:hover {
+        background: rgb(0,0,0);
+background: linear-gradient(0deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.02) 70%, rgba(0,0,0,0.06) 100%);
+    border-radius: 2px;
+    }
+
     </style>
 
 <main class=" ms-sm-auto p-0" id="mainWrapper">
-         
+
          <div class='boo-container'>
            
            <div class='boo-nav-container'>
+            <div class="boo-nav-top uk-padding-small">
+                <h4><span class='boo-current-book-selector' uk-icon="triangle-down"></span> <span>Super-book name test of long long name of the book...</span></h4>
+            </div>
+
              <div class="boo-nav-section boo-active">
              <div class="boo-nav-content" id='sortableList'>
                
@@ -177,7 +252,50 @@
            </div>
            
             <div class='boo-main-container'>
-             Hello document body
+                <div class="boo-main-top">
+                    <div class="boo-tab-zone">
+                    <div class="boo-tab"><span>success</span> <span uk-icon="close"></span></div>
+                    <div class="boo-tab active"><span>A new book insidesu</span> <span uk-icon="close"></span></div>
+                    <div class="boo-tab"><span>A new book insidesu</span> <span uk-icon="close"></span></div>
+                    </div>
+                    <div class="boo-tab-dropdown">
+                        <span uk-icon="triangle-down"></span>
+                    </div>
+                </div>
+
+             <!-- Place the first <script> tag in your HTML's <head> -->
+                <script src="https://cdn.tiny.cloud/1/qgh5wm6ady2g3daf5a52xzdgehiut1cgawf40xpy65bnmeq3/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+                <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
+                <script>
+    tinymce.init({
+        selector: '#tiny_place',
+        advcode_inline: true,
+        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough code | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+    });
+
+    // Function to get content from TinyMCE and place it in the textarea
+    function getContentAndPlace() {
+        var content = tinymce.get('tiny_place').getContent();
+        document.getElementById('contenarea').value = content;
+    }
+
+    // Function to place content from the textarea into TinyMCE
+    function placeContent() {
+        var content = document.getElementById('contenarea').value;
+        tinymce.get('tiny_place').setContent(content);
+    }
+</script>
+
+<textarea id='tiny_place'>
+    Welcome to TinyMCE!
+</textarea>
+
+<div class='uk-button uk-button-default' id='btn_getcontent' onclick='getContentAndPlace()'>Get content</div>
+<div class='uk-button uk-button-default' id='btn_placecontent' onclick='placeContent()'>Place content</div>
+
+<textarea name="content" id="contenarea" cols="30" rows="10"></textarea>
            </div>
            
            <div class='boo-mark-container'>
@@ -196,7 +314,23 @@ class BookerFlow
 {
     constructor()
     {
+        // Add menu items to header
+        const centralMenu = document.querySelector('.th-central-menu');
+        centralMenu.innerHTML = "";
+        let bookerLogo = document.createElement('div');
+        bookerLogo.innerHTML = 'BꝎ₭ΞR';
+        bookerLogo.classList.add('th-navbar-item');
+        centralMenu.appendChild(bookerLogo);
 
+        let viewType = document.createElement('div');
+        viewType.innerHTML = 'Tree';
+        viewType.classList.add('th-navbar-item', 'active');
+        centralMenu.appendChild(viewType);
+
+        let viewType2 = document.createElement('div');
+        viewType2.innerHTML = 'Flow';
+        viewType2.classList.add('th-navbar-item');
+        centralMenu.appendChild(viewType2);
     }
 }
 
@@ -877,7 +1011,7 @@ refreshPullers(){
 function cb(id, name){
     alert( name);
 };
-
+let bf = new BookerFlow();
 let a = new TreeNav('sortableList');
 a.onChangedName(cb);
 /*

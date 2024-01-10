@@ -74,14 +74,14 @@
     color: #333;
     font-weight: 500;
   }
-  .eventor-today {
+  .cl-today {
     color: #03A9F4 !important;
     border: 3px solid;
   } 
-  .eventor-today .uk-text-lead {
+  .cl-today .uk-text-lead {
     color: #03A9F4 !important;
   }
-  .eventor-hiddenrow {
+  .cl-hiddenrow {
     /* display: none; */
   }
 

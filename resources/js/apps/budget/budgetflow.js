@@ -18,31 +18,36 @@ class BudgetFlow
         for (let i = 0; i < rows.length; i++) {
             const element = rows[i];
             if (!element.classList.contains('bud-row-body')) {
-                element.classList.add('bud-row-body');
-                element.classList.add('uk-child-width-1-4@xl','uk-child-width-1-3@l','uk-child-width-1-2@m','uk-child-width-1-2@s','uk-grid-small','uk-grid-match');
+                //element.setAttribute("class", "");
+                //element.classList.add('uk-grid');
+               // element.classList.add('uk-child-width-1-4@xl','uk-child-width-1-3@l','uk-child-width-1-2@m','uk-child-width-1-2@s','uk-grid-small','uk-grid-match');
                 element.setAttribute('uk-grid', '');
 
+                
                 for (let y = 0; y < 3; y++) {
                     let col = document.createElement('div');
                     col.id = '';
-                    col.style.backgroundColor = "#00ff9e17";
+                    col.classList.add('bud-acc-col');
+                    
+                    let colin = document.createElement('div');
+                    colin.classList.add('acc-col-in');
+                    colin.style.backgroundColor = "#00ff9e17";
                     if (y == 1){
-                        col.style.backgroundColor = "#00a4ff37";
+                        colin.style.backgroundColor = "#00a4ff37";
                     }
                     if (y == 2){
-                        col.style.backgroundColor = "#ffa4ff37";
+                        colin.style.backgroundColor = "#ffa4ff37";
                     }
-                    col.classList.add('bud-acc-col');
-                    col.classList.add('bud-droparea');
-                    col.setAttribute('draggable', true);
-                    col.addEventListener('dragstart', this.drag);
-                    col.addEventListener('dragover', this.allowDrop);
-                    col.addEventListener('drop', this.drop);
+                    colin.classList.add('bud-droparea');
+                    colin.setAttribute('draggable', true);
+                    colin.addEventListener('dragstart', this.drag);
+                    colin.addEventListener('dragover', this.allowDrop);
+                    colin.addEventListener('drop', this.drop);
                     
                     let colhead = document.createElement('div');
                     colhead.classList.add('bud-colhead');
                     colhead.innerHTML = "<span>+" + i * y + "</span><span>423850</span>";
-                    col.appendChild(colhead);
+                    colin.appendChild(colhead);
                     let div = document.createElement('div');
                     div.id = 'h_' + i + "_" + y;
                     div.classList.add('bud-card-wrapper');
@@ -54,8 +59,13 @@ class BudgetFlow
                     card.classList.add('uk-card');
                     card.classList.add('uk-card-default');
                     card.classList.add('uk-padding');
-                    div.appendChild(card);
-                    col.appendChild(div);
+                    let randomNum = Math.floor(Math.random() * 4); 
+                    if (randomNum > 1){
+
+                        div.appendChild(card);
+                    }
+                    colin.appendChild(div);
+                    col.appendChild(colin);
                     element.appendChild(col);
                 }
 

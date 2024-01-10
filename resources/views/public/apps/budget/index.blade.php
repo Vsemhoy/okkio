@@ -81,11 +81,22 @@
         .bud-colhead > span {
             color: gray;
         }
-        .bud-acc-col {
-            align-content: flex-start;
+        .bud-acc-col, .acc-col-in {
+            /* align-content: flex-start; */
+            padding: 0.5rem;
         }
+        .acc-col-in {
+            border-radius: 0.5rem;
+        }
+        .cl-row-body {
+            
+        }
+        .cl-row-body > .bud-acc-col {
+            
+        }
+
         .uk-grid-small>.uk-grid-margin {
-    margin-top: 0px;
+    
 }
 .uk-grid-column-small, .uk-grid-small {
     margin-left: 0px;
@@ -190,9 +201,10 @@
     @endsection
 
 @section('page-scripts')
-<script src="{{ asset('resources/js/apps/budget/dayFlow/caltemplate.js') }}"></script>
+<!-- <script src="{{ asset('resources/js/apps/budget/dayFlow/caltemplate.js') }}"></script>
 <script src="{{ asset('resources/js/apps/budget/dayFlow/shortdate.js') }}"></script>
-<script src="{{ asset('resources/js/apps/budget/dayFlow/dayflow.js') }}"></script>
+<script src="{{ asset('resources/js/apps/budget/dayFlow/dayflow.js') }}"></script> -->
+<script src="{{ asset('resources/vendors/Teftele/DayFlow/dayflow.js') }}"></script>
 
 <script src="{{ asset('resources/js/apps/budget/page.js') }}"></script>
 <script src="{{ asset('resources/js/apps/budget/sidemenu.js') }}"></script>
