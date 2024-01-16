@@ -18,7 +18,7 @@ class EventorTemplate
 
 
       static makeEventCard(event) {
-        let cutlength = 800;
+        let cutlength = 300;
         let category = null;
         let section = null;
         let time  = new Date( event.created_at).toLocaleTimeString();
@@ -44,18 +44,28 @@ class EventorTemplate
           }
         };
         let additionalClasses = '';
-        if (event.type == 2){
-          additionalClasses = "evt-type-action";
-        } else if (event.type == 3){
-          additionalClasses = "evt-type-note";
+        let typeName = 'event';
+        let obj = EventorTypes.getDataType(event.type);
+        if (obj != null)
+        {
+          additionalClasses = obj.cardClass;
+          typeName = obj.name.toLowerCase();
         }
+ 
+        let headerIcon = "<span>";
         let starredMark = "";
         if (event.starred == 1){
           starredMark = " evt-starred";
+          headerIcon += "<span uk-icon='icon: star;' class='uk-icon'></span> ";
         }
+        if (event.locked == 1){
+          headerIcon += "<span uk-icon='icon: lock;' class='uk-icon'></span> ";
+        }
+        headerIcon += "</span>";
+
         if (event.status == 0){
           starredMark += " evt-disabled";
-          cutlength = 300;
+          cutlength = 500;
         } else if (event.status == 2){
           starredMark += " evt-archieved";
           cutlength = 500;
@@ -74,17 +84,22 @@ class EventorTemplate
         if (event.format == 0){
           content = event.content.substring(0, cutlength);
           if (event.content.length > cutlength){
-            content = content.trim() + "...";
+            content = content.trimEnd() + "...";
           }
-          content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
+
+          var reader = new commonmark.Parser();
+          var parsed = reader.parse(EventorUtils.replaceEntities( content));
+          var writer = new commonmark.HtmlRenderer();
+          var html = writer.render(parsed);
+          //content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
         }
         let body = '';
         if (event.content != ''){
           body = `              <div class="uk-card-body evt-card-body">
-            <p>${content}</p>
+            ${html}
           </div>`;
         };
-        let editLink = "<a href='#' class='uk-button uk-button-text evt-edit-button'>Edit</a>";
+        let editLink = "<a href='#' class='uk-button uk-button-text evt-edit-button'>Edit " + typeName + "</a>";
         if (event.locked == 1){
           editLink = '<span uk-icon="icon: lock"></span>';
         }
@@ -95,7 +110,7 @@ class EventorTemplate
              style='border-color: #${rootcolor};'>
               <div class="uk-card-header">
                 <div class="uk-width-expand">
-                  <h3 class="evt-card-title uk-margin-remove-bottom">${event.title}</h3>
+                  <h3 class="evt-card-title uk-margin-remove-bottom">${event.title}${headerIcon}</h3>
                   <div class="uk-text-meta uk-margin-remove-top flex-space"><time datetime="${time}">${time}</time> ${secBlock}</div>
                 </div>
               </div>
@@ -110,12 +125,12 @@ class EventorTemplate
 
 
       static makeEventSearchCard(event, searchWord) {
-        let cutlength = 800;
+        let cutlength = 300;
         let category = null;
         let section = null;
         let time  = new Date( event.created_at).toLocaleTimeString();
         let date = event.setdate;
-        const regex = new RegExp(searchWord, 'gi');
+
         if (event.category != null && event.category != "")
         {
           for (let i = 0; i < category_container.length; i++){
@@ -162,12 +177,46 @@ class EventorTemplate
         if (event.format == 0){
           content = event.content.substring(0, cutlength);
           if (event.content.length > cutlength){
-            content = content.trim() + "...";
+            content = content.trimEnd() + "...";
           }
           content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
         }
-        content = content.replace(regex, `<span class='evt-found'>$&</span>`);
-        event.title = event.title.replace(regex, `<span class='evt-found'>$&</span>`);
+
+      
+        if (Array.isArray(searchWord)){
+          for (let i = 0; i < searchWord.length; i++) {
+            let sw = searchWord[i];
+            console.log(sw);
+            let reg = "";
+            if (sw.includes('++')){
+              reg = sw;
+              content = content.replace(reg.toLowerCase(), "<span class='evt-found'>" + reg + "</span>");
+              event.title = event.title.replace(reg.toLowerCase(), "<span class='evt-found'>" + reg + "</span>");
+              content = content.replace(reg.toUpperCase(), "<span class='evt-found'>" + reg + "</span>");
+              event.title = event.title.replace(reg.toUpperCase(), "<span class='evt-found'>" + reg + "</span>");
+            } else {
+              reg = new RegExp(sw, 'gi');
+              content = content.replace(reg, `<span class='evt-found'>$&</span>`);
+              event.title = event.title.replace(reg, `<span class='evt-found'>$&</span>`);
+            }
+            
+          }
+        } else {
+          let reg = "";
+          if (searchWord.includes('++')){
+            reg = searchWord;
+            console.log('reg' + ' => ' + reg);
+            content = content.replace(reg.toLowerCase(), "<span class='evt-found'>" + reg + "</span>");
+            event.title = event.title.replace(reg.toLowerCase(), "<span class='evt-found'>" + reg + "</span>");
+            content = content.replace(reg.toUpperCase(), "<span class='evt-found'>" + reg + "</span>");
+            event.title = event.title.replace(reg.toUpperCase(), "<span class='evt-found'>" + reg + "</span>");
+          } else {
+            reg = new RegExp(searchWord, 'gi');
+            content = content.replace(reg, `<span class='evt-found'>$&</span>`);
+            event.title = event.title.replace(reg, `<span class='evt-found'>$&</span>`);
+          }
+          
+        }
         let body = '';
         if (event.content != ''){
           body = `              <div class="uk-card-body evt-card-body">
@@ -181,7 +230,7 @@ class EventorTemplate
              style='border-color: #${rootcolor};'>
               <div class="uk-card-header">
                 <div class="uk-width-expand">
-                  <h3 class="evt-card-title uk-margin-remove-bottom">${event.title}</h3>
+                  <h3 class="evt-card-title uk-margin-remove-bottom"><span class='evt-ctitle-string'><span>${event.title}</span></span></h3>
                   <div class="uk-text-meta uk-margin-remove-top flex-space"><time datetime="${time}">${date}</time> ${secBlock}</div>
                 </div>
               </div>
@@ -218,10 +267,15 @@ class EventorTemplate
         {
             content += cards[i];
         }
-        let todate = EventorUtils.isDateToday(date) ? "eventor-today" : "";
-
+        let todate = EventorUtils.isDateToday(date) ? "cl-today" : "";
+        let dweek = new Date(date).getDay();
+        console.log(dweek);
+        if (dweek == 0 || dweek == 6)
+        {
+          todate += " evt-weekend";
+        }
         let todateId = EventorUtils.isDateToday(date) ? "id='row_today'" : "";
-        let noEventClass = cards.length == 0 ? "eventor-hiddenrow" : "";
+        let noEventClass = cards.length == 0 ? "cl-hiddenrow" : "";
         let day = EventorTemplate.getDayOfWeek(date);
         day = day.slice(0, 3);
         let dnum = new Date(date).getUTCDate();
@@ -237,7 +291,7 @@ class EventorTemplate
 
             <div class="uk-width-expand@m">
                 <div class="uk-child-width-1-4@xl uk-child-width-1-3@l uk-child-width-1-2@m uk-child-width-1-2@s uk-grid-small 
-                uk-grid-match start-collapse section-padding uk-grid uk-grid-stack eventor-row-content" uk-grid="">
+                uk-grid-match start-collapse section-padding uk-grid uk-grid-stack cl-row-body" uk-grid="">
                 ${content}
                 </div>
             </div>
@@ -323,9 +377,15 @@ class EventorTemplate
   }
 
   static wrapTextToHtmlView(text) {
+    var tab = RegExp("\\t", "g");
     let lines = text.split('\n');
     let result = [];
-    
+    for (let i = 0; i < lines.length; i++) {
+      lines[i] =
+      lines[i].replace(tab,'&nbsp;&nbsp;&nbsp;&nbsp;');
+      
+    }
+
     // Regular expression to find URLs starting with "http://" or "https://"
     const urlPattern = /https?:\/\/\S+/g;
   
@@ -334,13 +394,14 @@ class EventorTemplate
       const div = document.createElement('div'); // Create a new div element
       let skip = false;
       // Use regular expression to find and replace URLs with <a> tags
+      
       const lineWithLinks = line.replace(urlPattern, (match) => {
-        return `<a href="${match}" class='uk-link-text' target="_blank">${match}</a>`;
+        return `<a href="${match}" class='uk-link-text' target="_blank">${ match.slice(0,23)}...</a>`;
       });
   
       // Set the div's innerHTML to the line with links
       div.innerHTML = lineWithLinks;
-  
+   
       if (line.startsWith('- ')) {
         div.classList.add('evt-list-item');
         div.innerHTML = lineWithLinks.replace(/^-\s*/, '');
@@ -350,17 +411,69 @@ class EventorTemplate
         let text = lineWithLinks.replace(/^-\s*/, '');
         result.push(document.createElement('hr'));
         div.innerHTML = text.replace(/^[-]+/, '');
-        if (div.innerHTML.trim() == ''){
+        if (div.innerHTML.trimEnd() == ''){
           skip = true;
         }
       }
-  
+      // replace each space
+      div.innerHTML = div.innerHTML.replace(/  /g, '&nbsp;&nbsp;');
+      // replace to only one space
+      //div.innerHTML = div.innerHTML.replace(/\s+/g, '&nbsp;');
+
+
       if (!skip){
         result.push(div);
       }
     });
-  
-    return result;
+
+    let nuresult = [];
+    let child = null;
+    let codeLinesCount = 2;
+    for (let i = 0; i < result.length; i++) {
+      const element = result[i];
+      
+      if (element.innerHTML.indexOf('```') != -1){
+        let text = element.innerHTML;
+        if (codeLinesCount % 2 == 0)
+        {
+          child = document.createElement('code');
+          let codeline = document.createElement('span');
+          codeline.innerHTML = text.replace('```','') + "<br>";
+          child.appendChild(codeline);
+          codeLinesCount++;
+          if (codeline.innerHTML.indexOf('```') != -1)
+          {
+            codeline.innerHTML = codeline.innerHTML.replace('```', '');
+            let parent = document.createElement('span');
+            parent.classList.add('evt-pre');
+            parent.appendChild(child);
+            nuresult.push(parent);
+            child = null;
+            codeLinesCount++;
+          }
+        } else {
+          let codeline = document.createElement('span');
+          codeline.innerHTML = text.replace('```','');
+          child.appendChild(codeline);
+          let parent = document.createElement('pre');
+          parent.classList.add('evt-pre');
+          parent.appendChild(child);
+          nuresult.push(parent);
+          child = null;
+          codeLinesCount++;
+        }
+
+      } else {
+        if (child != null){
+          let codeline = document.createElement('span');
+          codeline.innerHTML = element.innerHTML.replace('```','') + "<br>";
+          child.appendChild(codeline);
+        } else {
+          nuresult.push(element);
+        }
+      }
+    }
+    return nuresult;
   }
 
 
@@ -397,8 +510,6 @@ class EventorTemplate
             html +=`</select>
         </div>
     </div>
-
-
 
     <div class="uk-margin">
     <label class="uk-form-label" 
@@ -443,7 +554,86 @@ class EventorTemplate
 
     subform.innerHTML = html;
     return subform;
-    
   }
 
+
+  static categorySubEditorForm(object)
+  {
+    let subform = document.createElement('div');
+    subform.id = 'evt_category_subeditor';
+    subform.classList.add('evt-cat-subeditor');
+    subform.setAttribute('data-id', object.id);
+    subform.style.borderColor = "#" + object.color;
+    let html = `
+    <div class="uk-form-horizontal">
+
+    <div class="uk-margin">
+        <label class="uk-form-label" for="form-horizontal-text">Description of the category</label>
+        <div class="uk-form-controls">
+            <textarea class='evt-category-content-in uk-textarea' placeholder='Description...'>${object.content}</textarea>
+        </div>
+    </div>
+
+
+    <div class="uk-margin">
+      <label class="uk-form-label" 
+      for="form-horizontal3-select">Status </label>
+        <div class="uk-form-controls">
+            <select class="uk-select evt-cat-status-selector" id="form-horizontal3-select">`;
+            (EventorTypes.getStatus()).forEach(element => {
+              let active = "";
+              if (object.status == element.value){
+                active = "selected";
+              }
+              let option = "<option value='" + element.value + "' " + active + ">" + element.label + "</option>";
+              html += option;
+          });
+
+            html +=`</select>
+            
+        </div>
+    </div>
+    <div>(Disabled are automatically unbind from all sections and events, but archieved will not shown in list)</div>
+    <br>
+
+
+    <div class='uk-modal-footer uk-text-right'>
+    <button class="uk-button uk-button-default" id='evt_closeCategoryEditor'>CLOSE</button>
+    <div>
+    <button class="uk-button uk-button-danger" style='margin-right: 6px;' id='evt_act_deleteCategory'>Delete</button>
+    <button class="uk-button uk-button-primary evt-act-update-category">Update</button>
+    </div>
+    </div>
+  </div>
+    `;
+
+    subform.innerHTML = html;
+    return subform;
+  }
+
+  static createCategoryBadge(bid, name, color, active = false){
+    // Create a container div element with class "evt-catgroup-s-item"
+    const containerDiv = document.createElement('div');
+    containerDiv.classList.add('evt-catgroup-f-item');
+    containerDiv.setAttribute('data-target', bid);
+    containerDiv.style.border = '3px solid #' + color;
+    if (active){
+      containerDiv.classList.add('active');
+    }
+    // Create the first span element with class "catGroupName" and set its text content
+    const span1 = document.createElement('span');
+    span1.classList.add('catGroupName');
+    span1.textContent = name + ' ';
+
+    // Create the second span element with class "catGroupUnlink" and set its text content
+    const span2 = document.createElement('span');
+    span2.classList.add('catGroupUnlink');
+    span2.textContent = '';
+    // span2.style.backgroundColor = '#' + color;
+
+    // Append the span elements to the container div
+    containerDiv.appendChild(span1);
+    containerDiv.appendChild(span2);
+    return containerDiv;
+}
 }

@@ -5,11 +5,14 @@
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A new Super Laravel App</title>
-
+    <title>TeleHost</title>
+	<meta name="description" content="TeleHost is a simple and free Private CRM">
     <!-- Add your CSS files here -->
 
     <link rel="stylesheet" href="{{ asset('resources/css/uikit.min.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('resources/css/apps/eventor/template.css') }}">
+
     <!-- Add more CSS files if needed -->
     @yield('page-styles')
     <style>
@@ -20,15 +23,6 @@
 
     main {
         min-height: 100vh;
-    }
-
-
-    .uk-navbar-container:not(.uk-navbar-transparent) {
-        background: #00BCD4;
-        background-image: url(/storage/site/background.jpg);
-        background-size: cover;
-        background-position: bottom;
-        background-attachment: scroll;
     }
 
     .th-navbar {
@@ -42,7 +36,7 @@
     .th-navbar>div {
 
         display: flex;
-        
+        justify-content: space-around;
     }
 
     .th-navbar>div>* {}
@@ -56,6 +50,10 @@
         transition: all ease 0.2s;
         border-right: 1px solid transparent;
         border-left: 1px solid transparent;
+    }
+
+    .th-navbar-item a {
+        color: gray;
     }
 
     .th-navbar-item:hover {
@@ -81,10 +79,6 @@
 
     .th-central-search {
         padding: 3px 12px;
-    }
-
-    .th-navbar-item a {
-        color: white;
     }
 
     .th-central-search input {}
@@ -148,7 +142,7 @@
         padding: 0px;
         opacity: 0;
         cursor: pointer;
-        /* background: rgb(3 169 244 / 56%); */
+        background: rgb(3 169 244 / 56%);
         height: 100vh;
         left: 0px;
         width: 6px;
@@ -239,17 +233,7 @@
         }
 
     }
-    .th-com-s-nav * {
-        user-select: none;
-    }
-    .th-com-s-nav-item {
-        display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: inherit;
 
-    align-items: center;
-    }
     .th-com-s-nav-item.th-active {
         background-color: #212121;
     }
@@ -259,13 +243,11 @@
     }
 
     .nav-link {
-        padding: 7px 3px 7px 7px;
-    text-decoration: none;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
-    color: rgb(221, 221, 221);
-    }
-    .nav-link:first-child {
-        text-align: center;
+        display: block;
+        padding: 6px 12px 6px 12px;
+        text-decoration: none;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+        color: rgb(221, 221, 221);
     }
 
     .menu-minimized .icon-square {
@@ -284,34 +266,13 @@
     }
 
     .th-com-s-nav {
-        display: flex !important;
-        flex-wrap: nowrap;
+        display: flex;
+        flex-wrap: wrap;
         padding-left: 0;
         margin: 0px;
         margin-bottom: 12px;
         list-style: none;
-        overflow-y: auto;
-    overflow-x: hidden;
     }
-
-    ::-webkit-scrollbar {
-  width: 10px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-    background: #00000024;
-}
- 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #88888854; 
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555; 
-}
 
     .th-sn-item-icon {}
 
@@ -323,12 +284,12 @@
 
     .th-sidebar-opened .th-sn-item-text {
         display: block;
-        padding-left: 6px;
     }
 
     .th-com-s-nav-item>a {
         display: grid;
-        grid-template-columns: 30px auto min-content;
+        display: grid;
+        grid-template-columns: 42px auto min-content;
     }
 
     .th-sn-column {
@@ -340,7 +301,7 @@
     }
 
     .th-com-s-nav-item:hover {
-        background-color: #01bedc;
+        background-color: #03A9F4;
     }
     .th-com-s-nav-item:hover a {
         color: white;
@@ -348,7 +309,9 @@
     }
     .th-com-s-nav-item:hover .th-sn-round {
         opacity: 1;
-        padding: 4px;
+        padding: 5px;
+        margin-left: 35px;
+        margin-top: -12px;
     }
     .th-user-go {
         vertical-align: middle;
@@ -368,43 +331,53 @@
     }
     .th-sn-round {
         display: block;
-        padding: 2px;
+        padding: 3px;
+        position: absolute;
+        margin-left: 37px;
+        margin-top: -10px;
         opacity: 0.6;
         transition: all ease 0.3s;
         border-radius: 2px;
-        margin-right: 5px;
-        height: 20px;
     }
     .th-sidebar-opened .th-sn-round {
-
+        margin-left: 248px;
     }
-    .uk-offcanvas-bar {
-        background: repeating-linear-gradient( -45deg, #01abc6, #01abc6 10px, #01abc6de 10px, #01abc6c7 20px );
-        backdrop-filter: blur(16px);
-        box-shadow: inset -10px 330px 800px #000000bf;
-        transition: all ease 0.5s;
-        
-    }
-    .uk-offcanvas-bar::before {
-        content: '■';
-    font-size: 25px;
-    vertical-align: middle;
-    display: inline-block;
-    width: calc(100% + 60px);
-    background: rgb(1,171,198);
-background: linear-gradient(90deg, rgba(1,171,198,1) 12%, rgba(1,171,198,0) 100%);
-    margin-left: -30px;
-    margin-top: -51px;
-    height: 44px;
-    text-align: left;
-    color: transparent;
+    .th-sidebar-opened .th-com-s-nav-item:hover .th-sn-round {
+        margin-left: 246px;
     }
 
-    .uk-sticky:not(.uk-active) {
-    z-index: 1 !important;
+    .th-user-container {
+    border: 1px solid #fff;
     }
-    .th-app-nav a.th-menu-plash {
-        font-size: 1.5rem;
+    .th-user-container-header, .th-user-container-footer, .th-user-evt-card {
+    padding: 1.2rem !important;
+    border-radius: 9px;
+    word-break: break-word;
+    }
+    .th-user-evt-card-footer , .th-user-evt-card-footer > div {
+    display: flex;
+        grid-gap: 1rem;
+        justify-content: space-between;
+    }
+
+    .th-user-evt-card-badge {
+    border: 1px solid pink;
+    padding: 0px 6px;
+    border-radius: 0.5rem;
+    color: gray;
+    }
+    .uk-user-readmore {
+    font-weight: 400;
+    cursor: pointer;
+    }
+    .uk-user-readmore:hover {
+    color: #1E88E5;
+    }
+    .th-user-container {
+        padding-bottom: 3rem;
+    }
+    .col-main {
+        margin-bottom: 5rem;
     }
     </style>
 </head>
@@ -412,27 +385,27 @@ background: linear-gradient(90deg, rgba(1,171,198,1) 12%, rgba(1,171,198,0) 100%
 <body class='th-sidenav-show'>
 
 
-    <!-- Offcanvas Menu -->
+	@auth
+    <?php // Offcanvas Menu ?>
     <div id="offcanvas-nav" uk-offcanvas="mode: slide; overlay: true; flip: true">
         <div class="uk-offcanvas-bar">
             <button class="uk-offcanvas-close" type="button" uk-close></button>
             <h5 class='uk-text-title'>Applications:</h5>
             <!-- Add your offcanvas menu content here -->
-            <ul class="uk-nav uk-nav-default th-app-nav">
-                <li class="{{ Request::routeIs('budget') ? 'uk-active' : '' }}"><a class='th-menu-plash'
-                        href="{{ route('budget') }}"><span uk-icon="icon: credit-card; ratio: 2.0"></span> <span>Budget</span></a></li>
-                <li class="{{ Request::routeIs('eventor') ? 'uk-active' : '' }}"><a class='th-menu-plash'
-                        href="{{ route('eventor') }}"><span uk-icon="icon: calendar; ratio: 2.0"></span> <span>Eventor</span></a></li>
-                        <li class="{{ Request::routeIs('booker') ? 'uk-active' : '' }}"><a class='th-menu-plash'
-                        href="{{ route('booker') }}"><span uk-icon="icon: file-text; ratio: 2.0"></span> <span>Booker</span></a></li>
+            <ul class="uk-nav uk-nav-default">
+                <li class="{{ Request::routeIs('budget') ? 'uk-active' : '' }}"><a
+                        href="{{ route('budget') }}">Budget</a></li>
+                <li class="{{ Request::routeIs('eventor') ? 'uk-active' : '' }}"><a
+                        href="{{ route('eventor') }}">Eventor</a></li>
 
 
                 <!-- Add more menu items if needed -->
             </ul>
         </div>
     </div>
+	@endauth
 
-    <!-- Navbar -->
+    <?php // Navbar ?>
     <nav class="uk-navbar-container uk-margin-none th-navbar" uk-navbar>
         <div>
             <div class='th-navbar-item th-sidenav-trigger' style='padding-left: 1px; padding-right: 1px;'>
@@ -493,11 +466,13 @@ background: linear-gradient(90deg, rgba(1,171,198,1) 12%, rgba(1,171,198,0) 100%
                     </ul>
                 </div>
             </div>
+			@auth
             <div class='th-navbar-item'>
                 <a class="" href="#offcanvas-nav" uk-toggle>
                     <span uk-icon='grid'></span>
                 </a>
             </div>
+			@endauth
         </div>
 
     </nav>
@@ -508,7 +483,7 @@ background: linear-gradient(90deg, rgba(1,171,198,1) 12%, rgba(1,171,198,0) 100%
             class="app-item login-btn">
 
         </a>
-        <nav id="sidebarMenu" class="th-col-sidenav uk-background-muted"><a
+        <nav id="sidebarMenu" class="th-col-sidenav uk-background-muted uk-hidden"><a
                 href="http://new.teftele.com/logout?token=qgH8Z217juVMgHxL5uo84paIhBOBtHSzIayDwmYy"
                 class="app-item login-btn">
             </a>
@@ -574,12 +549,8 @@ background: linear-gradient(90deg, rgba(1,171,198,1) 12%, rgba(1,171,198,0) 100%
 
 
 
-        <main class="col-main ms-sm-auto p-0" id="mainWrapper">
-            <!-- Your page content goes here -->
-            <div class="uk-expand">
-                @yield('content')
-            </div>
-
+        <main class="col-main ms-sm-auto p-0" id="officialEventWrapper">
+        
         </main>
     </div>
 
@@ -589,7 +560,7 @@ background: linear-gradient(90deg, rgba(1,171,198,1) 12%, rgba(1,171,198,0) 100%
     </div>
 
     @guest
-    <!-- Login Modal -->
+    <?php // Login modal ?>
     <div id="login-modal" uk-modal>
         <div class="uk-modal-dialog uk-modal-body">
             <h2 class="uk-modal-title">Login</h2>
@@ -708,7 +679,7 @@ console.log(remember);
     </script>
 
 
-    <!-- Register Modal -->
+	<?php // Register modal ?>
     <div id="register-modal" uk-modal>
         <div class="uk-modal-dialog uk-modal-body">
             <h2 class="uk-modal-title">Registration</h2>
@@ -949,7 +920,7 @@ console.log(remember);
 
     <!-- Add more JavaScript files if needed -->
     <script>
-    var sideMenu = new SidebarMenu(SidebarMenu.getDemoMenuItems());
+    var sideMenu = new SidebarMenu();
     </script>
     <script>
     class SearchBar {
@@ -958,12 +929,11 @@ console.log(remember);
             this.searchbar = document.querySelector(".th-central-search");
             this.menubar = document.querySelector(".th-central-menu");
             this.closearch = document.querySelector("#th_searchClose");
-            let area = document.querySelector('#th_searchArea');
+
 
             this.cst.addEventListener('click', (e) => {
                 e.preventDefault;
                 this.trigSearchBar();
-                area.focus();
             });
             this.closearch.addEventListener('click', (e) => {
                 e.preventDefault;
@@ -1030,11 +1000,27 @@ console.log(remember);
     }
 
     $sb = new SearchBar();
-    $sn = new SideNav();
+	
+    //$sn = new SideNav();
+
     let me = '{{ Auth::user() != null ? Auth::user()->id : ""}}';
     </script>
 
-@yield('page-script')
+    <script src="{{ asset('resources/js/apps/eventor/page.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/sidemenu.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/templates.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/types.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/utils.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/nav.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/modals.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/flowofficial.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/sectionmanager.js') }}"></script>
+    <script src="{{ asset('resources/js/apps/eventor/categorymanager.js') }}"></script>
+
+    <script>
+
+        let FO = new FlowOfficial();
+    </script>
 </body>
 
 </html>

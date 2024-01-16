@@ -26,8 +26,8 @@ class EventorNav {
         EventorUtils.changeAddressBar('sect', section);
         EventorFlow.clearAllCardBodyFromChart();
         EventorFlow.activeSection = section;
-        console.log('section to load :>> ', section);
-        eventor.reloadSectionEvents(section);
+        // console.log('section to load :>> ', section);
+        EventorFlow.reloadSectionEvents(section);
         if (prevExpended == false){
           EventorNav.shrinkAllRows();
         }
@@ -129,7 +129,6 @@ class EventorNav {
             }
           }
           this.triggerTypeToggle();
-          console.log("Itrigyou!");
           UIkit.notification({
             message: 'Type toggled!',
             status: 'success',
@@ -158,7 +157,6 @@ class EventorNav {
           }
           if (JSON.stringify(EventorNav.activeTypes.length) != oldTypes ){
             this.triggerTypeToggle();
-            console.log("Itrigyou!2");
             UIkit.notification({
               message: 'Type toggled!',
               status: 'success',
@@ -317,49 +315,105 @@ class EventorNav {
         shrinkRowsButton.title = 'shrink rows';
         flexContainer3.appendChild(shrinkRowsButton);
     
-        // Create the "create event" button
-        const createEventButton = document.createElement('a');
-        createEventButton.classList.add('uk-button', 'evt-stickybar-button', 'evt-stb-group', 'evt-event-color');
-        if (EventorNav.activeTypes.includes(1)){
-          createEventButton.classList.add( 'active');
-        }
-        createEventButton.id = 'evt_toggle_events';
-        createEventButton.href = '#';
-        createEventButton.setAttribute('aria-expanded', 'false');
-        createEventButton.setAttribute('data-type', '1');
-        createEventButton.setAttribute('uk-icon', 'icon: image');
-        createEventButton.setAttribute("uk-tooltip", "title: Toggle Events; pos: bottom-right");
-        flexContainer3.appendChild(createEventButton);
+        // // Create the "create event" button
+        // for (let i = 0 ; i < EventorTypes.DataTypes.length; i++){
+        //   let item = EventorTypes.DataTypes[i];
+        //   if (item.state == 1){
+        //     const createEventButton = document.createElement('a');
+        //     createEventButton.classList.add('uk-button', 'evt-stickybar-button', 'evt-stb-group', 'stb-full', item.class);
+        //     if (EventorNav.activeTypes.includes(1)){
+        //       createEventButton.classList.add( 'active');
+        //     }
+        //     createEventButton.id = 'evt_toggle_' + item.name.toLowerCase() + 's';
+        //     createEventButton.href = '#';
+        //     createEventButton.setAttribute('aria-expanded', 'false');
+        //     createEventButton.setAttribute('data-type', item.value);
+        //     createEventButton.setAttribute('uk-icon', 'icon: ' + item.icon);
+        //     createEventButton.setAttribute("uk-tooltip", "title: Toggle " + item.name + "; pos: bottom-right");
+        //     flexContainer3.appendChild(createEventButton);
+        //   }
+        // }
+        // const openbutton = document.createElement('a');
+        // openbutton.classList.add('uk-button', 'evt-stickybar-button', 'stb-mobile');
+        
+        
+        let inlinediv = document.createElement('div');
+        inlinediv.classList.add('uk-inline', 'evt-stickybar-button');
 
-        const createEventButton2 = document.createElement('a');
-        createEventButton2.classList.add('uk-button', 'evt-stickybar-button', 'evt-stb-group', 'evt-action-color');
-        if (EventorNav.activeTypes.includes(2)){
-          createEventButton2.classList.add( 'active');
-        }
-        createEventButton2.id = 'evt_toggle_actions';
-        createEventButton2.href = '#';
-        createEventButton2.setAttribute('aria-expanded', 'false');
-        createEventButton2.setAttribute('data-type', '2');
-        createEventButton2.setAttribute('uk-icon', 'icon: crosshairs');
-        createEventButton2.setAttribute("uk-tooltip", "title: Toggle Actions; pos: bottom-right");
-        flexContainer3.appendChild(createEventButton2);
+        // Category trigger
+        let catbutton = document.createElement('button');
+        catbutton.id = 'evt_expandCatToggle';
+        catbutton.classList.add('evt-open-button','evt-sticker-button');
+        catbutton.setAttribute('category', 'button');
+        catbutton.innerHTML = "<span uk-icon='icon: social'></span></button>";
+        inlinediv.appendChild(catbutton);
+        catbutton.title = 'Category toggler';
+        
+        let catdropdiv = document.createElement('div');
+        catdropdiv.setAttribute('uk-dropdown', 'stretch: x; boundary: body; flip: false; position: bottom-right');
+        catdropdiv.classList.add('evt-dd-background');
+        catdropdiv.style.padding = '0px';
 
-        const createEventButton3 = document.createElement('a');
-        createEventButton3.classList.add('uk-button', 'evt-stickybar-button', 'evt-stb-group', 'evt-note-color');
-        if (EventorNav.activeTypes.includes(3)){
-          createEventButton3.classList.add( 'active');
+       let minidivg = document.createElement('div');
+       minidivg.id = 'evt_cat_filter';
+       minidivg.classList.add('evt-category-row', 'uk-flex');
+
+       catdropdiv.appendChild(minidivg);
+
+        // catdropdiv.innerHTML =  ` 
+        // <div class="uk-drop-grid uk-child-width-1-1@m" uk-grid>
+        // <div>
+        //     <ul class="uk-nav uk-dropdown-nav">
+        //         <li class="uk-active"><a href="#">Active</a></li>
+        //         <li><a href="#">Item</a></li>
+        //         <li class="uk-nav-header">Header</li>
+        //         <li><a href="#">Item</a></li>
+        //         <li><a href="#">Item</a></li>
+        //         <li class="uk-nav-divider"></li>
+        //         <li><a href="#">Item</a></li>
+        //     </ul>
+        // </div></div>`;
+        inlinediv.appendChild(catdropdiv);
+
+
+        // Type trigger
+        let stikbutton = document.createElement('button');
+        stikbutton.id = 'evt_expandToggler';
+        stikbutton.classList.add('evt-open-button','evt-sticker-button');
+        stikbutton.setAttribute('type', 'button');
+        stikbutton.innerHTML = "<span uk-icon='icon: more'></span></button>";
+        stikbutton.title = 'Type toggler';
+        inlinediv.appendChild(stikbutton);
+
+        let dropdowndiv = document.createElement('div');
+        dropdowndiv.setAttribute('uk-dropdown', '');
+        dropdowndiv.style.padding = '0px';
+
+        // dropdowndiv.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+        
+        for (let i = 0 ; i < EventorTypes.DataTypes.length; i++){
+          let item = EventorTypes.DataTypes[i];
+          if (item.state == 1){
+            const createEventButton = document.createElement('a');
+            createEventButton.classList.add('uk-button', 'evt-stickybar-button', 'evt-stb-group', item.class);
+            if (EventorNav.activeTypes.includes(1)){
+              createEventButton.classList.add( 'active');
+            }
+            createEventButton.id = 'evt_toggle_' + item.name.toLowerCase() + 's';
+            createEventButton.href = '#';
+            createEventButton.setAttribute('aria-expanded', 'false');
+            createEventButton.setAttribute('data-type', item.value);
+            createEventButton.setAttribute('uk-icon', 'icon: ' + item.icon);
+            createEventButton.setAttribute("uk-tooltip", "title: Toggle " + item.name + "; pos: bottom-right");
+            dropdowndiv.appendChild(createEventButton);
+          }
         }
-        createEventButton3.id = 'evt_toggle_notes';
-        createEventButton3.href = '#';
-        createEventButton3.setAttribute('aria-expanded', 'false');
-        createEventButton3.setAttribute('data-type', '3');
-        createEventButton3.setAttribute('uk-icon', 'icon: pencil');
-        createEventButton3.setAttribute("uk-tooltip", "title: Toggle Notes; pos: bottom-right");
-        flexContainer3.appendChild(createEventButton3);
     
-        // Append shrinkRowsButton and createEventButton to flexContainer3
-    
-        // Append flexContainer1, flexContainer2, and flexContainer3 to the main container div
+        inlinediv.appendChild(dropdowndiv);
+        // flexContainer3.appendChild(openbutton);
+        flexContainer3.appendChild(inlinediv);
+
+
         containerDiv.appendChild(flexContainer1);
         containerDiv.appendChild(flexContainer2);
         containerDiv.appendChild(flexContainer3);
@@ -421,7 +475,7 @@ class EventorNav {
       let setItem1 = SidebarMenu.getNewItem();
       setItem1.name  = "Sections";
       setItem1.ukicon = 'thumbnails';
-      setItem1.id = "djsfgaks";
+      setItem1.id = "evt_openSectionManager";
       setItem1.ref='#modal_sectionManager';
       setItem1.linkSingleAttribute = "uk-toggle";
       smenu.setItems.push(setItem1);
@@ -429,7 +483,7 @@ class EventorNav {
       let setItem2 = SidebarMenu.getNewItem();
       setItem2.name  = "Categories";
       setItem2.ukicon = 'social';
-      setItem2.id = "djsfakfs";
+      setItem2.id = "evt_openCategoryManager";
       setItem2.ref='#modal_categoryManager';
       setItem2.linkSingleAttribute = "uk-toggle";
       smenu.setItems.push(setItem2);
@@ -437,10 +491,10 @@ class EventorNav {
       let setItem3 = SidebarMenu.getNewItem();
       setItem3.name  = "Settings";
       setItem3.ukicon = 'settings';
-      setItem3.id = "djsfaks";
+      setItem3.id = "evt_openSetingsManager";
       setItem3.ref='#modal_settingsManager';
       setItem3.linkSingleAttribute = "uk-toggle";
-      smenu.setItems.push(setItem3);
+      //smenu.setItems.push(setItem3);
 
       return smenu;
     }

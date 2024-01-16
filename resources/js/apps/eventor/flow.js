@@ -4,7 +4,9 @@ class EventorFlow {
     static loadedSections = {};
     static dayFlow = null;
     static activeSection = 'all';
-    static activeTypes = [1,2,3];
+    static filteredCategories = [];
+    static activeCategory = '';
+    static activeTypes = [1,2,3,4,5,6,7,8];
     constructor(selector) {
         // { 'date' => [ 'afklsjdklfjas', 'jdlfkajsdf' ]}
         let cursect = EventorUtils.getParam('sect');
@@ -25,7 +27,6 @@ class EventorFlow {
         menuitem.innerHTML = "ΞVΞNŦOR";
 
         document.querySelector('.th-central-menu').prepend(menuitem);
-
 
         document.addEventListener("dblclick", function (e) {
             if (e.target.closest(".event-section") && !e.target.closest(".event-card")) {
@@ -144,7 +145,6 @@ class EventorFlow {
                 EventorFlow.loadSingleEvent([targetEvent]); // It loaded eventId into targetEvents array
                 // define it's month and section
                 if (EventorFlow.targetEvents.length > 0) {
-                    console.log(EventorFlow.targetEvents[0]);
                     let setdate = EventorFlow.targetEvents[0].setdate;
                     let section = EventorFlow.targetEvents[0].section;
                     let tdate = new ShortDate(setdate);
@@ -162,11 +162,10 @@ class EventorFlow {
 
             let callParamsArray = [];
             for (let i = 0; i < DayFlow.dateArray.length; i++) {
-                //console.log(eventor.dateArray[i]);
                 callParamsArray.push([DayFlow.dateArray[i], EventorFlow.activeSection]);
             };
             EventorFlow.loadEvents(callParamsArray);
-            EventorFlow.dayFlow.onMoved(this.reloadSectionEvents);
+            EventorFlow.dayFlow.onMoved(EventorFlow.reloadSectionEvents);
             
             if (targetEvent != null) {
                 let tgE = document.querySelector('#' + targetEvent.replace('.', `\\.`));
@@ -213,51 +212,134 @@ class EventorFlow {
                             if (element.id == tid){
                                 eInArray == true;
                                 EventorFlow.targetEvents.push( element);
+                                console.log("I FOUND EM!");
                                 break;
                             }
+                        }
+                        
+                        // Target Event should be loaded
+                        if (EventorFlow.targetEvents.length > 0){
+                            EventorFlow.goToTargetEvent();
                         }
                         if (!eInArray){
                             EventorFlow.loadSingleEvent([tid]);
                         };
-                        // Target Event should be loaded
-                        if (EventorFlow.targetEvents.length > 0){
-                            const element = EventorFlow.targetEvents[0];
-                            let tdate = new ShortDate(element.setdate);
-                            let section = element.section;
-                            DayFlow.dateArray = [];
-                            DayFlow.dateArray.push(tdate);
-                            EventorFlow.activeSection = section;
-
-                            DateUtils.changeAddressBar('stm', tdate.getShortDate());
-                            DateUtils.changeAddressBar('enm', tdate.getShortDate());
-                            DateUtils.changeAddressBar('sect', EventorFlow.activeSection);
-
-                            // Flush event container
-                            event_container = [];
-                            let callParamsArray = [];
-                            for (let i = 0; i < DayFlow.dateArray.length; i++) {
-                                callParamsArray.push([DayFlow.dateArray[i], EventorFlow.activeSection]);
-                            };
-                            EventorFlow.dayFlow.reset(tdate);
-                            EventorFlow.loadEvents(callParamsArray);
-                            EventorNav.recheckMenuItems(section);
-                            this.reloadSectionEvents();
-
-                            let targetEvent = document.querySelector('#' + tid.replace('.', `\\.`));
-                            if (targetEvent != null) {
-                                    targetEvent.classList.add('evt-founded');
-                                    let sec = targetEvent.closest('.event-section');
-                                    sec.classList.add('evt-sec-founded');
-                                    targetEvent.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-                                    DateUtils.changeAddressBar('targ', tid);
-                            }
-                        }
                     }
                 }
             }
-        })
+
+
+            // Handle categoryFilterClick
+            if (e.target.closest('.evt-catgroup-f-item')){
+                let button = e.target.closest('.evt-catgroup-f-item');
+                let cid = button.getAttribute('data-target');
+                if (cid == 'evt_clear_grp_filter'){
+                    EventorFlow.activeCategory = '';
+                } else {
+                    if (EventorFlow.activeCategory == cid){
+                        EventorFlow.activeCategory = '';
+                    } else {
+                        
+                        EventorFlow.activeCategory = cid;
+                    }
+                }
+                EventorFlow.refreshEvents();
+            }
+        });
+
+
+        /**
+         * Create Section content, category content and Search listener
+         */
+        // Depends on global variable
+        let smenu = EventorNav.buildMenu();
+        sideMenu = new SidebarMenu(smenu);
+        let categoryManager = new CategoryManager();
+        let searchMan = new EventorSearch('modal_searchManager');
+        
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('#evt_openSectionManager')) {
+                this.sectionManager = new SectionManager();
+
+            }
+        });
+
+
+        
     }
 
+    static goToTargetEvent()
+    {
+        if (EventorFlow.targetEvents.length > 0){
+            console.log("TRY TO LOAD");
+            const element = EventorFlow.targetEvents[0];
+            let tdate = new ShortDate(element.setdate);
+            let section = element.section;
+            DayFlow.dateArray = [];
+            DayFlow.dateArray.push(tdate);
+            EventorFlow.activeSection = section;
+
+            DateUtils.changeAddressBar('stm', tdate.getShortDate());
+            DateUtils.changeAddressBar('enm', tdate.getShortDate());
+            DateUtils.changeAddressBar('sect', EventorFlow.activeSection);
+
+            // Flush event container
+            event_container = [];
+            let callParamsArray = [];
+            for (let i = 0; i < DayFlow.dateArray.length; i++) {
+                callParamsArray.push([DayFlow.dateArray[i], EventorFlow.activeSection]);
+            };
+            EventorFlow.dayFlow.reset(tdate);
+            EventorFlow.loadEvents(callParamsArray);
+            EventorNav.recheckMenuItems(section);
+            EventorFlow.reloadSectionEvents();
+
+            EventorFlow.markTargetEvent(element);
+        }
+    }
+
+    static refreshCategoryFilter(){
+        let minidivg = document.querySelector('#evt_cat_filter');
+        minidivg.innerHTML = "";
+        minidivg.appendChild(
+            EventorTemplate.createCategoryBadge("evt_clear_grp_filter", "Reset filter", "03A9F4"));
+        
+        for (let i = 0; i < category_container.length; i++) {
+            const element = category_container[i];
+            if (EventorFlow.filteredCategories.includes(element.id)){
+                minidivg.appendChild(
+                EventorTemplate.createCategoryBadge(element.id,
+                     element.title, element.color,
+                     EventorFlow.activeCategory == element.id ? true : false));
+            }
+            
+        }
+    }
+
+    /**
+     * Make frame around selected card and focus to it 
+     * @param {object} element 
+     * @param {int} loop 
+     */
+    static async markTargetEvent(element, loop = 0)
+    {
+        let targetEvent = null;
+        loop++;
+        setTimeout(() => {
+            targetEvent = document.querySelector('#' + element.id.replace('.', `\\.`));
+            if (targetEvent != null) {
+                targetEvent.classList.add('evt-founded');
+                let sec = targetEvent.closest('.event-section');
+                sec.classList.add('evt-sec-founded');
+                targetEvent.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+                DateUtils.changeAddressBar('targ', element.id);
+            } else {
+                if (loop < 10){
+                    EventorFlow.markTargetEvent(element, loop);
+                }
+            }
+        }, 250);
+    }
 
     toggleItemType(types)
     {
@@ -355,8 +437,6 @@ class EventorFlow {
                     alert("You are not registered!");
                     return 0;
                 };
-                console.log(this.responseText);
-                console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Event") {
@@ -388,9 +468,6 @@ class EventorFlow {
                     };
                 });
                 EventorFlow.refreshEvents();
-                //console.log('event_container.length :>> ', event_container.length);
-                // let result = JSON.parse(this.responseText);
-                // console.log('рудзукы updated ' + this.responseText);
             }
             else if (this.status > 200) {
                 if (counter < 1) {
@@ -400,7 +477,7 @@ class EventorFlow {
                 }
             }
         };
-        xhttp.open("POST", "/eventor/postcall", false);
+        xhttp.open("POST", "/eventor/postcall", true);
         // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
@@ -430,7 +507,7 @@ class EventorFlow {
 
 
 
-    reloadSectionEvents() {
+    static reloadSectionEvents() {
         let sectionid = EventorFlow.activeSection;
         console.log('command :>> ', 'reloadSectionEvents');
         // check if there not events in the array for this section
@@ -438,6 +515,7 @@ class EventorFlow {
         if (EventorFlow.activeSection != 'all') {
             for (let i = 0; i < DayFlow.dateArray.length; i++) {
                 let cdate = DayFlow.dateArray[i].getShortDate();
+                console.log('cdate' + ' => ' + cdate);
                 if (EventorFlow.loadedSections[cdate] != null) {
                     console.log('not null cdate');
 
@@ -554,7 +632,6 @@ class EventorFlow {
             }
         }
         let catar = strcats.split(',');
-        console.log('catar :>> ', catar);
         Array.from(category_container).forEach((option) => {
             if (catar.includes(option.id) || section == "" || section == 'all') {
                 const optionElement = document.createElement('option');
@@ -575,7 +652,6 @@ class EventorFlow {
             EventorFlow.activeSection = 'all';
         } else {
             EventorFlow.activeSection = cursect.trim();
-            console.log("YEP2", EventorFlow.activeSection);
         }
         let counter = 0;
         var xhttp = new XMLHttpRequest();
@@ -594,7 +670,6 @@ class EventorFlow {
                             section_container.push(item2);
 
                             if (EventorFlow.activeSection == 'all') {
-                                console.log('cursect :>> ', EventorFlow.activeSection);
                                 for (let i = 0; i < DayFlow.dateArray.length; i++) {
                                     let cdate = DayFlow.dateArray[i].getShortDate();
                                     if (EventorFlow.loadedSections[cdate] != null) {
@@ -617,7 +692,6 @@ class EventorFlow {
                     }
                 });
                 EventorFlow.refreshCategoriesAndSections();
-                console.log(EventorFlow.loadedSections);
                 // let result = JSON.parse(this.responseText);
             }
             else if (this.status > 200) {
@@ -669,24 +743,41 @@ class EventorFlow {
             const element = arsenal[ind];
             element.remove();
         }
-
+        if (EventorFlow.activeCategory == ""){
+            EventorFlow.filteredCategories = [];
+        }
         Array.from(event_container).forEach((event) => {
             if (EventorFlow.activeSection == 'all' || event.section == EventorFlow.activeSection) {
                 //console.log(event.setdate);
                 // if (document.querySelector('#' + event.id) != null){
                 //     document.querySelector('#' + event.id).remove();
                 // }
-                console.log('EventorFlow.activeTypes :>> ', EventorFlow.activeTypes);
                 if (EventorFlow.activeTypes.includes(event.type)){
 
                     let rid = "row_" + event.setdate;
     
                     let row = document.querySelector('#' + rid);
                     if (row != null) {
-                        let erc = row.querySelector('.eventor-row-content');
-                        //let card = EventorTemplate.createEventCard(event.title, event.setdate, event.category, event.content);
-                        let card = EventorTemplate.makeEventCard(event);
-                        erc.insertAdjacentHTML('beforeend', card);
+                        if (event.category != '' && 
+                        !EventorFlow.filteredCategories.includes(event.category))
+                        {
+                            EventorFlow.filteredCategories.push(event.category);
+                        }
+                        if (EventorFlow.activeCategory != ''){
+                            if (EventorFlow.activeCategory == event.category){
+
+                                let erc = row.querySelector('.cl-row-body');
+                                //let card = EventorTemplate.createEventCard(event.title, event.setdate, event.category, event.content);
+                                let card = EventorTemplate.makeEventCard(event);
+                                erc.insertAdjacentHTML('beforeend', card);
+                            }
+                        } else {
+                            let erc = row.querySelector('.cl-row-body');
+                            //let card = EventorTemplate.createEventCard(event.title, event.setdate, event.category, event.content);
+                            let card = EventorTemplate.makeEventCard(event);
+                            erc.insertAdjacentHTML('beforeend', card);
+
+                        }
                         //erc.appendChild(card);
                     }
                 }
@@ -695,6 +786,8 @@ class EventorFlow {
             }
 
         });
+        EventorFlow.refreshCategoryFilter();
+        Prism.highlightAll();
     }
 
     static clearAllCardBodyFromChart() {
@@ -710,7 +803,8 @@ class EventorFlow {
 
     static loadEvents(callArray) {
         console.log('command :>> ', 'loadEvents');
-        console.log('Called section', EventorFlow.activeSection);
+        console.log(callArray);
+        console.log('callArray' + ' => ' + callArray);
         let counter = 0;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -724,7 +818,6 @@ class EventorFlow {
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Event") {
-                        // console.log(item.results);
                         Array.from(item.results).forEach((item2) => {
                             let exists = false;
                             let newId = item2.id;
@@ -771,14 +864,10 @@ class EventorFlow {
                 }
             }
         };
-        xhttp.open("POST", "/eventor/postcall", false);
+        xhttp.open("POST", "/eventor/postcall", true);
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
 
-        // console.log(datePast);
-        // console.log(dateFuture);
-        // console.log(EventorUtils.getSimpleDate(datePast, true));
-        // console.log(EventorUtils.getSimpleDate(dateFuture, true));
         let taskArray = [];
 
         for (let ind = 0; ind < callArray.length; ind++) {
@@ -794,12 +883,13 @@ class EventorFlow {
                 column: "user",
                 value: me,
             };
+            console.log(shortdate);
             task.where.push(where);
             const where2 = {
                 column: "setdate",
-                value: EventorUtils.getSimpleDate(shortdate.getFirstDate(true), true),
+                value: shortdate.getFirstDate(true),
                 operator: "BETWEEN",
-                value2: EventorUtils.getSimpleDate(shortdate.getFirstDateOfNextMonth(true), true),
+                value2: shortdate.getFirstDateOfNextMonth(true),
             };
             task.where.push(where2);
             if (section != undefined && section != 'all' && section != '') {
@@ -808,9 +898,7 @@ class EventorFlow {
                     value: section,
                 };
                 task.where.push(where3);
-                console.log('WHERE SECTION: ', section);
             }
-            console.log(task);
             taskArray.push(task);
         }
         xhttp.send(JSON.stringify(taskArray));
@@ -820,7 +908,6 @@ class EventorFlow {
 
     static loadSingleEvent(callArray) {
         EventorFlow.targetEvents = [];
-        console.log('command :>> ', 'loadSingleEvent');
         let counter = 0;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -829,15 +916,14 @@ class EventorFlow {
                     console.log("You are not registered!");
                     return 0;
                 };
-                //console.log(this.responseText);
-                //console.log(JSON.parse(this.responseText));
                 let result = JSON.parse(this.responseText);
                 Array.from(result.results).forEach((item) => {
                     if (item.type == "Event") {
                         // console.log(item.results);
                         Array.from(item.results).forEach((item2) => {
                             EventorFlow.targetEvents.push(item2);
-
+                            console.log("I LOAD EM!!! from database", EventorFlow.targetEvents);
+                            EventorFlow.goToTargetEvent();
                         });
 
                     };
@@ -849,19 +935,14 @@ class EventorFlow {
                         return;
                     };
                     console.log("Oops! There is some problems with the server connection.");
-                    //console.log(this.responseText);
                     counter++;
                 }
             }
         };
-        xhttp.open("POST", "/eventor/postcall", false);
+        xhttp.open("POST", "/eventor/postcall", true);
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
 
-        // console.log(datePast);
-        // console.log(dateFuture);
-        // console.log(EventorUtils.getSimpleDate(datePast, true));
-        // console.log(EventorUtils.getSimpleDate(dateFuture, true));
         let taskArray = [];
 
         for (let ind = 0; ind < callArray.length; ind++) {
@@ -882,7 +963,6 @@ class EventorFlow {
             };
             task.where.push(where2);
 
-            console.log(task);
             taskArray.push(task);
         }
         xhttp.send(JSON.stringify(taskArray));
@@ -950,7 +1030,7 @@ class EventorFlow {
                 }
             }
         };
-        xhttp.open("POST", "/eventor/postcall", false);
+        xhttp.open("POST", "/eventor/postcall", true);
         // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhttp.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);

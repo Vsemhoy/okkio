@@ -112,13 +112,28 @@ class EventModal {
                 if (elem.id == event_container[i].id){
     
                   let el = event_container[i];
-                  let divs = EventorTemplate.wrapTextToHtmlView(el.content);
-                    let parentContainer = modal.querySelector('.evt-reader-body'); // Replace 'parentContainer' with the actual ID or selector of your parent container
-                    for (let i = 0; i < divs.length; i++) {
-                      const element = divs[i];
-                      parentContainer.appendChild(element);
-                    }
+                  let parentContainer = modal.querySelector('.evt-reader-body'); // Replace 'parentContainer' with the actual ID or selector of your parent container
+    // Create a CommonMark parser
+    var reader = new commonmark.Parser();
+
+    // Parse the Markdown text
+    var parsed = reader.parse(EventorUtils.replaceEntities( el.content));
+    
+
+    // Create a CommonMark HTML renderer
+    var writer = new commonmark.HtmlRenderer();
+
+    // Render the parsed Markdown to HTML
+    var html = writer.render(parsed);
+
+                  //let divs = EventorTemplate.wrapTextToHtmlView(el.content);
+                    // for (let i = 0; i < divs.length; i++) {
+                    //   const element = divs[i];
+                    //   parentContainer.appendChild(element);
+                    // }
+                    parentContainer.innerHTML = html;
                     modal.querySelector('.evt-reader-title').innerHTML = el.title;
+                    Prism.highlightAll();
                   break;
                 }
               }
@@ -137,14 +152,12 @@ class EventModal {
                   
                   const regex = new RegExp(EventorSearch.searchWord, 'gi');
                   el.content = el.content.replace(regex, `<span class='evt-found'>$&</span>`);
-
-                  let divs = EventorTemplate.wrapTextToHtmlView(el.content);
-
-                    let parentContainer = modal.querySelector('.evt-reader-body'); // Replace 'parentContainer' with the actual ID or selector of your parent container
-                    for (let i = 0; i < divs.length; i++) {
-                      const element = divs[i];
-                      parentContainer.appendChild(element);
-                    }
+                  let parentContainer = modal.querySelector('.evt-reader-body'); // Replace 'parentContainer' with the actual ID or selector of your parent container
+                  var reader = new commonmark.Parser();
+                  var parsed = reader.parse(EventorUtils.replaceEntities( el.content));
+                  var writer = new commonmark.HtmlRenderer();
+                  var html = writer.render(parsed);
+                 parentContainer.innerHTML = html;
                     modal.querySelector('.evt-reader-title').innerHTML = el.title;
                   break;
                 }
@@ -215,28 +228,41 @@ class EventModal {
     typeTrigs.id = 'evt_trigCreateButtons';
     typeTrigs.classList.add('evt-modal-type_triggers');
     
-    let bt1 = document.createElement('div');
-    bt1.id = '';
-    bt1.classList.add('evt-mod-typetrig', 'evt-event-color', 'active');
-    bt1.setAttribute('data-type', '1');
-    bt1.innerHTML = "Event";
-    typeTrigs.appendChild(bt1);
+    // let bt1 = document.createElement('div');
+    // bt1.id = '';
+    // bt1.classList.add('evt-mod-typetrig', 'evt-event-color', 'active');
+    // bt1.setAttribute('data-type', '1');
+    // bt1.innerHTML = "Event";
+    // typeTrigs.appendChild(bt1);
     
-    let bt2 = document.createElement('div');
-    bt2.id = '';
-    bt2.classList.add('evt-mod-typetrig', 'evt-action-color');
-    bt2.setAttribute('data-type', '2');
-    bt2.innerHTML = "Action";
-    typeTrigs.appendChild(bt2);
+    // let bt2 = document.createElement('div');
+    // bt2.id = '';
+    // bt2.classList.add('evt-mod-typetrig', 'evt-action-color');
+    // bt2.setAttribute('data-type', '2');
+    // bt2.innerHTML = "Action";
+    // typeTrigs.appendChild(bt2);
 
-    let bt3 = document.createElement('div');
-    bt3.id = '';
-    bt3.classList.add('evt-mod-typetrig', 'evt-note-color');
-    bt3.setAttribute('data-type', '3');
-    bt3.innerHTML = "Note";
-    typeTrigs.appendChild(bt3);
+    // let bt3 = document.createElement('div');
+    // bt3.id = '';
+    // bt3.classList.add('evt-mod-typetrig', 'evt-note-color');
+    // bt3.setAttribute('data-type', '3');
+    // bt3.innerHTML = "Note";
+    // typeTrigs.appendChild(bt3);
     
-
+    for (let i = 0 ; i < EventorTypes.DataTypes.length; i++){
+      let item = EventorTypes.DataTypes[i];
+      if (item.state == 1){
+        let block = document.createElement('div');
+        block.id = '';
+        block.classList.add('evt-mod-typetrig', item.class);
+        if (i == 0){
+          block.classList.add('active');
+        }
+        block.setAttribute('data-type', item.value);
+        block.innerHTML = item.name;
+        typeTrigs.appendChild(block);
+      }
+    }
 
     // Modal body
     const modalBody = document.createElement('div');

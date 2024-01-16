@@ -132,6 +132,26 @@ class DayFlow {
                 this.triggerMoveEvent();
             };
 
+            if (e.target.closest(".cl-com-today")){
+                e.preventDefault();
+                let calledMonth = new ShortDate();
+                DayFlow.dateArray = [];
+                this.pool.innerHTML = "";
+                this.startMonth = calledMonth;
+                this.endMonth = calledMonth;
+                DateUtils.changeAddressBar(DayFlow.startParam,
+                    this.startMonth.getShortDate());
+                DateUtils.changeAddressBar(DayFlow.endParam,
+                    this.endMonth.getShortDate());
+                    DayFlow.dateArray.push(calledMonth);
+                this.renderMonth(calledMonth);
+                this.triggerMoveEvent();
+                let row = document.querySelector('#row_today');
+                if (row != null){
+                    row.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+                }
+            };
+
             if (e.target.closest(".cl-nav")){
                 let el = e.target.closest(".cl-nav");
                 let trig = el.getAttribute('cl-move-down');
@@ -522,7 +542,7 @@ class ShortDate {
             );
         }
         if (asString){
-            return this.year + this.delimeter + this.month + this.delimeter + (lastDay.getDate()).toString().padStart(2, '0');
+            return this.year + this.delimeter + this.month.toString().padStart(2,'0') + this.delimeter + (lastDay.getDate()).toString().padStart(2, '0');
         }
         return lastDay;
     }
@@ -548,9 +568,9 @@ class ShortDate {
             );
         }
         if (asString){
-            return this.year + this.delimeter + this.month + this.delimeter + '01';
+            return this.year + this.delimeter + this.month.toString().padStart(2,'0') + this.delimeter + '01';
         }
-        return lastDay;
+        return firstday;
     }
 
     
@@ -1025,6 +1045,12 @@ class CalTemplate
         row.classList.add('cl-row');
         row.setAttribute('data-date', date);
         row.classList.add('uk-text-center','uk-grid-collapse','start-collapse','uk-background-muted','event-section','uk-grid');
+        let dweek = new Date(date).getDay();
+        console.log(dweek);
+        if (dweek == 0 || dweek == 6)
+        {
+          row.classList.add("row-weekend");
+        }
 
         let day = CalTemplate.getDayOfWeek(date);
         day = day.slice(0, 3);
@@ -1050,18 +1076,18 @@ class CalTemplate
 
         let bodydiv = document.createElement('div');
         bodydiv.id = '';
-        bodydiv.classList.add('uk-child-width-1-4@xl','uk-child-width-1-3@l','uk-child-width-1-2@m','uk-child-width-1-2@s','uk-grid-small','uk-grid-match','start-collapse','section-padding','uk-grid','uk-grid-stack','eventor-row-content');
+        bodydiv.classList.add('uk-child-width-1-4@xl','uk-child-width-1-3@l','uk-child-width-1-2@m','uk-child-width-1-2@s','uk-grid-small','uk-grid-match','start-collapse','section-padding','uk-grid','uk-grid-stack','cl-row-body');
 
         for (let index = 0; index < items.length; index++) {
           const element = items[index];
           bodydiv.appendChild(element);
         }
         if (items.length == 0){
-          row.classList.add('eventor-hiddenrow');
+          row.classList.add('cl-hiddenrow');
         }
 
         if (todateId != ''){
-          row.classList.add('eventor-today');
+          row.classList.add('cl-today');
         }
         row.appendChild(headdiv);
         row.appendChild(bodydiv);
