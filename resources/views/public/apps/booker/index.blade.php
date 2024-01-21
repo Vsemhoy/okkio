@@ -444,11 +444,42 @@
 @section('page-script')
 <script>
     class BookerFlow {
+        static user_container = [];
+        static section_container = [];
+        static book_container = [];
+        static page_container = [];
+        static image_container = [];
+
+       // static date = new DayFlow();
+
         static activeSection = "";
         static acitveBook = "";
+        /** 0 - READ MODE / 1 - Single user Edit mode */
+        static viewMode = 1;
+        /** 1 - Books / 2 - Pages / 3 - Flow */
+        static activeTab = 2;
+        static openedPages = [];
 
         constructor() {
-  
+            
+        }
+    }
+
+
+    class BookerPageTab
+    {
+        book_id;
+        page_id;
+        viewMode;
+        order;
+        color;
+        is_locked;
+        constructor(bookId, pageId) {
+            this.book_id = bookId;
+            this.page_id = pageId;
+            this.viewMode = 0;
+            this.order = 0;
+            this.is_locked = 0;
         }
     }
 
@@ -598,6 +629,17 @@
             mainDiv.appendChild(subsDiv);
 
             return mainDiv;
+        }
+
+
+        getBookCardItem(bookId, bookName, bookShortDescr, color, author, readMode)
+        {
+            let result = `                <li>
+                    <div class="boo-book-card boo-medium-padding">
+                        <span class="uk-sortable-handle uk-margin-small-right uk-text-center" uk-icon="icon: table"></span>Item 1
+                    </div>
+                </li>`;
+                return result;
         }
     }
 
@@ -1195,9 +1237,7 @@
 @endsection
 
 @section('page-scripts')
-<script src="{{ asset('resources/js/apps/budget/dayFlow/caltemplate.js') }}"></script>
-<script src="{{ asset('resources/js/apps/budget/dayFlow/shortdate.js') }}"></script>
-<script src="{{ asset('resources/js/apps/budget/dayFlow/dayflow.js') }}"></script>
+<script src="{{ asset('resources/vendors/Teftele/DayFlow/dayflow.js') }}"></script>
 
 <script src="{{ asset('resources/js/apps/budget/page.js') }}"></script>
 <script src="{{ asset('resources/js/apps/budget/sidemenu.js') }}"></script>

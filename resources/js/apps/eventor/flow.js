@@ -766,13 +766,13 @@ class EventorFlow {
                         if (EventorFlow.activeCategory != ''){
                             if (EventorFlow.activeCategory == event.category){
 
-                                let erc = row.querySelector('.cl-row-body');
+                                let erc = row.querySelector('.eventor-row-content');
                                 //let card = EventorTemplate.createEventCard(event.title, event.setdate, event.category, event.content);
                                 let card = EventorTemplate.makeEventCard(event);
                                 erc.insertAdjacentHTML('beforeend', card);
                             }
                         } else {
-                            let erc = row.querySelector('.cl-row-body');
+                            let erc = row.querySelector('.eventor-row-content');
                             //let card = EventorTemplate.createEventCard(event.title, event.setdate, event.category, event.content);
                             let card = EventorTemplate.makeEventCard(event);
                             erc.insertAdjacentHTML('beforeend', card);

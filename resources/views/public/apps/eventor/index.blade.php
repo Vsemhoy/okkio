@@ -177,7 +177,7 @@
 
 
     <div id="modal_eventReader" uk-modal class="uk-modal-container">
-    <div class="uk-modal-dialog">
+    <div class="uk-modal-dialog uk-margin-auto-vertical">
 
         <button class="uk-modal-close-default" type="button" uk-close></button>
 
