@@ -267,7 +267,7 @@ class EventorTemplate
         {
             content += cards[i];
         }
-        let todate = EventorUtils.isDateToday(date) ? "eventor-today" : "";
+        let todate = EventorUtils.isDateToday(date) ? "cl-today" : "";
         let dweek = new Date(date).getDay();
         console.log(dweek);
         if (dweek == 0 || dweek == 6)
@@ -275,7 +275,7 @@ class EventorTemplate
           todate += " evt-weekend";
         }
         let todateId = EventorUtils.isDateToday(date) ? "id='row_today'" : "";
-        let noEventClass = cards.length == 0 ? "eventor-hiddenrow" : "";
+        let noEventClass = cards.length == 0 ? "cl-hiddenrow" : "";
         let day = EventorTemplate.getDayOfWeek(date);
         day = day.slice(0, 3);
         let dnum = new Date(date).getUTCDate();
@@ -291,7 +291,7 @@ class EventorTemplate
 
             <div class="uk-width-expand@m">
                 <div class="uk-child-width-1-4@xl uk-child-width-1-3@l uk-child-width-1-2@m uk-child-width-1-2@s uk-grid-small 
-                uk-grid-match start-collapse section-padding uk-grid uk-grid-stack eventor-row-content" uk-grid="">
+                uk-grid-match start-collapse section-padding uk-grid uk-grid-stack cl-row-body" uk-grid="">
                 ${content}
                 </div>
             </div>

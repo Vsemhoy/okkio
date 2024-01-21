@@ -206,7 +206,7 @@ class EventModal {
   
     // Modal dialog
     const modalDialog = document.createElement('div');
-    modalDialog.classList.add('uk-modal-dialog');
+    modalDialog.classList.add('uk-modal-dialog', 'uk-margin-auto-vertical');
   
     // Modal close button inside dialog
     const modalCloseButtonInsideDialog = document.createElement('button');
